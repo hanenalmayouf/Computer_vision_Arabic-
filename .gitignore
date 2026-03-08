@@ -1,0 +1,12 @@
+# Ignore everything
+*
+
+# Except the docs directory
+!docs/
+!docs/**
+
+# And this file
+!.gitignore
+
+# And the README
+!README.md
