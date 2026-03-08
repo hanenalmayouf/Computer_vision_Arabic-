@@ -1,0 +1,481 @@
+---
+title: "Ultralytics YOLO Foundations: Part 3"
+subtitle: "Evaluation & Deployment"
+date: today
+format:
+  revealjs:
+    theme: [default, ../slides_template/assets/sdaia.scss]
+    logo: ../slides_template/assets/sdaia.svg
+    transition: slide
+    background-transition: fade
+    slide-number: true
+    controls: true
+    progress: true
+    center-title-slide: true
+    title-slide-attributes:
+      data-background-image: "../slides_template/assets/anim.svg"
+      data-background-opacity: "0.15"
+---
+# 6. Model Evaluation {.sdaia-dark background-gradient="linear-gradient(135deg, #1C355E, #00C9A7)"}
+
+How good is your model?
+
+## Binary Classification Basics
+
+When evaluating models, every prediction falls into one of four categories. Let's use detecting a "Car" as an example:
+
+- **True Positive (TP):** Model correctly predicted "Car" and there is a car there.
+- **False Positive (FP):** Model predicted "Car", but there was no car there (False Alarm).
+- **True Negative (TN):** Model correctly predicted "Not Car" for background.
+- **False Negative (FN):** There is a car in the image, but the model missed it.
+
+
+## The Confusion Matrix
+
+:::: {.columns}
+
+::: {.column width="60%"}
+```{python}
+#| echo: false
+#| fig-align: center
+import numpy as np
+import matplotlib.pyplot as plt
+
+# True labels vs predictions (1=Car, 0=Not Car)
+y_true = np.array([1, 1, 0, 1, 0, 0, 1, 0, 0, 0])
+y_pred = np.array([1, 0, 0, 1, 0, 1, 1, 0, 0, 0])
+
+# Calculate TP, FP, TN, FN
+TP = np.sum((y_true == 1) & (y_pred == 1))
+FP = np.sum((y_true == 0) & (y_pred == 1))
+TN = np.sum((y_true == 0) & (y_pred == 0))
+FN = np.sum((y_true == 1) & (y_pred == 0))
+
+cm = np.array([[TN, FP], [FN, TP]])
+
+# Plotting the Confusion Matrix
+fig, ax = plt.subplots(figsize=(4, 4))
+fig.patch.set_alpha(0.0) 
+ax.imshow(cm, cmap='Blues', alpha=0.8)
+
+# Add text annotations
+thresh = cm.max() / 2.
+for i in range(2):
+    for j in range(2):
+        ax.text(j, i, str(cm[i, j]), ha="center", va="center", 
+                color="white" if cm[i, j] > thresh else "black", 
+                fontsize=16, fontweight='bold')
+
+classes = ['Not Car', 'Car']
+ax.set_xticks([0, 1])
+ax.set_xticklabels(classes)
+ax.set_yticks([0, 1])
+ax.set_yticklabels(classes)
+ax.set_xlabel('Predicted label', fontsize=12, fontweight='bold')
+ax.set_ylabel('True label', fontsize=12, fontweight='bold')
+
+plt.show()
+
+accuracy = (TP + TN) / (TP + TN + FP + FN)
+precision = TP / (TP + FP)
+recall = TP / (TP + FN)
+
+print(f"Accuracy : {accuracy:.2f}")
+print(f"Precision: {precision:.2f}")
+print(f"Recall   : {recall:.2f}")
+```
+:::
+
+::: {.column width="40%" .incremental}
+<br>
+**Matrix Layout:**
+
+- **Rows:** True Labels (Actual)
+- **Columns:** Predicted Labels
+- **Diagonal:** Correct predictions (TP & TN)
+- **Off-Diagonal:** Errors (FP & FN)
+
+:::
+
+::::
+
+## The Problem with Accuracy
+
+The most intuitive metric is **Accuracy** (Total Correct / Total Predictions). But is it enough?
+
+Imagine a dataset with **1 "Car"** and **99 "Not Car"** (background) images. If a model simply predicts **"Not Car"** for everything:
+
+- **TP = 0**, **FN = 1** *(Missed the only car)*
+- **TN = 99**, **FP = 0**
+
+::: {.fragment .fade-up}
+$$Accuracy = \frac{0 + 99}{100} = 99\%$$
+:::
+
+::: {.fragment .fade-up}
+It achieved **99% Accuracy** despite being completely useless at finding cars!
+:::
+
+::: {.fragment .fade-up}
+This is the **Class Imbalance Problem**, common in object detection where most of an image is empty background.
+:::
+
+
+
+## Intersection over Union (IoU)
+
+How perfectly does the predicted bounding box overlap the *ground truth* box?
+
+```{python}
+#| echo: false
+#| fig-align: center
+import matplotlib.pyplot as plt
+import matplotlib.patches as patches
+import numpy as np
+import sys; import os; sys.path.insert(0, os.path.abspath('.')); sys.path.insert(0, os.path.abspath('slides')); from plot_utils import draw_base_car
+
+fig, axes = plt.subplots(1, 2, figsize=(9, 4))
+fig.patch.set_alpha(0.0)
+
+# ---------- Left: car with GT and predicted boxes ----------
+ax = axes[0]
+ax.patch.set_alpha(1.0)
+ax.set_facecolor('white')
+draw_base_car(ax)
+
+# Ground Truth box (green) — the annotated label
+gt = patches.Rectangle((2.5, 3.0), 10, 9,
+                        linewidth=3, edgecolor='#00ff00',
+                        facecolor='none', label='Ground Truth', zorder=3)
+ax.add_patch(gt)
+
+# Predicted box (red) — slightly offset to show imperfect overlap
+pred = patches.Rectangle((4.0, 4.5), 9, 8,
+                          linewidth=3, edgecolor='#ff3333',
+                          facecolor='none', label='Prediction', zorder=3)
+ax.add_patch(pred)
+
+# Intersection fill (yellow overlay)
+intersect = patches.Rectangle((4.0, 4.5), 8.5, 7.5,
+                               linewidth=0, facecolor='#ffff00',
+                               alpha=0.35, label='Intersection', zorder=2)
+ax.add_patch(intersect)
+
+ax.set_xticks([])
+ax.set_yticks([])
+for sp in ax.spines.values():
+    sp.set_visible(False)
+ax.legend(loc='lower center', bbox_to_anchor=(0.5, -0.18),
+          ncol=3, fontsize=8, frameon=False)
+ax.set_title('Car: GT vs Prediction', fontsize=10, fontweight='bold')
+
+# ---------- Right: IoU formula diagram ----------
+ax2 = axes[1]
+ax2.patch.set_alpha(1.0)
+ax2.set_facecolor('white')
+
+# Same GT box as the left plot — outline only
+gt2 = patches.Rectangle((2.5, 3.0), 10, 9,
+                         linewidth=3, edgecolor='#00ff00',
+                         facecolor='none', label='Ground Truth', zorder=3)
+ax2.add_patch(gt2)
+
+# Same Predicted box as the left plot — outline only
+pred2 = patches.Rectangle((4.0, 4.5), 9, 8,
+                           linewidth=3, edgecolor='#ff3333',
+                           facecolor='none', label='Prediction', zorder=3)
+ax2.add_patch(pred2)
+
+# Same Intersection fill as the left plot
+intersect2 = patches.Rectangle((4.0, 4.5), 8.5, 7.5,
+                                linewidth=0, facecolor='#ffff00',
+                                alpha=0.35, label='Intersection', zorder=2)
+ax2.add_patch(intersect2)
+
+ax2.set_xlim(-0.5, 15.5)
+ax2.set_ylim(15.5, -0.5)
+ax2.set_aspect('equal')
+ax2.set_xticks([])
+ax2.set_yticks([])
+for sp in ax2.spines.values():
+    sp.set_visible(False)
+ax2.legend(loc='lower center', bbox_to_anchor=(0.5, -0.18),
+           ncol=3, fontsize=8, frameon=False)
+ax2.set_title("IoU = Intersection / Union", fontsize=10, fontweight='bold')
+
+plt.tight_layout()
+plt.show()
+```
+
+**Rule of Thumb**: A prediction is typically considered a "True Positive" (correct) if the IoU is > 0.50.
+
+## 1. The Per-Class Breakdown
+
+When we evaluate the "Car" class, we ignore everything else.
+
+- **True Positive (TP):** The model predicted "Car," and there is a "Car" at that spot with an $IoU \ge 0.5$.
+- **False Positive (FP):** The model predicted "Car," but there is no "Car" there (it might be a "Truck," or just empty background).
+- **False Negative (FN):** There is a "Car" in the image, but the model either missed it entirely or labeled it as something else.
+
+*(Note: True Negatives are rarely used in object detection due to the massive empty background).*
+
+## 2. Dealing with Multiple Detections
+
+A common question is: "What if the model predicts two boxes for the same car?"
+
+::::: {.columns}
+
+:::: {.column width="50%"}
+```{python}
+#| echo: false
+#| fig-align: center
+import matplotlib.pyplot as plt
+import matplotlib.patches as patches
+import sys; import os; sys.path.insert(0, os.path.abspath('.')); sys.path.insert(0, os.path.abspath('slides')); from plot_utils import draw_base_car
+
+fig, ax = plt.subplots(figsize=(4, 4))
+fig.patch.set_alpha(0.0)
+ax.patch.set_alpha(1.0)
+ax.set_facecolor('white')
+draw_base_car(ax)
+
+# Ground Truth box (green)
+gt = patches.Rectangle((2.5, 3.0), 10, 9,
+                        linewidth=3, edgecolor='#00ff00',
+                        facecolor='none', zorder=3)
+ax.add_patch(gt)
+ax.text(7.5, 2.3, 'Ground Truth', color='#00ff00',
+        fontsize=9, ha='center', fontweight='bold')
+
+# Prediction 1 - best IoU (solid red)
+pred1 = patches.Rectangle((3.0, 3.5), 9.5, 8.5,
+                           linewidth=3, edgecolor='#ff3333',
+                           facecolor='none', zorder=4,
+                           linestyle='-')
+ax.add_patch(pred1)
+ax.text(7.5, 12.4, 'Pred 1 (TP, conf=0.91)', color='#ff3333',
+        fontsize=8, ha='center', fontweight='bold')
+
+# Prediction 2 - lower IoU (dashed orange)
+pred2 = patches.Rectangle((5.0, 5.0), 9, 8,
+                           linewidth=2.5, edgecolor='#ff8c00',
+                           facecolor='none', zorder=4,
+                           linestyle='--')
+ax.add_patch(pred2)
+ax.text(13.3, 9.0, 'Pred 2\n(FP, conf=0.74)', color='#ff8c00',
+        fontsize=7.5, ha='left', va='center')
+
+ax.set_xticks([])
+ax.set_yticks([])
+for sp in ax.spines.values():
+    sp.set_visible(False)
+plt.tight_layout()
+plt.show()
+```
+::::
+
+:::: {.column width="50%" .incremental}
+
+- The box with the **highest IoU** (Pred 1, solid red) is the **True Positive (TP)**.
+- The second box (Pred 2, dashed orange) is automatically a **False Positive (FP)**, even if it overlaps the car.
+::::
+
+:::::
+
+## Object Detection Metrics
+
+To solve the Class Imbalance Problem, we focus on metrics that ignore True Negatives:
+
+- **Precision:** When it guesses an object, is it correct? (Quality)
+  $$Precision = \frac{TP}{TP + FP}$$
+- **Recall:** Out of all actual objects, how many did it find? (Quantity)
+  $$Recall = \frac{TP}{TP + FN}$$
+- **F1-Score:** The harmonic mean of Precision and Recall.
+  $$F_1 = 2 \times \frac{Precision \times Recall}{Precision + Recall}$$
+
+
+## The Confidence Threshold Trade-off
+
+The **Confidence Threshold** dictates how "sure" the model must be to output a prediction. Adjusting it directly affects your balance of errors:
+
+- **High Threshold (e.g., `0.80`)**: The model is strict.
+  - Decreases **False Positives (FP)** (fewer false alarms $\rightarrow$ **Higher Precision**)
+  - Increases **False Negatives (FN)** (misses more objects $\rightarrow$ **Lower Recall**)
+
+- **Low Threshold (e.g., `0.20`)**: The model is loose.
+  - Increases **False Positives (FP)** (more false alarms $\rightarrow$ **Lower Precision**)
+  - Decreases **False Negatives (FN)** (catches almost everything $\rightarrow$ **Higher Recall**)
+
+
+## Interactive Demo: Threshold Trade-off
+
+```{=html}
+<iframe class="interactive-demo" src="demo_threshold.html" width="100%" height="90%" style="border:none; overflow:hidden;"></iframe>
+```
+
+## 3. The Ranking Process 
+
+:::: {.columns}
+
+::: {.column width="50%"}
+<br>
+
+::: {.fragment .fade-up}
+**Step 1: Gather**
+We take every "Car" prediction the model made across the whole test set.
+:::
+
+<br>
+
+::: {.fragment .fade-up}
+**Step 2: Sort**
+We sort them from highest confidence (e.g., $0.99$) to lowest (e.g., $0.10$).
+:::
+
+<br>
+
+::: {.fragment .fade-up}
+**Step 3: Calculate**
+We calculate Precision and Recall at every single step of that sorted list.
+:::
+
+<br>
+
+:::
+
+::: {.column width="50%"}
+```{python}
+#| echo: false
+#| fig-align: center
+import matplotlib.pyplot as plt
+import numpy as np
+
+fig, ax = plt.subplots(figsize=(6, 5))
+fig.patch.set_alpha(0.0)
+ax.patch.set_alpha(0.0)
+
+recall = np.linspace(0, 1, 100)
+# Mock PR curve
+precision = 1 - recall**3 + 0.1 * np.random.rand(100)
+precision = np.clip(precision, 0, 1)
+precision = np.maximum.accumulate(precision[::-1])[::-1] # Make it monotonically decreasing
+
+ax.plot(recall, precision, color='#00C9A7', linewidth=4, label='PR Curve')
+ax.fill_between(recall, precision, alpha=0.3, color='#00C9A7', label='AP (Area)')
+
+ax.set_xlabel('Recall', fontsize=14, fontweight='bold', color='#1C355E')
+ax.set_ylabel('Precision', fontsize=14, fontweight='bold', color='#1C355E')
+ax.set_xlim(0, 1)
+ax.set_ylim(0, 1.05)
+
+# Clean up spines and match brand colors
+ax.spines['top'].set_visible(False)
+ax.spines['right'].set_visible(False)
+ax.spines['bottom'].set_linewidth(2)
+ax.spines['bottom'].set_color('#1C355E')
+ax.spines['left'].set_linewidth(2)
+ax.spines['left'].set_color('#1C355E')
+
+ax.tick_params(colors='#1C355E', width=2, labelsize=12)
+ax.grid(True, linestyle='--', alpha=0.3, color='#1C355E')
+ax.legend(loc='lower left', frameon=False, fontsize=12, labelcolor='#1C355E')
+
+plt.tight_layout()
+plt.show()
+```
+
+::: {.fragment .fade-up}
+::: {.callout-note appearance="simple"}
+**Average Precision (AP)** is simply the area under this **Precision-Recall (PR) curve**!
+:::
+:::
+
+:::
+
+::::
+
+## 4. From AP to mAP
+
+Once we have the AP for every class (Cars, Pedestrians, Trees, etc.), we simply take the arithmetic mean.
+
+$$mAP = \frac{AP_{cars} + AP_{pedestrians} + AP_{trees} + ...}{Total\ Number\ of\ Classes}$$
+
+- **mAP50:** Accuracy considering only "easy" detections (IoU > 0.50).
+- **mAP50-95:** The strict evaluation averaged across multiple IoU thresholds (from 0.50 to 0.95).
+
+## Validating the Model (YOLO CLI/Python)
+
+We use the `val` mode to evaluate a trained model.
+
+```bash
+yolo val model=best.pt data=data.yaml
+```
+
+```python
+# Python Equivalent
+from ultralytics import YOLO
+
+model = YOLO("best.pt")
+metrics = model.val(data="data.yaml")
+```
+
+YOLO automatically generates graphs (`confusion_matrix.png`, `PR_curve.png`) in your `runs/detect/val` folder.
+
+*Docs Reference: [Model Evaluation Insights](https://docs.ultralytics.com/guides/model-evaluation-insights/)*
+
+
+# 7. Deployment {.sdaia-dark background-gradient="linear-gradient(135deg, #1C355E, #00C9A7)"}
+
+Taking it to production.
+
+## Exporting Models
+
+A PyTorch `.pt` file is great for research, but slow in production.
+Convert to optimized formats using the `export` mode!
+
+```bash
+# Export to ONNX (Great for CPU)
+yolo export model=best.pt format=onnx
+
+# Export to OpenVINO (Intel) or TensorRT (Nvidia GPUs)
+yolo export model=best.pt format=openvino
+```
+
+```python
+# Python Equivalent
+from ultralytics import YOLO
+
+model = YOLO("best.pt")
+model.export(format="onnx")
+model.export(format="openvino")
+```
+
+*Docs Reference: [Export](https://docs.ultralytics.com/modes/export/)*
+
+## Inference with Exported Models
+
+You don't need complex deployment code to use your exported models. The Ultralytics API loads them just like a standard PyTorch `.pt` file!
+
+```bash
+yolo predict model=best.onnx source="https://ultralytics.com/images/bus.jpg"
+```
+
+```python
+from ultralytics import YOLO
+model = YOLO("best.onnx")
+results = model.predict(source="https://ultralytics.com/images/bus.jpg")
+print(results[0].boxes) 
+```
+
+*Docs Reference: [Predict with Exported Models](https://docs.ultralytics.com/modes/predict/)*
+
+
+## What's Next?
+
+In **Part 4**, we will dive into **Real World Use Cases & Solutions** to learn what to do *after* you have trained and deployed a highly accurate model.
+
+## Q&A {.sdaia-dark background-color="#1C355E"}
+
+**Thank You!**
+
+Any questions?

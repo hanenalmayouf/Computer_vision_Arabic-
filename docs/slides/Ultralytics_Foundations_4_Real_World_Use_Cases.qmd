@@ -1,0 +1,304 @@
+---
+title: "Ultralytics YOLO Foundations: Part 4"
+subtitle: "Real World Use Cases & Solutions"
+date: today
+format:
+  revealjs:
+    theme: [default, ../slides_template/assets/sdaia.scss]
+    logo: ../slides_template/assets/sdaia.svg
+    transition: slide
+    background-transition: fade
+    slide-number: true
+    controls: true
+    progress: true
+    center-title-slide: true
+    title-slide-attributes:
+      data-background-image: "../slides_template/assets/anim.svg"
+      data-background-opacity: "0.15"
+---
+
+# 8. Real World Use Cases & Solutions {.sdaia-dark background-gradient="linear-gradient(135deg, #1C355E, #00C9A7)"}
+
+Beyond bounding boxes: actionable insights.
+
+## The "After" of Training
+
+You now know how to build datasets, pick models, and train effectively.
+
+But what happens **AFTER** the model is trained? 
+
+- Often, you don't just want bounding boxes drawn on an image. 
+- You want **actionable insights**. 
+- You want to trigger alerts, count items, or manage entire systems.
+
+## Ultralytics Solutions
+
+Ultralytics provides a suite of high-level **Solutions** that act as wrappers around your trained model.
+
+They allow you to deploy world-class computer vision systems with just a few lines of code.
+
+## Solution Categories
+
+1. **Region and Boundary Analytics:** Counting, Zones, Parking, Queues
+2. **Kinematic and Spatial Measurement:** Speed, Distance, VisionEye
+3. **Data Aggregation and Visualization:** Analytics, Heatmaps
+4. **Image Output Manipulation:** Cropping, Blurring
+5. **Specialized Model Heads:** Instance Segmentation Tracking, Workouts
+6. **External Integrations:** Live Inference (Streamlit), Security Alarms
+7. **Multimodal Embeddings:** Similarity Search
+
+# Region & Boundary Analytics {.sdaia-dark background-gradient="linear-gradient(135deg, #1C355E, #00C9A7)"}
+
+Counting, Zones, and Queues
+
+## Region and Boundary Analytics
+
+These solutions rely on defining geospatial boundaries (lines or polygons) in the frame and cross-referencing tracked object coordinates.
+
+- **Object Counting:** Evaluates line vector intersections.
+- **Regions:** Evaluates continuous occupancy inside a polygon.
+- **Parking Management:** Binary state (occupied/empty) for small polygons.
+- **Queue Management:** Measures object wait times in regions.
+- **Track Objects in Zone:** Masking filter to isolate tracking.
+
+## Example: Object Counting
+
+Count objects passing through an area or crossing a line.
+*[View Official Documentation](https://docs.ultralytics.com/guides/object-counting/)*
+
+```python
+import cv2
+from ultralytics import solutions
+
+cap = cv2.VideoCapture("videos/traffic.mp4")
+line_points = [(100, 500), (900, 500)]
+
+counter = solutions.ObjectCounter(
+    show=True, region=line_points, model="yolov8n.pt"
+)
+
+while cap.isOpened():
+    success, im0 = cap.read()
+    if not success: break
+    results = counter(im0)
+```
+
+## Example: Parking Management
+
+Organize and direct vehicle flow in parking areas.
+*[View Official Documentation](https://docs.ultralytics.com/guides/parking-management/)*
+
+```python
+import cv2
+from ultralytics import solutions
+
+cap = cv2.VideoCapture("videos/traffic.mp4")
+parking_spots = [
+    [(10, 10), (10, 50), (100, 50), (100, 10)],
+    [(110, 10), (110, 50), (200, 50), (200, 10)]
+]
+
+manager = solutions.ParkingManagement(
+    model="yolov8n.pt", region=parking_spots, show=True
+)
+
+while cap.isOpened():
+    success, im0 = cap.read()
+    if not success: break
+    results = manager(im0)
+```
+
+# Kinematic and Spatial Measurement {.sdaia-dark background-gradient="linear-gradient(135deg, #1C355E, #00C9A7)"}
+
+Speed, Distance, and Proximity
+
+## Kinematic and Spatial Measurement
+
+Calculate physical, real-world metrics based on relative 2D box positions.
+
+- **Distance Calculation**: Compares two moving objects to each other.
+- **VisionEye View**: Compares the distance from tracking objects to a single, static observer point.
+- **Speed Estimation**: Tracks the delta of an individual object's position over time, accounting for perspective.
+
+## Example: Speed Estimation
+
+Estimate object speed using tracking techniques and perspective transformations.
+*[View Official Documentation](https://docs.ultralytics.com/guides/speed-estimation/)*
+
+```python
+import cv2
+from ultralytics import solutions
+
+cap = cv2.VideoCapture("videos/traffic.mp4")
+# ... extract fps
+speedestimator = solutions.SpeedEstimator(
+    show=True, model="yolov8n.pt",
+    fps=30, meter_per_pixel=0.05, 
+)
+
+while cap.isOpened():
+    success, im0 = cap.read()
+    if not success: break
+    results = speedestimator(im0)
+```
+
+# Data Aggregation & Visualization {.sdaia-dark background-gradient="linear-gradient(135deg, #1C355E, #00C9A7)"}
+
+Analytics and Heatmaps
+
+## Data Aggregation & Visualization
+
+Aggregate detection and tracking data over time to produce high-level visual summaries and distributions.
+
+- **Analytics**: Plots statistical temporal trends (line graphs, pie charts) of class frequencies.
+- **Heatmaps**: Plots spatial density and accumulated movement paths directly onto the original image matrix.
+
+## Example: Analytics
+
+Discover patterns and make informed decisions (Line, Bar, Area, Pie).
+*[View Official Documentation](https://docs.ultralytics.com/guides/analytics/)*
+
+```python
+import cv2
+from ultralytics import solutions
+
+cap = cv2.VideoCapture("videos/people.mp4")
+analytics = solutions.Analytics(
+    show=True,
+    analytics_type="line", # "pie", "bar", "area"
+    model="yolov8n.pt", 
+)
+
+frame_count = 0
+while cap.isOpened():
+    success, im0 = cap.read()
+    if not success: break
+    frame_count += 1
+    results = analytics(im0, frame_count) 
+```
+
+# Image Output Manipulation {.sdaia-dark background-gradient="linear-gradient(135deg, #1C355E, #00C9A7)"}
+
+Cropping and Blurring
+
+## Image Output Manipulation
+
+Act purely as downstream image processing steps utilizing box/mask coordinates.
+
+- **Object Cropping**: Slices out regions based on boxes and saves them as isolated image files (useful for dataset extraction).
+- **Object Blurring**: Applies a filter to obscure regions in the original full frame (privacy compliance).
+
+## Example: Object Blurring
+
+Automatically blur bounding boxes or segmentation masks to protect privacy.
+*[View Official Documentation](https://docs.ultralytics.com/guides/object-blurring/)*
+
+```python
+import cv2
+from ultralytics import solutions
+
+cap = cv2.VideoCapture("videos/people.mp4")
+blurrer = solutions.ObjectBlurrer(
+    show=True,
+    model="yolov8n.pt", 
+    blur_ratio=0.5, # percentage of blur intensity
+)
+
+while cap.isOpened():
+    success, im0 = cap.read()
+    if not success: break
+    results = blurrer(im0)
+```
+
+# Specialized Model Heads {.sdaia-dark background-gradient="linear-gradient(135deg, #1C355E, #00C9A7)"}
+
+Segmentation and Pose
+
+## Specialized Model Heads
+
+Utilize specific YOLO architectures (`YOLO-seg`, `YOLO-pose`) to extract granular, non-rectangular spatial data.
+
+- **Instance Seg Tracking**: Combines pixel-perfect masks with continuous track IDs.
+- **Workouts Monitoring**: Tracks human skeletal connections (pose keypoints) to evaluate biomechanical form.
+
+## Example: Workouts Monitoring
+
+Track and evaluate exercise form (like pushups) using YOLO Pose keypoints.
+*[View Official Documentation](https://docs.ultralytics.com/guides/workouts-monitoring/)*
+
+```python
+import cv2
+from ultralytics import solutions
+
+cap = cv2.VideoCapture("videos/people.mp4")
+gym = solutions.AIGym(
+    show=True,
+    kpts=[6, 8, 10], # default keypoints for pushups
+    model="yolov8n-pose.pt", 
+)
+
+while cap.isOpened():
+    success, im0 = cap.read()
+    if not success: break
+    results = gym(im0)
+```
+
+# External System Integrations {.sdaia-dark background-gradient="linear-gradient(135deg, #1C355E, #00C9A7)"}
+
+Alarms, Web Apps, Embeddings
+
+## External Integrations & Embeddings
+
+- **Live Inference with Streamlit**: Host a real-time, interactive web GUI for easy browser access.
+- **Security Alarm System**: Runs headless, communicates over SMTP to push email notifications upon triggers.
+- *(Bonus)* **Similarity Search**: Utilizes neural embeddings (CLIP) and Meta FAISS for natural language image retrieval.
+
+## Example: Security Alarm System
+
+Trigger email alerts upon detecting specific objects.
+*[View Official Documentation](https://docs.ultralytics.com/guides/security-alarm-system/)*
+
+```python
+import cv2
+from ultralytics import solutions
+
+cap = cv2.VideoCapture("videos/people.mp4")
+securityalarm = solutions.SecurityAlarm(
+    show=True, model="yolov8n.pt",
+    records=1, # send email after 1 detection
+)
+
+# Remember to use an App Password here if using Gmail!
+securityalarm.authenticate("sen@email", "PASS", "rec@email") 
+
+while cap.isOpened():
+    success, im0 = cap.read()
+    if not success: break
+    results = securityalarm(im0)
+```
+
+# Conclusion {.sdaia-dark background-gradient="linear-gradient(135deg, #1C355E, #00C9A7)"}
+
+Course Wrap-up
+
+## The Ultralytics Ecosystem
+
+You have learned:
+
+- **Datasets**: Structuring arrays and labels for different tasks.
+- **Tools**: Navigating the CLI, YAML configs, and hyperparameters.
+- **Evaluation**: Interpreting metrics, confidence thresholds, and PR curves.
+- **Deployment**: Exporting PyTorch models for production speed.
+- **Solutions**: Effortlessly integrating advanced logic out-of-the-box.
+
+## What's Next?
+
+**Your Turn!**
+
+Apply these foundational skills to solve real-world problems. Whether building smart security cameras, medical imaging tools, or autonomous vehicles, the core principles remain the same.
+
+## Q&A {.sdaia-dark background-color="#1C355E"}
+
+**Thank You!**
+
+Any questions?

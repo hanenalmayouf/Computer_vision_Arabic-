@@ -10,3 +10,6 @@
 
 # And the README
 !README.md
+
+/.quarto/
+**/*.quarto_ipynb
