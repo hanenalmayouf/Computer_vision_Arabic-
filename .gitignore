@@ -8,6 +8,9 @@
 # And this file
 !.gitignore
 
+!labs/
+!labs/**
+
 # And the README
 !README.md
 
