@@ -99,6 +99,8 @@
   <link href="Ultralytics_Foundations_1_Tasks_Inference_files/libs/revealjs/plugin/quarto-line-highlight/line-highlight.css" rel="stylesheet">
   <link href="Ultralytics_Foundations_1_Tasks_Inference_files/libs/revealjs/plugin/reveal-menu/menu.css" rel="stylesheet">
   <link href="Ultralytics_Foundations_1_Tasks_Inference_files/libs/revealjs/plugin/reveal-menu/quarto-menu.css" rel="stylesheet">
+  <link href="Ultralytics_Foundations_1_Tasks_Inference_files/libs/revealjs/plugin/reveal-chalkboard/font-awesome/css/all.css" rel="stylesheet">
+  <link href="Ultralytics_Foundations_1_Tasks_Inference_files/libs/revealjs/plugin/reveal-chalkboard/style.css" rel="stylesheet">
   <link href="Ultralytics_Foundations_1_Tasks_Inference_files/libs/revealjs/plugin/quarto-support/footer.css" rel="stylesheet">
   <style type="text/css">
     .reveal div.sourceCode {
@@ -239,7 +241,7 @@
 <h2>Image Classification Output Concept</h2>
 <div class="columns">
 <div class="column" style="width:55%;">
-<div id="8512382c" class="cell" data-execution_count="2">
+<div id="00e1fa1d" class="cell" data-execution_count="2">
 <div class="cell-output cell-output-display">
 <div class="quarto-figure quarto-figure-center">
 <figure>
@@ -285,7 +287,7 @@
 <h2 data-id="quarto-animate-title">Object Detection Output &amp; Confidence</h2>
 <div class="columns" data-id="model-output">
 <div class="column" style="width:55%;">
-<div id="d847902e" class="cell" data-execution_count="3">
+<div id="b90fa69e" class="cell" data-execution_count="3">
 <div class="cell-output cell-output-display">
 <div class="quarto-figure quarto-figure-center">
 <figure>
@@ -315,7 +317,7 @@
 <h2 data-id="quarto-animate-title">Mapping to Bounding Boxes</h2>
 <div class="columns" data-id="model-output">
 <div class="column" style="width:55%;">
-<div id="5acf6836" class="cell" data-execution_count="4">
+<div id="d1479a6c" class="cell" data-execution_count="4">
 <div class="cell-output cell-output-display">
 <div class="quarto-figure quarto-figure-center">
 <figure>
@@ -409,7 +411,7 @@ y_{max} &amp;= cy + \frac{h}{2} = 7.5 + 3.5 = 11.0
 <h2>Instance Segmentation Output Concept</h2>
 <div class="columns">
 <div class="column" style="width:55%;">
-<div id="6708eac8" class="cell" data-execution_count="5">
+<div id="d331d6f6" class="cell" data-execution_count="5">
 <div class="cell-output cell-output-display">
 <div class="quarto-figure quarto-figure-center">
 <figure>
@@ -449,7 +451,7 @@ y_{max} &amp;= cy + \frac{h}{2} = 7.5 + 3.5 = 11.0
 <h2>Pose Estimation Output Concept</h2>
 <div class="columns">
 <div class="column" style="width:55%;">
-<div id="1a5fd2b9" class="cell" data-execution_count="6">
+<div id="369e4aa6" class="cell" data-execution_count="6">
 <div class="cell-output cell-output-display">
 <div class="quarto-figure quarto-figure-center">
 <figure>
@@ -490,7 +492,7 @@ y_{max} &amp;= cy + \frac{h}{2} = 7.5 + 3.5 = 11.0
 <h2>OBB (Oriented Bounding Box) Output Concept</h2>
 <div class="columns">
 <div class="column" style="width:55%;">
-<div id="62bb0c1d" class="cell" data-execution_count="7">
+<div id="4a9907fe" class="cell" data-execution_count="7">
 <div class="cell-output cell-output-display">
 <div class="quarto-figure quarto-figure-center">
 <figure>
@@ -621,6 +623,7 @@ y_{max} &amp;= cy + \frac{h}{2} = 7.5 + 3.5 = 11.0
   <script src="Ultralytics_Foundations_1_Tasks_Inference_files/libs/revealjs/plugin/pdf-export/pdfexport.js"></script>
   <script src="Ultralytics_Foundations_1_Tasks_Inference_files/libs/revealjs/plugin/reveal-menu/menu.js"></script>
   <script src="Ultralytics_Foundations_1_Tasks_Inference_files/libs/revealjs/plugin/reveal-menu/quarto-menu.js"></script>
+  <script src="Ultralytics_Foundations_1_Tasks_Inference_files/libs/revealjs/plugin/reveal-chalkboard/plugin.js"></script>
   <script src="Ultralytics_Foundations_1_Tasks_Inference_files/libs/revealjs/plugin/quarto-support/support.js"></script>
   
 
@@ -642,7 +645,8 @@ y_{max} &amp;= cy + \frac{h}{2} = 7.5 + 3.5 = 11.0
 'autoAnimateDuration': 1,
 'autoAnimateUnmatched': true,
 'jumpToSlide': true,
-'menu': {"side":"left","useTextContentForMissingTitles":true,"markers":false,"loadIcons":false,"custom":[{"title":"Tools","icon":"<i class=\"fas fa-gear\"></i>","content":"<ul class=\"slide-menu-items\">\n<li class=\"slide-tool-item active\" data-item=\"0\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.fullscreen(event)\"><kbd>f</kbd> Fullscreen</a></li>\n<li class=\"slide-tool-item\" data-item=\"1\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.speakerMode(event)\"><kbd>s</kbd> Speaker View</a></li>\n<li class=\"slide-tool-item\" data-item=\"2\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.overview(event)\"><kbd>o</kbd> Slide Overview</a></li>\n<li class=\"slide-tool-item\" data-item=\"3\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.togglePdfExport(event)\"><kbd>e</kbd> PDF Export Mode</a></li>\n<li class=\"slide-tool-item\" data-item=\"4\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.toggleScrollView(event)\"><kbd>r</kbd> Scroll View Mode</a></li>\n<li class=\"slide-tool-item\" data-item=\"5\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.keyboardHelp(event)\"><kbd>?</kbd> Keyboard Help</a></li>\n</ul>"},{"title":"Index","icon":"<svg width='1.8rem' viewBox='0 0 24 24'><path d='M5 7h14M5 12h14M5 17h7' stroke='white' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/></svg>","src":"../../index.html"}],"openButton":true},
+'menu': {"side":"left","useTextContentForMissingTitles":true,"markers":false,"loadIcons":false,"custom":[{"title":"Tools","icon":"<i class=\"fas fa-gear\"></i>","content":"<ul class=\"slide-menu-items\">\n<li class=\"slide-tool-item active\" data-item=\"0\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.fullscreen(event)\"><kbd>f</kbd> Fullscreen</a></li>\n<li class=\"slide-tool-item\" data-item=\"1\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.speakerMode(event)\"><kbd>s</kbd> Speaker View</a></li>\n<li class=\"slide-tool-item\" data-item=\"2\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.overview(event)\"><kbd>o</kbd> Slide Overview</a></li>\n<li class=\"slide-tool-item\" data-item=\"3\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.togglePdfExport(event)\"><kbd>e</kbd> PDF Export Mode</a></li>\n<li class=\"slide-tool-item\" data-item=\"4\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.toggleScrollView(event)\"><kbd>r</kbd> Scroll View Mode</a></li>\n<li class=\"slide-tool-item\" data-item=\"5\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.toggleChalkboard(event)\"><kbd>b</kbd> Toggle Chalkboard</a></li>\n<li class=\"slide-tool-item\" data-item=\"6\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.toggleNotesCanvas(event)\"><kbd>c</kbd> Toggle Notes Canvas</a></li>\n<li class=\"slide-tool-item\" data-item=\"7\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.downloadDrawings(event)\"><kbd>d</kbd> Download Drawings</a></li>\n<li class=\"slide-tool-item\" data-item=\"8\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.keyboardHelp(event)\"><kbd>?</kbd> Keyboard Help</a></li>\n</ul>"},{"title":"Index","icon":"<svg width='1.8rem' viewBox='0 0 24 24'><path d='M5 7h14M5 12h14M5 17h7' stroke='white' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/></svg>","src":"../../index.html"}],"openButton":true},
+'chalkboard': {"buttons":true},
 'smaller': false,
  
         // Display controls in the bottom right corner
@@ -813,7 +817,7 @@ y_{max} &amp;= cy + \frac{h}{2} = 7.5 + 3.5 = 11.0
         },
 
         // reveal.js plugins
-        plugins: [QuartoLineHighlight, PdfExport, RevealMenu, QuartoSupport,
+        plugins: [QuartoLineHighlight, PdfExport, RevealMenu, RevealChalkboard, QuartoSupport,
 
           RevealMath,
           RevealNotes,
