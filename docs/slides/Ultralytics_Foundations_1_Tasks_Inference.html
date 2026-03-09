@@ -239,7 +239,7 @@
 <h2>Image Classification Output Concept</h2>
 <div class="columns">
 <div class="column" style="width:55%;">
-<div id="8253999c" class="cell" data-execution_count="2">
+<div id="8512382c" class="cell" data-execution_count="2">
 <div class="cell-output cell-output-display">
 <div class="quarto-figure quarto-figure-center">
 <figure>
@@ -255,11 +255,11 @@
 <li class="fragment"><strong><code>top1conf</code> (0.95)</strong>: Confidence score of the top class.</li>
 <li class="fragment"><strong><code>probs</code></strong>: Array of probabilities for <em>all</em> possible classes.</li>
 </ul>
-</div><div class="callout callout-note no-icon callout-style-simple">
+</div></div>
+<div class="callout callout-note no-icon callout-style-simple">
 <div class="callout-body">
 <div class="callout-content">
 <p><strong>Multi-Label Classification</strong> Since <code>probs</code> evaluates <em>every</em> class, we can predict <strong>multiple labels</strong> for a single image by applying a confidence threshold (e.g., keeping all classes with <code>prob &gt; 0.50</code>) instead of just taking the <code>top1</code> prediction.</p>
-</div>
 </div>
 </div>
 </div>
@@ -285,7 +285,7 @@
 <h2 data-id="quarto-animate-title">Object Detection Output &amp; Confidence</h2>
 <div class="columns" data-id="model-output">
 <div class="column" style="width:55%;">
-<div id="ac411e9d" class="cell" data-execution_count="3">
+<div id="d847902e" class="cell" data-execution_count="3">
 <div class="cell-output cell-output-display">
 <div class="quarto-figure quarto-figure-center">
 <figure>
@@ -302,11 +302,11 @@
 <li class="fragment"><strong><code>conf</code> (0.85)</strong>: The confidence score.</li>
 <li class="fragment"><strong><code>cls</code> (0)</strong>: The class ID.</li>
 </ul>
-</div><div class="callout callout-note no-icon callout-style-simple">
+</div></div>
+<div class="callout callout-note no-icon callout-style-simple">
 <div class="callout-body">
 <div class="callout-content">
 <p><strong>Filtering Predictions</strong> We use a <strong>Confidence Threshold</strong> to automatically drop weak predictions (e.g., ignoring any box with <code>conf &lt; 0.50</code>).</p>
-</div>
 </div>
 </div>
 </div>
@@ -315,7 +315,7 @@
 <h2 data-id="quarto-animate-title">Mapping to Bounding Boxes</h2>
 <div class="columns" data-id="model-output">
 <div class="column" style="width:55%;">
-<div id="9e78a7b2" class="cell" data-execution_count="4">
+<div id="5acf6836" class="cell" data-execution_count="4">
 <div class="cell-output cell-output-display">
 <div class="quarto-figure quarto-figure-center">
 <figure>
@@ -409,7 +409,7 @@ y_{max} &amp;= cy + \frac{h}{2} = 7.5 + 3.5 = 11.0
 <h2>Instance Segmentation Output Concept</h2>
 <div class="columns">
 <div class="column" style="width:55%;">
-<div id="a98473da" class="cell" data-execution_count="5">
+<div id="6708eac8" class="cell" data-execution_count="5">
 <div class="cell-output cell-output-display">
 <div class="quarto-figure quarto-figure-center">
 <figure>
@@ -449,7 +449,7 @@ y_{max} &amp;= cy + \frac{h}{2} = 7.5 + 3.5 = 11.0
 <h2>Pose Estimation Output Concept</h2>
 <div class="columns">
 <div class="column" style="width:55%;">
-<div id="e1a8e8ed" class="cell" data-execution_count="6">
+<div id="1a5fd2b9" class="cell" data-execution_count="6">
 <div class="cell-output cell-output-display">
 <div class="quarto-figure quarto-figure-center">
 <figure>
@@ -490,7 +490,7 @@ y_{max} &amp;= cy + \frac{h}{2} = 7.5 + 3.5 = 11.0
 <h2>OBB (Oriented Bounding Box) Output Concept</h2>
 <div class="columns">
 <div class="column" style="width:55%;">
-<div id="ceae7beb" class="cell" data-execution_count="7">
+<div id="62bb0c1d" class="cell" data-execution_count="7">
 <div class="cell-output cell-output-display">
 <div class="quarto-figure quarto-figure-center">
 <figure>
@@ -600,8 +600,10 @@ y_{max} &amp;= cy + \frac{h}{2} = 7.5 + 3.5 = 11.0
 </section>
 <section id="qa" class="slide level2 sdaia-dark" data-background-color="#1C355E">
 <h2>Q&amp;A</h2>
+<div class="r-fit-text">
 <p><strong>Thank You!</strong></p>
 <p>Any questions?</p>
+</div>
 
 </section></section>
     </div>
