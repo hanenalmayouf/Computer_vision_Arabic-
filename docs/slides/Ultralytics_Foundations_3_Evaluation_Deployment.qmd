@@ -122,6 +122,18 @@ This is the **Class Imbalance Problem**, common in object detection where most o
 
 
 
+## Precision, Recall, and F1
+
+To solve the Class Imbalance Problem, we focus on metrics that ignore True Negatives:
+
+- **Precision:** When it guesses an object, is it correct? (Quality)
+  $$Precision = \frac{TP}{TP + FP}$$
+- **Recall:** Out of all actual objects, how many did it find? (Quantity)
+  $$Recall = \frac{TP}{TP + FN}$$
+- **F1-Score:** The harmonic mean of Precision and Recall.
+  $$F_1 = 2 \times \frac{Precision \times Recall}{Precision + Recall}$$
+
+
 ## Intersection over Union (IoU)
 
 How perfectly does the predicted bounding box overlap the *ground truth* box?
@@ -281,18 +293,6 @@ plt.show()
 ::::
 
 :::::
-
-## Object Detection Metrics
-
-To solve the Class Imbalance Problem, we focus on metrics that ignore True Negatives:
-
-- **Precision:** When it guesses an object, is it correct? (Quality)
-  $$Precision = \frac{TP}{TP + FP}$$
-- **Recall:** Out of all actual objects, how many did it find? (Quantity)
-  $$Recall = \frac{TP}{TP + FN}$$
-- **F1-Score:** The harmonic mean of Precision and Recall.
-  $$F_1 = 2 \times \frac{Precision \times Recall}{Precision + Recall}$$
-
 
 ## The Confidence Threshold Trade-off
 

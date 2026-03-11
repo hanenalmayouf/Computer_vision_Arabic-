@@ -9,7 +9,7 @@
 <link href="Ultralytics_Foundations_3_Evaluation_Deployment_files/libs/quarto-html/quarto-syntax-highlighting-587c61ba64f3a5504c4d52d930310e48.css" rel="stylesheet" id="quarto-text-highlighting-styles"><meta charset="utf-8">
   <meta name="generator" content="quarto-1.8.26">
 
-  <meta name="dcterms.date" content="2026-03-09">
+  <meta name="dcterms.date" content="2026-03-11">
   <title>Ultralytics YOLO Foundations: Part 3</title>
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
@@ -203,7 +203,7 @@
 <div class="quarto-title-authors">
 </div>
 
-  <p class="date">2026-03-09</p>
+  <p class="date">2026-03-11</p>
 </section>
 <section>
 <section id="model-evaluation" class="title-slide slide level1 sdaia-dark center" data-background-gradient="linear-gradient(135deg, #1C355E, #00C9A7)">
@@ -224,7 +224,7 @@
 <h2>The Confusion Matrix</h2>
 <div class="columns">
 <div class="column" style="width:60%;">
-<div id="b035315c" class="cell" data-execution_count="1">
+<div id="adeb4857" class="cell" data-execution_count="1">
 <div class="cell-output cell-output-display">
 <div class="quarto-figure quarto-figure-center">
 <figure>
@@ -266,10 +266,19 @@ Recall   : 0.75</code></pre>
 <p>This is the <strong>Class Imbalance Problem</strong>, common in object detection where most of an image is empty background.</p>
 </div>
 </section>
+<section id="precision-recall-and-f1" class="slide level2">
+<h2>Precision, Recall, and F1</h2>
+<p>To solve the Class Imbalance Problem, we focus on metrics that ignore True Negatives:</p>
+<ul>
+<li><strong>Precision:</strong> When it guesses an object, is it correct? (Quality) <span class="math display">\[Precision = \frac{TP}{TP + FP}\]</span></li>
+<li><strong>Recall:</strong> Out of all actual objects, how many did it find? (Quantity) <span class="math display">\[Recall = \frac{TP}{TP + FN}\]</span></li>
+<li><strong>F1-Score:</strong> The harmonic mean of Precision and Recall. <span class="math display">\[F_1 = 2 \times \frac{Precision \times Recall}{Precision + Recall}\]</span></li>
+</ul>
+</section>
 <section id="intersection-over-union-iou" class="slide level2">
 <h2>Intersection over Union (IoU)</h2>
 <p>How perfectly does the predicted bounding box overlap the <em>ground truth</em> box?</p>
-<div id="fdb121a4" class="cell" data-execution_count="2">
+<div id="432a6c60" class="cell" data-execution_count="2">
 <div class="cell-output cell-output-display">
 <div class="quarto-figure quarto-figure-center">
 <figure>
@@ -280,22 +289,22 @@ Recall   : 0.75</code></pre>
 </div>
 <p><strong>Rule of Thumb</strong>: A prediction is typically considered a “True Positive” (correct) if the IoU is &gt; 0.50.</p>
 </section>
-<section id="the-per-class-breakdown" class="slide level2">
-<h2>1. The Per-Class Breakdown</h2>
+<section id="evaluating-a-single-class-tp-fp-fn" class="slide level2">
+<h2>Evaluating a Single Class (TP, FP, FN)</h2>
 <p>When we evaluate the “Car” class, we ignore everything else.</p>
 <ul>
 <li><strong>True Positive (TP):</strong> The model predicted “Car,” and there is a “Car” at that spot with an <span class="math inline">\(IoU \ge 0.5\)</span>.</li>
-<li><strong>False Positive (FP):</strong> The model predicted “Car,” but there is no “Car” there (it might be a “Truck,” or just empty background).</li>
-<li><strong>False Negative (FN):</strong> There is a “Car” in the image, but the model either missed it entirely or labeled it as something else.</li>
+<li><strong>False Positive (FP):</strong> The model predicted “Car,” but there is no “Car” there, <strong>or the bounding box is inaccurate (IoU <span class="math inline">\(&lt; 0.5\)</span>)</strong>.</li>
+<li><strong>False Negative (FN):</strong> There is a “Car” in the image, but the model missed it, labeled it incorrectly, or predicted it with a poor IoU (<span class="math inline">\(&lt; 0.5\)</span>).</li>
 </ul>
 <p><em>(Note: True Negatives are rarely used in object detection due to the massive empty background).</em></p>
 </section>
-<section id="dealing-with-multiple-detections" class="slide level2">
-<h2>2. Dealing with Multiple Detections</h2>
+<section id="handling-multiple-detections" class="slide level2">
+<h2>Handling Multiple Detections</h2>
 <p>A common question is: “What if the model predicts two boxes for the same car?”</p>
 <div class="columns">
 <div class="column" style="width:50%;">
-<div id="acb62b94" class="cell" data-execution_count="3">
+<div id="8af35bd9" class="cell" data-execution_count="3">
 <div class="cell-output cell-output-display">
 <div class="quarto-figure quarto-figure-center">
 <figure>
@@ -308,17 +317,9 @@ Recall   : 0.75</code></pre>
 <ul>
 <li class="fragment">The box with the <strong>highest IoU</strong> (Pred 1, solid red) is the <strong>True Positive (TP)</strong>.</li>
 <li class="fragment">The second box (Pred 2, dashed orange) is automatically a <strong>False Positive (FP)</strong>, even if it overlaps the car.</li>
+<li class="fragment"><strong>Low IoU (&lt; 0.50)</strong>: The prediction is treated as background (<strong>FP</strong>). If no other box claims the object, it also becomes a <strong>FN</strong>.</li>
 </ul>
 </div></div>
-</section>
-<section id="object-detection-metrics" class="slide level2">
-<h2>Object Detection Metrics</h2>
-<p>To solve the Class Imbalance Problem, we focus on metrics that ignore True Negatives:</p>
-<ul>
-<li><strong>Precision:</strong> When it guesses an object, is it correct? (Quality) <span class="math display">\[Precision = \frac{TP}{TP + FP}\]</span></li>
-<li><strong>Recall:</strong> Out of all actual objects, how many did it find? (Quantity) <span class="math display">\[Recall = \frac{TP}{TP + FN}\]</span></li>
-<li><strong>F1-Score:</strong> The harmonic mean of Precision and Recall. <span class="math display">\[F_1 = 2 \times \frac{Precision \times Recall}{Precision + Recall}\]</span></li>
-</ul>
 </section>
 <section id="the-confidence-threshold-trade-off" class="slide level2">
 <h2>The Confidence Threshold Trade-off</h2>
@@ -340,8 +341,8 @@ Recall   : 0.75</code></pre>
 <h2>Interactive Demo: Threshold Trade-off</h2>
 <iframe class="interactive-demo" src="demo_threshold.html" width="100%" height="90%" style="border:none; overflow:hidden;"></iframe>
 </section>
-<section id="the-ranking-process" class="slide level2">
-<h2>3. The Ranking Process</h2>
+<section id="the-pr-curve-average-precision-ap" class="slide level2">
+<h2>The PR Curve &amp; Average Precision (AP)</h2>
 <div class="columns">
 <div class="column" style="width:50%;">
 <p><br></p>
@@ -358,7 +359,7 @@ Recall   : 0.75</code></pre>
 </div>
 <p><br></p>
 </div><div class="column" style="width:50%;">
-<div id="32bf192a" class="cell" data-execution_count="4">
+<div id="de59b24b" class="cell" data-execution_count="4">
 <div class="cell-output cell-output-display">
 <div class="quarto-figure quarto-figure-center">
 <figure>
@@ -381,8 +382,8 @@ Recall   : 0.75</code></pre>
 </div>
 </div></div>
 </section>
-<section id="from-ap-to-map" class="slide level2">
-<h2>4. From AP to mAP</h2>
+<section id="mean-average-precision-map" class="slide level2">
+<h2>Mean Average Precision (mAP)</h2>
 <p>Once we have the AP for every class (Cars, Pedestrians, Trees, etc.), we simply take the arithmetic mean.</p>
 <p><span class="math display">\[mAP = \frac{AP_{cars} + AP_{pedestrians} + AP_{trees} + ...}{Total\ Number\ of\ Classes}\]</span></p>
 <ul>
