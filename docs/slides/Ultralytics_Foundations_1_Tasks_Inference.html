@@ -9,7 +9,7 @@
 <link href="Ultralytics_Foundations_1_Tasks_Inference_files/libs/quarto-html/quarto-syntax-highlighting-587c61ba64f3a5504c4d52d930310e48.css" rel="stylesheet" id="quarto-text-highlighting-styles"><meta charset="utf-8">
   <meta name="generator" content="quarto-1.8.26">
 
-  <meta name="dcterms.date" content="2026-03-11">
+  <meta name="dcterms.date" content="2026-03-13">
   <title>Ultralytics YOLO Foundations: Part 1</title>
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
@@ -95,7 +95,7 @@
     code span.vs { color: #20794d; } /* VerbatimString */
     code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
   </style>
-  <link rel="stylesheet" href="Ultralytics_Foundations_1_Tasks_Inference_files/libs/revealjs/dist/theme/quarto-11fb225df25554060309039e467d350a.css">
+  <link rel="stylesheet" href="Ultralytics_Foundations_1_Tasks_Inference_files/libs/revealjs/dist/theme/quarto-fec02f753a3bac5d9c24dfa8257e7610.css">
   <link href="Ultralytics_Foundations_1_Tasks_Inference_files/libs/revealjs/plugin/quarto-line-highlight/line-highlight.css" rel="stylesheet">
   <link href="Ultralytics_Foundations_1_Tasks_Inference_files/libs/revealjs/plugin/reveal-menu/menu.css" rel="stylesheet">
   <link href="Ultralytics_Foundations_1_Tasks_Inference_files/libs/revealjs/plugin/reveal-menu/quarto-menu.css" rel="stylesheet">
@@ -196,14 +196,14 @@
   <div class="reveal">
     <div class="slides">
 
-<section id="title-slide" data-background-image="../slides_template/assets/anim.svg" data-background-opacity="0.15" data-background-size="cover" class="quarto-title-block center">
+<section id="title-slide" data-background-image="slides_template/assets/anim.svg" data-background-opacity="0.15" data-background-size="cover" class="quarto-title-block center">
   <h1 class="title">Ultralytics YOLO Foundations: Part 1</h1>
   <p class="subtitle">Tasks &amp; Inference</p>
 
 <div class="quarto-title-authors">
 </div>
 
-  <p class="date">2026-03-11</p>
+  <p class="date">2026-03-13</p>
 </section>
 <section>
 <section id="first-steps-what-can-yolo-do" class="title-slide slide level1 sdaia-dark center" data-background-gradient="linear-gradient(135deg, #1C355E, #00C9A7)">
@@ -241,7 +241,7 @@
 <h2>Image Classification Output Concept</h2>
 <div class="columns">
 <div class="column" style="width:55%;">
-<div id="5ede1636" class="cell" data-execution_count="2">
+<div id="aef39bbf" class="cell" data-execution_count="2">
 <div class="cell-output cell-output-display">
 <div class="quarto-figure quarto-figure-center">
 <figure>
@@ -287,7 +287,7 @@
 <h2 data-id="quarto-animate-title">Object Detection Output &amp; Confidence</h2>
 <div class="columns" data-id="model-output">
 <div class="column" style="width:55%;">
-<div id="3f90b9da" class="cell" data-execution_count="3">
+<div id="2203bef8" class="cell" data-execution_count="3">
 <div class="cell-output cell-output-display">
 <div class="quarto-figure quarto-figure-center">
 <figure>
@@ -317,7 +317,7 @@
 <h2 data-id="quarto-animate-title">Mapping to Bounding Boxes</h2>
 <div class="columns" data-id="model-output">
 <div class="column" style="width:55%;">
-<div id="41846286" class="cell" data-execution_count="4">
+<div id="b3de23fa" class="cell" data-execution_count="4">
 <div class="cell-output cell-output-display">
 <div class="quarto-figure quarto-figure-center">
 <figure>
@@ -411,7 +411,7 @@ y_{max} &amp;= cy + \frac{h}{2} = 7.5 + 3.5 = 11.0
 <h2>Instance Segmentation Output Concept</h2>
 <div class="columns">
 <div class="column" style="width:55%;">
-<div id="d5f4a972" class="cell" data-execution_count="5">
+<div id="5ecc1f4c" class="cell" data-execution_count="5">
 <div class="cell-output cell-output-display">
 <div class="quarto-figure quarto-figure-center">
 <figure>
@@ -451,7 +451,7 @@ y_{max} &amp;= cy + \frac{h}{2} = 7.5 + 3.5 = 11.0
 <h2>Pose Estimation Output Concept</h2>
 <div class="columns">
 <div class="column" style="width:55%;">
-<div id="bbf36e05" class="cell" data-execution_count="6">
+<div id="27c0d13b" class="cell" data-execution_count="6">
 <div class="cell-output cell-output-display">
 <div class="quarto-figure quarto-figure-center">
 <figure>
@@ -492,7 +492,7 @@ y_{max} &amp;= cy + \frac{h}{2} = 7.5 + 3.5 = 11.0
 <h2>OBB (Oriented Bounding Box) Output Concept</h2>
 <div class="columns">
 <div class="column" style="width:55%;">
-<div id="7999cd64" class="cell" data-execution_count="7">
+<div id="0f2b3840" class="cell" data-execution_count="7">
 <div class="cell-output cell-output-display">
 <div class="quarto-figure quarto-figure-center">
 <figure>
@@ -593,11 +593,11 @@ y_{max} &amp;= cy + \frac{h}{2} = 7.5 + 3.5 = 11.0
 </section>
 <section id="next-steps" class="slide level2">
 <h2>Next Steps</h2>
-<p>Next up: <strong>Custom Data &amp; Training</strong></p>
+<p>Next up: <strong>Real World Use Cases &amp; Solutions</strong></p>
 <ul>
-<li>Learn how to prepare your own datasets for YOLO.</li>
-<li>Train custom models to detect specific objects.</li>
-<li>Understand hyperparameter tuning and model tracking.</li>
+<li>Learn how to extract actionable insights from trained models.</li>
+<li>Discover out-of-the-box solutions for real-world problems.</li>
+<li>Integrate object tracking, counting, and more into your applications.</li>
 </ul>
 </section>
 <section id="qa" class="slide level2 sdaia-dark" data-background-color="#1C355E">
@@ -610,7 +610,7 @@ y_{max} &amp;= cy + \frac{h}{2} = 7.5 + 3.5 = 11.0
 </section></section>
     </div>
   <div class="quarto-auto-generated-content" style="display: none;">
-<p><img src="../slides_template/assets/sdaia.svg" class="slide-logo"></p>
+<p><img src="slides_template/assets/sdaia.svg" class="slide-logo"></p>
 <div class="footer footer-default">
 
 </div>

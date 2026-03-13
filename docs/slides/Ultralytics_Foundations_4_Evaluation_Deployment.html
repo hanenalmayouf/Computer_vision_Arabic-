@@ -1,21 +1,21 @@
 <!DOCTYPE html>
 <html lang="en"><head>
-<script src="Image_Foundations_files/libs/clipboard/clipboard.min.js"></script>
-<script src="Image_Foundations_files/libs/quarto-html/tabby.min.js"></script>
-<script src="Image_Foundations_files/libs/quarto-html/popper.min.js"></script>
-<script src="Image_Foundations_files/libs/quarto-html/tippy.umd.min.js"></script>
-<link href="Image_Foundations_files/libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="Image_Foundations_files/libs/quarto-html/light-border.css" rel="stylesheet">
-<link href="Image_Foundations_files/libs/quarto-html/quarto-syntax-highlighting-587c61ba64f3a5504c4d52d930310e48.css" rel="stylesheet" id="quarto-text-highlighting-styles"><meta charset="utf-8">
+<script src="Ultralytics_Foundations_4_Evaluation_Deployment_files/libs/clipboard/clipboard.min.js"></script>
+<script src="Ultralytics_Foundations_4_Evaluation_Deployment_files/libs/quarto-html/tabby.min.js"></script>
+<script src="Ultralytics_Foundations_4_Evaluation_Deployment_files/libs/quarto-html/popper.min.js"></script>
+<script src="Ultralytics_Foundations_4_Evaluation_Deployment_files/libs/quarto-html/tippy.umd.min.js"></script>
+<link href="Ultralytics_Foundations_4_Evaluation_Deployment_files/libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="Ultralytics_Foundations_4_Evaluation_Deployment_files/libs/quarto-html/light-border.css" rel="stylesheet">
+<link href="Ultralytics_Foundations_4_Evaluation_Deployment_files/libs/quarto-html/quarto-syntax-highlighting-587c61ba64f3a5504c4d52d930310e48.css" rel="stylesheet" id="quarto-text-highlighting-styles"><meta charset="utf-8">
   <meta name="generator" content="quarto-1.8.26">
 
   <meta name="dcterms.date" content="2026-03-13">
-  <title>Digital Image Foundations</title>
+  <title>Ultralytics YOLO Foundations: Part 4</title>
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui">
-  <link rel="stylesheet" href="Image_Foundations_files/libs/revealjs/dist/reset.css">
-  <link rel="stylesheet" href="Image_Foundations_files/libs/revealjs/dist/reveal.css">
+  <link rel="stylesheet" href="Ultralytics_Foundations_4_Evaluation_Deployment_files/libs/revealjs/dist/reset.css">
+  <link rel="stylesheet" href="Ultralytics_Foundations_4_Evaluation_Deployment_files/libs/revealjs/dist/reveal.css">
   <style>
     code{white-space: pre-wrap;}
     span.smallcaps{font-variant: small-caps;}
@@ -95,13 +95,13 @@
     code span.vs { color: #20794d; } /* VerbatimString */
     code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
   </style>
-  <link rel="stylesheet" href="Image_Foundations_files/libs/revealjs/dist/theme/quarto-fec02f753a3bac5d9c24dfa8257e7610.css">
-  <link href="Image_Foundations_files/libs/revealjs/plugin/quarto-line-highlight/line-highlight.css" rel="stylesheet">
-  <link href="Image_Foundations_files/libs/revealjs/plugin/reveal-menu/menu.css" rel="stylesheet">
-  <link href="Image_Foundations_files/libs/revealjs/plugin/reveal-menu/quarto-menu.css" rel="stylesheet">
-  <link href="Image_Foundations_files/libs/revealjs/plugin/reveal-chalkboard/font-awesome/css/all.css" rel="stylesheet">
-  <link href="Image_Foundations_files/libs/revealjs/plugin/reveal-chalkboard/style.css" rel="stylesheet">
-  <link href="Image_Foundations_files/libs/revealjs/plugin/quarto-support/footer.css" rel="stylesheet">
+  <link rel="stylesheet" href="Ultralytics_Foundations_4_Evaluation_Deployment_files/libs/revealjs/dist/theme/quarto-fec02f753a3bac5d9c24dfa8257e7610.css">
+  <link href="Ultralytics_Foundations_4_Evaluation_Deployment_files/libs/revealjs/plugin/quarto-line-highlight/line-highlight.css" rel="stylesheet">
+  <link href="Ultralytics_Foundations_4_Evaluation_Deployment_files/libs/revealjs/plugin/reveal-menu/menu.css" rel="stylesheet">
+  <link href="Ultralytics_Foundations_4_Evaluation_Deployment_files/libs/revealjs/plugin/reveal-menu/quarto-menu.css" rel="stylesheet">
+  <link href="Ultralytics_Foundations_4_Evaluation_Deployment_files/libs/revealjs/plugin/reveal-chalkboard/font-awesome/css/all.css" rel="stylesheet">
+  <link href="Ultralytics_Foundations_4_Evaluation_Deployment_files/libs/revealjs/plugin/reveal-chalkboard/style.css" rel="stylesheet">
+  <link href="Ultralytics_Foundations_4_Evaluation_Deployment_files/libs/revealjs/plugin/quarto-support/footer.css" rel="stylesheet">
   <style type="text/css">
     .reveal div.sourceCode {
       margin: 0;
@@ -197,8 +197,8 @@
     <div class="slides">
 
 <section id="title-slide" data-background-image="slides_template/assets/anim.svg" data-background-opacity="0.15" data-background-size="cover" class="quarto-title-block center">
-  <h1 class="title">Digital Image Foundations</h1>
-  <p class="subtitle">How computers perceive images</p>
+  <h1 class="title">Ultralytics YOLO Foundations: Part 4</h1>
+  <p class="subtitle">Evaluation &amp; Deployment</p>
 
 <div class="quarto-title-authors">
 </div>
@@ -206,192 +206,304 @@
   <p class="date">2026-03-13</p>
 </section>
 <section>
-<section id="digital-image-foundations" class="title-slide slide level1 sdaia-dark center" data-background-gradient="linear-gradient(135deg, #1C355E, #00C9A7)">
-<h1>1. Digital Image Foundations</h1>
-<p>How computers store images</p>
+<section id="model-evaluation" class="title-slide slide level1 sdaia-dark center" data-background-gradient="linear-gradient(135deg, #1C355E, #00C9A7)">
+<h1>7. Model Evaluation</h1>
+<p>How good is your model?</p>
 </section>
-<section id="how-we-see-light-and-the-human-eye" class="slide level2">
-<h2>How We See: Light and The Human Eye</h2>
+<section id="binary-classification-basics" class="slide level2">
+<h2>Binary Classification Basics</h2>
+<p>When evaluating models, every prediction falls into one of four categories. Let’s use detecting a “Car” as an example:</p>
+<ul>
+<li><strong>True Positive (TP):</strong> Model correctly predicted “Car” and there is a car there.</li>
+<li><strong>False Positive (FP):</strong> Model predicted “Car”, but there was no car there (False Alarm).</li>
+<li><strong>True Negative (TN):</strong> Model correctly predicted “Not Car” for background.</li>
+<li><strong>False Negative (FN):</strong> There is a car in the image, but the model missed it.</li>
+</ul>
+</section>
+<section id="the-confusion-matrix" class="slide level2">
+<h2>The Confusion Matrix</h2>
 <div class="columns">
-<div class="column" style="width:50%;">
-<ul>
-<li><strong>1. Illumination</strong>: Light from a source (e.g., the sun) hits an object.</li>
-<li><strong>2. Reflection</strong>: The object absorbs some colors and reflects others.</li>
-<li><strong>3. Capture</strong>: Reflected light enters the eye through the <strong>pupil</strong>.</li>
-<li><strong>4. Processing</strong>: The lens focuses light onto the <strong>retina</strong>. <em>Photoreceptors</em> (rods and cones) convert it to electrical signals for the brain.</li>
-</ul>
-</div><div class="column" style="width:50%;">
-<p><img data-src="../slides_template/assets/human_vision_sdaia.png" class="quarto-figure quarto-figure-center"> </p>
-</div></div>
-</section>
-<section id="how-computers-see-the-digital-camera" class="slide level2">
-<h2>How Computers “See”: The Digital Camera</h2>
-<div class="columns">
-<div class="column" style="width:50%;">
-<ul>
-<li><strong>1. Capture</strong>: Just like the eye, the camera captures reflected light.</li>
-<li><strong>2. Lens &amp; Aperture</strong>: Light enters through an opening (aperture) and is focused by glass lenses.</li>
-<li><strong>3. The Sensor</strong>: Instead of a retina, light hits a <strong>digital sensor</strong> (CMOS/CCD).</li>
-<li><strong>4. Digitization</strong>: Millions of sensor <em>pixels</em> convert incoming photons into an electrical charge, which is translated into a digital matrix.</li>
-</ul>
-</div><div class="column" style="width:50%;">
-<p><img data-src="../slides_template/assets/camera_vision_sdaia.png" class="quarto-figure quarto-figure-center"> </p>
-</div></div>
-</section>
-<section id="the-digital-sensor-capturing-light" class="slide level2">
-<h2>The Digital Sensor: Capturing Light</h2>
-<ul>
-<li><strong>Photodiodes</strong>: Each pixel on a sensor forms a tiny bucket collecting photons (light).</li>
-<li><strong>Charge</strong>: More light <span class="math inline">\(\rightarrow\)</span> more photons <span class="math inline">\(\rightarrow\)</span> higher electrical charge.</li>
-<li><strong>Bayer Filter</strong>: Sensors capture only light intensity (grayscale). To get color, a microscopic mosaic filter is placed over them so each pixel records only Red, Green, or Blue.</li>
-<li><strong>Digitization</strong>: An Analog-to-Digital Converter (ADC) turns the electrical charge into a discrete number, typically from <code>0</code> to <code>255</code>.</li>
-</ul>
-</section>
-<section id="grayscale-images-pixels-coordinates" class="slide level2">
-<h2>Grayscale Images: Pixels &amp; Coordinates</h2>
-<ul>
-<li>Images are 2D matrices of numbers. The origin <code>(0,0)</code> is top-left.</li>
-<li>Example: an 8x8 matrix where <code>0</code> is black and <code>1</code> is white.</li>
-</ul>
-<div class="columns">
-<div class="column" style="width:50%;">
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href=""></a><span class="co"># 8x8 matrix (0=black, 1=white)</span></span>
-<span id="cb1-2"><a href=""></a>img <span class="op">=</span> np.array([</span>
-<span id="cb1-3"><a href=""></a>    [<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">0</span>],</span>
-<span id="cb1-4"><a href=""></a>    [<span class="dv">0</span>,<span class="dv">1</span>,<span class="dv">1</span>,<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">1</span>,<span class="dv">1</span>,<span class="dv">0</span>],</span>
-<span id="cb1-5"><a href=""></a>    [<span class="dv">0</span>,<span class="dv">1</span>,<span class="dv">1</span>,<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">1</span>,<span class="dv">1</span>,<span class="dv">0</span>],</span>
-<span id="cb1-6"><a href=""></a>    [<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">0</span>],</span>
-<span id="cb1-7"><a href=""></a>    [<span class="dv">0</span>,<span class="dv">1</span>,<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">1</span>,<span class="dv">0</span>],</span>
-<span id="cb1-8"><a href=""></a>    [<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">1</span>,<span class="dv">1</span>,<span class="dv">1</span>,<span class="dv">1</span>,<span class="dv">0</span>,<span class="dv">0</span>],</span>
-<span id="cb1-9"><a href=""></a>    [<span class="dv">0</span>,<span class="dv">1</span>,<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">1</span>,<span class="dv">0</span>],</span>
-<span id="cb1-10"><a href=""></a>    [<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">0</span>]</span>
-<span id="cb1-11"><a href=""></a>])</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-</div><div class="column" style="width:50%;">
-<div id="3b8b16de" class="cell" data-execution_count="1">
+<div class="column" style="width:60%;">
+<div id="d323e05c" class="cell" data-execution_count="1">
 <div class="cell-output cell-output-display">
 <div class="quarto-figure quarto-figure-center">
 <figure>
-<p><img data-src="Image_Foundations_files/figure-revealjs/cell-2-output-1.png" class="quarto-figure quarto-figure-center" width="315" height="315"></p>
+<p><img data-src="Ultralytics_Foundations_4_Evaluation_Deployment_files/figure-revealjs/cell-2-output-1.png" class="quarto-figure quarto-figure-center" width="396" height="358"></p>
+</figure>
+</div>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Accuracy : 0.80
+Precision: 0.75
+Recall   : 0.75</code></pre>
+</div>
+</div>
+</div><div class="column" style="width:40%;">
+<p><br> <strong>Matrix Layout:</strong></p>
+<ul>
+<li class="fragment"><strong>Rows:</strong> True Labels (Actual)</li>
+<li class="fragment"><strong>Columns:</strong> Predicted Labels</li>
+<li class="fragment"><strong>Diagonal:</strong> Correct predictions (TP &amp; TN)</li>
+<li class="fragment"><strong>Off-Diagonal:</strong> Errors (FP &amp; FN)</li>
+</ul>
+</div></div>
+</section>
+<section id="the-problem-with-accuracy" class="slide level2">
+<h2>The Problem with Accuracy</h2>
+<p>The most intuitive metric is <strong>Accuracy</strong> (Total Correct / Total Predictions). But is it enough?</p>
+<p>Imagine a dataset with <strong>1 “Car”</strong> and <strong>99 “Not Car”</strong> (background) images. If a model simply predicts <strong>“Not Car”</strong> for everything:</p>
+<ul>
+<li><strong>TP = 0</strong>, <strong>FN = 1</strong> <em>(Missed the only car)</em></li>
+<li><strong>TN = 99</strong>, <strong>FP = 0</strong></li>
+</ul>
+<div class="fragment fade-up">
+<p><span class="math display">\[Accuracy = \frac{0 + 99}{100} = 99\%\]</span></p>
+</div>
+<div class="fragment fade-up">
+<p>It achieved <strong>99% Accuracy</strong> despite being completely useless at finding cars!</p>
+</div>
+<div class="fragment fade-up">
+<p>This is the <strong>Class Imbalance Problem</strong>, common in object detection where most of an image is empty background.</p>
+</div>
+</section>
+<section id="precision-recall-and-f1" class="slide level2">
+<h2>Precision, Recall, and F1</h2>
+<p>To solve the Class Imbalance Problem, we focus on metrics that ignore True Negatives:</p>
+<ul>
+<li><strong>Precision:</strong> When it guesses an object, is it correct? (Quality) <span class="math display">\[Precision = \frac{TP}{TP + FP}\]</span></li>
+<li><strong>Recall:</strong> Out of all actual objects, how many did it find? (Quantity) <span class="math display">\[Recall = \frac{TP}{TP + FN}\]</span></li>
+<li><strong>F1-Score:</strong> The harmonic mean of Precision and Recall. <span class="math display">\[F_1 = 2 \times \frac{Precision \times Recall}{Precision + Recall}\]</span></li>
+</ul>
+</section>
+<section id="interactive-demo-threshold-trade-off" class="slide level2">
+<h2>Interactive Demo: Threshold Trade-off</h2>
+<iframe class="interactive-demo" src="demo_threshold.html" width="100%" height="90%" style="border:none; overflow:hidden;"></iframe>
+</section>
+<section id="the-confidence-threshold-trade-off" class="slide level2">
+<h2>The Confidence Threshold Trade-off</h2>
+<p>The <strong>Confidence Threshold</strong> dictates how “sure” the model must be to output a prediction. Adjusting it directly affects your balance of errors:</p>
+<ul>
+<li><strong>High Threshold (e.g., <code>0.80</code>)</strong>: The model is strict.
+<ul>
+<li>Decreases <strong>False Positives (FP)</strong> (fewer false alarms <span class="math inline">\(\rightarrow\)</span> <strong>Higher Precision</strong>)</li>
+<li>Increases <strong>False Negatives (FN)</strong> (misses more objects <span class="math inline">\(\rightarrow\)</span> <strong>Lower Recall</strong>)</li>
+</ul></li>
+<li><strong>Low Threshold (e.g., <code>0.20</code>)</strong>: The model is loose.
+<ul>
+<li>Increases <strong>False Positives (FP)</strong> (more false alarms <span class="math inline">\(\rightarrow\)</span> <strong>Lower Precision</strong>)</li>
+<li>Decreases <strong>False Negatives (FN)</strong> (catches almost everything <span class="math inline">\(\rightarrow\)</span> <strong>Higher Recall</strong>)</li>
+</ul></li>
+</ul>
+</section>
+<section id="the-pr-curve-average-precision-ap" class="slide level2">
+<h2>The PR Curve &amp; Average Precision (AP)</h2>
+<div class="columns">
+<div class="column" style="width:50%;">
+<p><br></p>
+<div class="fragment fade-up">
+<p><strong>Step 1: Gather</strong> We take every “Car” prediction the model made across the whole test set.</p>
+</div>
+<p><br></p>
+<div class="fragment fade-up">
+<p><strong>Step 2: Sort</strong> We sort them from highest confidence (e.g., <span class="math inline">\(0.99\)</span>) to lowest (e.g., <span class="math inline">\(0.10\)</span>).</p>
+</div>
+<p><br></p>
+<div class="fragment fade-up">
+<p><strong>Step 3: Calculate</strong> We calculate Precision and Recall at every single step of that sorted list.</p>
+</div>
+<p><br></p>
+</div><div class="column" style="width:50%;">
+<div id="f8e66a13" class="cell" data-execution_count="2">
+<div class="cell-output cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure>
+<p><img data-src="Ultralytics_Foundations_4_Evaluation_Deployment_files/figure-revealjs/cell-3-output-1.png" class="quarto-figure quarto-figure-center" width="566" height="470"></p>
 </figure>
 </div>
 </div>
 </div>
+<div class="fragment fade-up">
+<div class="callout callout-note callout-style-simple">
+<div class="callout-body">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-content">
+<p><strong>Average Precision (AP)</strong> is simply the area under this <strong>Precision-Recall (PR) curve</strong>!</p>
+</div>
+</div>
+</div>
+</div>
 </div></div>
 </section>
-<section id="color-images-the-rgb-channels" class="slide level2 smaller">
-<h2>Color Images: The RGB Channels</h2>
-<ul>
-<li>Images are 3D matrices (height × width × <strong>3 channels</strong>).</li>
-<li><strong>RGB</strong>: Red, Green, Blue. Values range from <code>0</code> (dark) to <code>255</code> (bright).</li>
-</ul>
-<div id="036ca657" class="cell" data-execution_count="2">
+<section id="intersection-over-union-iou" class="slide level2">
+<h2>Intersection over Union (IoU)</h2>
+<p>How perfectly does the predicted bounding box overlap the <em>ground truth</em> box?</p>
+<div id="a3f87a95" class="cell" data-execution_count="3">
 <div class="cell-output cell-output-display">
 <div class="quarto-figure quarto-figure-center">
 <figure>
-<p><img data-src="Image_Foundations_files/figure-revealjs/cell-3-output-1.png" class="quarto-figure quarto-figure-center" width="479" height="463"></p>
+<p><img data-src="Ultralytics_Foundations_4_Evaluation_Deployment_files/figure-revealjs/cell-4-output-1.png" class="quarto-figure quarto-figure-center" width="771" height="373"></p>
 </figure>
 </div>
 </div>
 </div>
+<p><strong>Rule of Thumb</strong>: A prediction is typically considered a “True Positive” (correct) if the IoU is &gt; 0.50.</p>
 </section>
-<section id="essential-image-libraries" class="slide level2">
-<h2>Essential Image Libraries</h2>
+<section id="the-double-penalty-of-iou" class="slide level2">
+<h2>The “Double Penalty” of IoU</h2>
+<p>A prediction must be <strong>accurate in location</strong> (<span class="math inline">\(IoU \ge 0.5\)</span>) to count as a <strong>True Positive (TP)</strong>.</p>
+<p><strong>What happens if a prediction misses (<span class="math inline">\(IoU &lt; 0.5\)</span>)?</strong></p>
+<div class="callout callout-important callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>Important</strong></p>
+</div>
+<div class="callout-content">
+<p><strong>It hurts your evaluation twice!</strong></p>
 <ul>
-<li><strong>OpenCV</strong>: Very fast C++ library mapped to Python. Uses <strong>BGR</strong> channel order by default. Great for video streams and low-level transforms.</li>
-<li><strong>Pillow (PIL)</strong>: Standard Python image library. Uses <strong>RGB</strong>. Easy to use for simple drawing and resizing.</li>
-<li><strong>NumPy</strong>: The core math library. Images in Python are fundamentally <code>numpy</code> multi-dimensional arrays (tensors).</li>
+<li><strong>False Positive (FP):</strong> The poorly placed prediction is a <strong>“False Alarm”</strong>.</li>
+<li><strong>False Negative (FN):</strong> The real object is considered <strong>“Missed”</strong>.</li>
+</ul>
+</div>
+</div>
+</div>
+<p><strong>The Car Example:</strong> You draw a bad box for a car (IoU &lt; 0.5).</p>
+<ul>
+<li><strong>FP:</strong> You generated a useless box (false alarm penalty).</li>
+<li><strong>FN:</strong> The actual car was never successfully claimed (missed target penalty).</li>
 </ul>
 </section>
-<section id="image-data-types-uint8-vs-floats" class="slide level2">
-<h2>Image Data Types: <code>uint8</code> vs Floats</h2>
-<ul>
-<li>Pixels are usually 8-bit unsigned integers (<strong><code>uint8</code></strong>), meaning values range from <code>0</code> to <code>255</code>.</li>
-<li><code>0</code> is Black. <code>255</code> is White (in grayscale) or full intensity (in RGB).</li>
-<li><strong>Deep Learning</strong>: Models like YOLO often prefer normalized inputs. We convert <code>0-255</code> to <strong>floats</strong> between <code>0.0</code> and <code>1.0</code> by dividing by <code>255.0</code>.</li>
-</ul>
-</section>
-<section id="coordinates-vs.-array-indexing-the-gotcha" class="slide level2">
-<h2>Coordinates vs.&nbsp;Array Indexing <br> (The “Gotcha”)</h2>
+<section id="handling-multiple-detections" class="slide level2">
+<h2>Handling Multiple Detections</h2>
+<p>A common question is: <em>“What if the model predicts multiple boxes for the exact same object?”</em></p>
 <div class="columns">
 <div class="column" style="width:50%;">
-<ul>
-<li>We think in geometry: <code>(x, y)</code> = <code>(width, height)</code>.</li>
-<li><strong>NumPy</strong> thinks in matrices: <code>matrix[row, col]</code> = <code>matrix[y, x]</code>.</li>
-<li>This causes endless confusion when cropping with bounding boxes <code>(x1, y1, x2, y2)</code>.</li>
-</ul>
+<div id="aac7e758" class="cell" data-execution_count="4">
+<div class="cell-output cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure>
+<p><img data-src="Ultralytics_Foundations_4_Evaluation_Deployment_files/figure-revealjs/cell-5-output-1.png" class="quarto-figure quarto-figure-center" width="373" height="338"></p>
+</figure>
+</div>
+</div>
+</div>
 </div><div class="column" style="width:50%;">
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href=""></a><span class="co"># Assuming a bounding box (x1, y1, x2, y2)</span></span>
-<span id="cb2-2"><a href=""></a></span>
-<span id="cb2-3"><a href=""></a><span class="co"># WRONG (Crops wrong area or crashes)</span></span>
-<span id="cb2-4"><a href=""></a>crop <span class="op">=</span> img[x1:x2, y1:y2] </span>
-<span id="cb2-5"><a href=""></a></span>
-<span id="cb2-6"><a href=""></a><span class="co"># CORRECT (y = row, x = col)</span></span>
-<span id="cb2-7"><a href=""></a>crop <span class="op">=</span> img[y1:y2, x1:x2] </span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p><strong>Rule: One Ground Truth = Only One TP</strong></p>
+<ol type="1">
+<li class="fragment"><strong>The Winner:</strong> <strong>Highest IoU</strong> (Pred 1) becomes the <strong>True Positive (TP)</strong>.</li>
+<li class="fragment"><strong>The Duplicate:</strong> Extra boxes (Pred 2) become <strong>False Positives (FP)</strong>.</li>
+</ol>
 </div></div>
 </section>
-<section id="the-smurf-effect-bgr-vs.-rgb" class="slide level2">
-<h2>The “Smurf Effect”: BGR vs.&nbsp;RGB</h2>
-<div class="columns">
-<div class="column" style="width:50%;">
+<section id="mean-average-precision-map" class="slide level2">
+<h2>Mean Average Precision (mAP)</h2>
+<p>Once we have the AP for every class (Cars, Pedestrians, Trees, etc.), we simply take the arithmetic mean.</p>
+<p><span class="math display">\[mAP = \frac{AP_{cars} + AP_{pedestrians} + AP_{trees} + ...}{Total\ Number\ of\ Classes}\]</span></p>
 <ul>
-<li>OpenCV historically uses <strong>B</strong>lue-<strong>G</strong>reen-<strong>R</strong>ed (<strong>BGR</strong>).</li>
-<li>Most other libraries (Matplotlib, Pillow) expect <strong>R</strong>ed-<strong>G</strong>reen-<strong>B</strong>lue (<strong>RGB</strong>).</li>
-<li>If you read an image with <code>cv2.imread()</code> and plot it directly in matplotlib, Red and Blue channels are swapped!</li>
-<li><em>Faces look blue, skies look red.</em></li>
+<li><strong>mAP50:</strong> Accuracy considering only “easy” detections (IoU &gt; 0.50).</li>
+<li><strong>mAP50-95:</strong> The strict evaluation averaged across multiple IoU thresholds (from 0.50 to 0.95).</li>
 </ul>
-</div><div class="column" style="width:50%;">
-<h4 id="basic-io-operations">Basic I/O Operations</h4>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href=""></a><span class="im">import</span> cv2</span>
-<span id="cb3-2"><a href=""></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
-<span id="cb3-3"><a href=""></a></span>
-<span id="cb3-4"><a href=""></a><span class="co"># 1. Read image (OpenCV loads BGR)</span></span>
-<span id="cb3-5"><a href=""></a>img_bgr <span class="op">=</span> cv2.imread(<span class="st">'dog.jpg'</span>)</span>
-<span id="cb3-6"><a href=""></a></span>
-<span id="cb3-7"><a href=""></a><span class="co"># 2. Convert to RGB for accurate display</span></span>
-<span id="cb3-8"><a href=""></a>img_rgb <span class="op">=</span> cv2.cvtColor(img_bgr, cv2.COLOR_BGR2RGB)</span>
-<span id="cb3-9"><a href=""></a></span>
-<span id="cb3-10"><a href=""></a><span class="co"># 3. Display</span></span>
-<span id="cb3-11"><a href=""></a>plt.imshow(img_rgb)</span>
-<span id="cb3-12"><a href=""></a>plt.axis(<span class="st">'off'</span>)</span>
-<span id="cb3-13"><a href=""></a>plt.show()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-</div></div>
 </section>
-<section id="image-resolution-and-resizing" class="slide level2">
-<h2>Image Resolution and Resizing</h2>
-<ul>
-<li><strong>Resolution</strong>: Dimensions of the image <code>(Width × Height)</code>.</li>
-<li>Deep Learning models typically require <strong>fixed input sizes</strong> (e.g., <code>640x640</code>).</li>
-<li><strong>Aspect Ratio</strong>: The ratio of width to height.</li>
-<li><em>Direct Resizing</em>: Squashes or stretches the image, changing the aspect ratio (causes distortion).</li>
-<li><em>Letterboxing</em>: Resizes while maintaining aspect ratio, then pads the remaining area with a solid color.</li>
-</ul>
+<section id="validating-the-model-yolo-clipython" class="slide level2">
+<h2>Validating the Model (YOLO CLI/Python)</h2>
+<p>We use the <code>val</code> mode to evaluate a trained model. YOLO automatically generates graphs (<code>confusion_matrix.png</code>, <code>PR_curve.png</code>) in your <code>runs/detect/val</code> folder.</p>
+<div class="panel-tabset">
+<ul id="tabset-1" class="panel-tabset-tabby"><li><a data-tabby-default="" href="#tabset-1-1">CLI</a></li><li><a href="#tabset-1-2">Python</a></li></ul>
+<div class="tab-content">
+<div id="tabset-1-1">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2"><pre class="sourceCode numberSource bash number-lines code-with-copy"><code class="sourceCode bash"><span id="cb2-1"><a href=""></a><span class="ex">yolo</span> val model=best.pt data=data.yaml</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<div id="tabset-1-2">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href=""></a><span class="im">from</span> ultralytics <span class="im">import</span> YOLO</span>
+<span id="cb3-2"><a href=""></a></span>
+<span id="cb3-3"><a href=""></a>model <span class="op">=</span> YOLO(<span class="st">"best.pt"</span>)</span>
+<span id="cb3-4"><a href=""></a>metrics <span class="op">=</span> model.val(data<span class="op">=</span><span class="st">"data.yaml"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</div>
+</div>
+<p><em>Docs Reference: <a href="https://docs.ultralytics.com/guides/model-evaluation-insights/">Model Evaluation Insights</a></em></p>
+</section></section>
+<section>
+<section id="deployment" class="title-slide slide level1 sdaia-dark center" data-background-gradient="linear-gradient(135deg, #1C355E, #00C9A7)">
+<h1>8. Deployment</h1>
+<p>Taking it to production.</p>
+</section>
+<section id="exporting-models" class="slide level2">
+<h2>Exporting Models</h2>
+<p>A PyTorch <code>.pt</code> file is great for research, but slow in production. Convert to optimized formats using the <code>export</code> mode!</p>
+<div class="panel-tabset">
+<ul id="tabset-2" class="panel-tabset-tabby"><li><a data-tabby-default="" href="#tabset-2-1">CLI</a></li><li><a href="#tabset-2-2">Python</a></li></ul>
+<div class="tab-content">
+<div id="tabset-2-1">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb4"><pre class="sourceCode numberSource bash number-lines code-with-copy"><code class="sourceCode bash"><span id="cb4-1"><a href=""></a><span class="co"># Export to ONNX (Great for CPU)</span></span>
+<span id="cb4-2"><a href=""></a><span class="ex">yolo</span> export model=best.pt format=onnx</span>
+<span id="cb4-3"><a href=""></a></span>
+<span id="cb4-4"><a href=""></a><span class="co"># Export to OpenVINO (Intel) or TensorRT (Nvidia GPUs)</span></span>
+<span id="cb4-5"><a href=""></a><span class="ex">yolo</span> export model=best.pt format=openvino</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<div id="tabset-2-2">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb5"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href=""></a><span class="im">from</span> ultralytics <span class="im">import</span> YOLO</span>
+<span id="cb5-2"><a href=""></a></span>
+<span id="cb5-3"><a href=""></a>model <span class="op">=</span> YOLO(<span class="st">"best.pt"</span>)</span>
+<span id="cb5-4"><a href=""></a>model.export(<span class="bu">format</span><span class="op">=</span><span class="st">"onnx"</span>)</span>
+<span id="cb5-5"><a href=""></a>model.export(<span class="bu">format</span><span class="op">=</span><span class="st">"openvino"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</div>
+</div>
+<p><em>Docs Reference: <a href="https://docs.ultralytics.com/modes/export/">Export</a></em></p>
+</section>
+<section id="inference-with-exported-models" class="slide level2">
+<h2>Inference with Exported Models</h2>
+<p>You don’t need complex deployment code to use your exported models. The Ultralytics API loads them just like a standard PyTorch <code>.pt</code> file!</p>
+<div class="panel-tabset">
+<ul id="tabset-3" class="panel-tabset-tabby"><li><a data-tabby-default="" href="#tabset-3-1">CLI</a></li><li><a href="#tabset-3-2">Python</a></li></ul>
+<div class="tab-content">
+<div id="tabset-3-1">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb6"><pre class="sourceCode numberSource bash number-lines code-with-copy"><code class="sourceCode bash"><span id="cb6-1"><a href=""></a><span class="ex">yolo</span> predict model=best.onnx source=<span class="st">"https://ultralytics.com/images/bus.jpg"</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<div id="tabset-3-2">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb7"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href=""></a><span class="im">from</span> ultralytics <span class="im">import</span> YOLO</span>
+<span id="cb7-2"><a href=""></a></span>
+<span id="cb7-3"><a href=""></a>model <span class="op">=</span> YOLO(<span class="st">"best.onnx"</span>)</span>
+<span id="cb7-4"><a href=""></a>results <span class="op">=</span> model.predict(source<span class="op">=</span><span class="st">"https://ultralytics.com/images/bus.jpg"</span>)</span>
+<span id="cb7-5"><a href=""></a><span class="bu">print</span>(results[<span class="dv">0</span>].boxes) </span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</div>
+</div>
+<p><em>Docs Reference: <a href="https://docs.ultralytics.com/modes/predict/">Predict with Exported Models</a></em></p>
 </section></section>
 <section>
 <section id="conclusion" class="title-slide slide level1 sdaia-dark center" data-background-gradient="linear-gradient(135deg, #1C355E, #00C9A7)">
 <h1>Conclusion</h1>
-<p>Wrapping up Image Foundations</p>
+<p>Course Wrap-up</p>
 </section>
-<section id="summary" class="slide level2">
-<h2>Summary</h2>
+<section id="the-ultralytics-ecosystem" class="slide level2">
+<h2>The Ultralytics Ecosystem</h2>
+<p>You have learned:</p>
 <ul>
-<li><strong>Light &amp; Cameras</strong>: How digital sensors capture light and turn it into data.</li>
-<li><strong>Pixels &amp; Channels</strong>: Grayscale (2D) vs.&nbsp;Color RGB (3D) representations.</li>
-<li><strong>Libraries</strong>: OpenCV, Pillow, and NumPy basics.</li>
-<li><strong>Gotchas</strong>: BGR vs RGB (The Smurf Effect) and Array Indexing vs Coordinates.</li>
+<li><strong>Tasks</strong>: Object Detection, Segmentation, Pose Estimation, and OBB.</li>
+<li><strong>Solutions</strong>: Effortlessly integrating advanced logic out-of-the-box.</li>
+<li><strong>Datasets</strong>: Structuring arrays and labels for different tasks.</li>
+<li><strong>Tools</strong>: Navigating the CLI, YAML configs, and hyperparameters.</li>
+<li><strong>Evaluation</strong>: Interpreting metrics, confidence thresholds, and PR curves.</li>
+<li><strong>Deployment</strong>: Exporting PyTorch models for production speed.</li>
 </ul>
 </section>
-<section id="next-steps" class="slide level2">
-<h2>Next Steps</h2>
-<p>Next up: <strong>YOLO Inference</strong></p>
-<ul>
-<li>Using these images with state-of-the-art Computer Vision models.</li>
-<li>Running inference directly out-of-the-box.</li>
-</ul>
+<section id="whats-next" class="slide level2">
+<h2>What’s Next?</h2>
+<p><strong>Your Turn!</strong></p>
+<p>Apply these foundational skills to solve real-world problems. Whether building smart security cameras, medical imaging tools, or autonomous vehicles, the core principles remain the same.</p>
 </section>
 <section id="qa" class="slide level2 sdaia-dark" data-background-color="#1C355E">
 <h2>Q&amp;A</h2>
+<div class="r-fit-text">
 <p><strong>Thank You!</strong></p>
 <p>Any questions?</p>
+</div>
 
 </section></section>
     </div>
@@ -403,20 +515,20 @@
 </div></div>
 
   <script>window.backupDefine = window.define; window.define = undefined;</script>
-  <script src="Image_Foundations_files/libs/revealjs/dist/reveal.js"></script>
+  <script src="Ultralytics_Foundations_4_Evaluation_Deployment_files/libs/revealjs/dist/reveal.js"></script>
   <!-- reveal.js plugins -->
-  <script src="Image_Foundations_files/libs/revealjs/plugin/quarto-line-highlight/line-highlight.js"></script>
-  <script src="Image_Foundations_files/libs/revealjs/plugin/pdf-export/pdfexport.js"></script>
-  <script src="Image_Foundations_files/libs/revealjs/plugin/reveal-menu/menu.js"></script>
-  <script src="Image_Foundations_files/libs/revealjs/plugin/reveal-menu/quarto-menu.js"></script>
-  <script src="Image_Foundations_files/libs/revealjs/plugin/reveal-chalkboard/plugin.js"></script>
-  <script src="Image_Foundations_files/libs/revealjs/plugin/quarto-support/support.js"></script>
+  <script src="Ultralytics_Foundations_4_Evaluation_Deployment_files/libs/revealjs/plugin/quarto-line-highlight/line-highlight.js"></script>
+  <script src="Ultralytics_Foundations_4_Evaluation_Deployment_files/libs/revealjs/plugin/pdf-export/pdfexport.js"></script>
+  <script src="Ultralytics_Foundations_4_Evaluation_Deployment_files/libs/revealjs/plugin/reveal-menu/menu.js"></script>
+  <script src="Ultralytics_Foundations_4_Evaluation_Deployment_files/libs/revealjs/plugin/reveal-menu/quarto-menu.js"></script>
+  <script src="Ultralytics_Foundations_4_Evaluation_Deployment_files/libs/revealjs/plugin/reveal-chalkboard/plugin.js"></script>
+  <script src="Ultralytics_Foundations_4_Evaluation_Deployment_files/libs/revealjs/plugin/quarto-support/support.js"></script>
   
 
-  <script src="Image_Foundations_files/libs/revealjs/plugin/notes/notes.js"></script>
-  <script src="Image_Foundations_files/libs/revealjs/plugin/search/search.js"></script>
-  <script src="Image_Foundations_files/libs/revealjs/plugin/zoom/zoom.js"></script>
-  <script src="Image_Foundations_files/libs/revealjs/plugin/math/math.js"></script>
+  <script src="Ultralytics_Foundations_4_Evaluation_Deployment_files/libs/revealjs/plugin/notes/notes.js"></script>
+  <script src="Ultralytics_Foundations_4_Evaluation_Deployment_files/libs/revealjs/plugin/search/search.js"></script>
+  <script src="Ultralytics_Foundations_4_Evaluation_Deployment_files/libs/revealjs/plugin/zoom/zoom.js"></script>
+  <script src="Ultralytics_Foundations_4_Evaluation_Deployment_files/libs/revealjs/plugin/math/math.js"></script>
   <script>window.define = window.backupDefine; window.backupDefine = undefined;</script>
 
   <script>

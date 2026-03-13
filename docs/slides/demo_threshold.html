@@ -1,353 +1,204 @@
 <!DOCTYPE html>
 <html>
-
 <head>
-  <meta charset="utf-8">
-  <title>Threshold Interactive Demo</title>
-  <style>
-    * {
-      box-sizing: border-box;
-    }
-
-    html,
-    body {
-      margin: 0;
-      padding: 0;
-      height: 100%;
-      overflow: hidden;
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-      background-color: #f8f9fa;
-      color: #333;
-    }
-
-    .demo-container {
-      display: flex;
-      flex-direction: column;
-      height: 100vh;
-      padding: 8px;
-      gap: 8px;
-    }
-
-    .header-controls {
-      text-align: center;
-      background: white;
-      padding: 8px 15px;
-      border-radius: 10px;
-      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
-      flex-shrink: 0;
-    }
-
-    label {
-      font-size: 1.1em;
-      font-weight: bold;
-    }
-
-    #confValue {
-      color: #00C9A7;
-      display: inline-block;
-      min-width: 2em;
-    }
-
-    input[type=range] {
-      width: 80%;
-      margin-top: 8px;
-      accent-color: #00C9A7;
-      height: 8px;
-      display: block;
-      margin-left: auto;
-      margin-right: auto;
-    }
-
-    .main-grid {
-      display: flex;
-      flex-direction: row;
-      gap: 10px;
-      flex: 1;
-      min-height: 0;
-      align-items: stretch;
-    }
-
-    .image-container {
-      position: relative;
-      background: #e9ecef;
-      border-radius: 10px;
-      overflow: hidden;
-      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-      line-height: 0;
-      flex: 1 1 auto;
-      min-width: 0;
-    }
-
-    .image-container img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      object-position: center;
-      display: block;
-    }
-
-    .right-panel {
-      display: flex;
-      flex-direction: column;
-      gap: 8px;
-      flex: 0 0 220px;
-      justify-content: center;
-    }
-
-    .bbox {
-      position: absolute;
-      border: 2px solid transparent;
-      box-sizing: border-box;
-      transition: all 0.2s ease-in-out;
-      display: flex;
-      align-items: flex-start;
-      justify-content: flex-start;
-    }
-
-    .bbox-label {
-      background: rgba(0, 0, 0, 0.7);
-      color: white;
-      font-size: 0.7em;
-      font-weight: bold;
-      padding: 1px 4px;
-      border-radius: 0 0 4px 0;
-      white-space: nowrap;
-      margin-top: -2px;
-      margin-left: -2px;
-    }
-
-    .bbox.tp {
-      border-color: #00C9A7;
-      background-color: rgba(0, 201, 167, 0.15);
-      z-index: 10;
-    }
-
-    .bbox.tp .bbox-label {
-      background-color: #00C9A7;
-    }
-
-    .bbox.fp {
-      border-color: #FF5252;
-      background-color: rgba(255, 82, 82, 0.15);
-      z-index: 10;
-    }
-
-    .bbox.fp .bbox-label {
-      background-color: #FF5252;
-    }
-
-    .bbox.fn {
-      border-color: #FFAB40;
-      border-style: dashed;
-      background-color: rgba(255, 171, 64, 0.1);
-      z-index: 5;
-      opacity: 0.7;
-    }
-
-    .bbox.fn .bbox-label {
-      background-color: #FFAB40;
-      color: #333;
-    }
-
-    .bbox.tn {
-      display: none;
-    }
-
-    .stats-panel {
-      display: flex;
-      flex-direction: column;
-      gap: 8px;
-      width: 100%;
-    }
-
-    .stat-box {
-      padding: 10px 14px;
-      border-radius: 8px;
-      text-align: center;
-      background: white;
-      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-    }
-
-    .tp-box {
-      border-left: 6px solid #00C9A7;
-    }
-
-    .fp-box {
-      border-left: 6px solid #FF5252;
-    }
-
-    .fn-box {
-      border-left: 6px solid #FFAB40;
-    }
-
-    h3 {
-      margin: 0 0 2px 0;
-      font-size: 0.82em;
-      text-align: center;
-    }
-
-    h1 {
-      margin: 0;
-      font-size: 1.8em;
-    }
-
-    small {
-      display: none;
-    }
-
-    .tradeoff-card {
-      background: white;
-      padding: 8px 12px;
-      border-radius: 10px;
-      text-align: center;
-      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
-    }
-
-    #tradeoffMsg {
-      font-weight: bold;
-      font-size: 0.85em;
-      margin: 0;
-      line-height: 1.4;
-    }
-  </style>
-</head>
-
-<body>
-  <div class="demo-container">
-    <div class="header-controls">
-      <label for="confSlider">Confidence Threshold: <span id="confValue">0.50</span></label><br>
-      <input type="range" id="confSlider" min="0.1" max="0.99" step="0.01" value="0.50">
-    </div>
-
-    <div class="main-grid">
-      <div class="image-container" id="imgContainer">
-        <img src="https://ultralytics.com/images/bus.jpg" alt="Bus Detection Image">
-        <!-- Bboxes injected via JS -->
-      </div>
-
-      <div class="right-panel">
-        <div class="stats-panel">
-          <div class="stat-box tp-box">
-            <h3 style="color: #00C9A7;">True Positives (TP)</h3>
-            <h1 id="tpCount">0</h1>
-          </div>
-          <div class="stat-box fp-box">
-            <h3 style="color: #FF5252;">False Positives (FP)</h3>
-            <h1 id="fpCount">0</h1>
-          </div>
-          <div class="stat-box fn-box">
-            <h3 style="color: #FFAB40;">False Negatives (FN)</h3>
-            <h1 id="fnCount">0</h1>
-          </div>
-        </div>
-
-        <div class="tradeoff-card">
-          <p id="tradeoffMsg"></p>
-        </div>
-      </div>
-    </div>
-
-  </div>
-
-  <script>
-    document.addEventListener("DOMContentLoaded", function () {
-      const slider = document.getElementById('confSlider');
-      const valDisplay = document.getElementById('confValue');
-      const tpCount = document.getElementById('tpCount');
-      const fpCount = document.getElementById('fpCount');
-      const fnCount = document.getElementById('fnCount');
-      const msg = document.getElementById('tradeoffMsg');
-      const imgContainer = document.getElementById('imgContainer');
-
-      // Real YOLOv8 predictions + Demonstration "Unreal" FP Boxes
-      // Recalculated for Center-Square Crop (Top/Bottom 12.5% removed)
-      const preds = [
-        { "id": "obj_0", "class": "bus", "conf": 0.8734, "isObject": true, "box": { "left": 2.82, "top": 11.87, "width": 96.56, "height": 64.88 } },
-        { "id": "obj_1", "class": "person", "conf": 0.8657, "isObject": true, "box": { "left": 5.99, "top": 32.53, "width": 24.3, "height": 62.24 } },
-        { "id": "obj_2", "class": "person", "conf": 0.8528, "isObject": true, "box": { "left": 82.65, "top": 31.74, "width": 17.31, "height": 59.85 } },
-        { "id": "obj_3", "class": "person", "conf": 0.8252, "isObject": true, "box": { "left": 27.35, "top": 33.42, "width": 15.24, "height": 55.77 } },
-        // UNREAL - DEMONSTRATION BOXES (isObject: false)
-        { "id": "fake_1", "class": "person", "conf": 0.28, "isObject": false, "box": { "left": 52.6, "top": 63.97, "width": 4.8, "height": 31.33 } }, // Bollard
-        { "id": "fake_2", "class": "car", "conf": 0.18, "isObject": false, "box": { "left": 72.0, "top": 20.66, "width": 12.0, "height": 20.0 } }   // Graphic
-      ];
-
-      // Setup DOM elements for bounding boxes
-      const boxElements = {};
-      preds.forEach(p => {
-        const el = document.createElement('div');
-        el.className = 'bbox';
-        el.style.left = p.box.left + '%';
-        el.style.top = p.box.top + '%';
-        el.style.width = p.box.width + '%';
-        el.style.height = p.box.height + '%';
-
-        const label = document.createElement('div');
-        label.className = 'bbox-label';
-
-        el.appendChild(label);
-        imgContainer.appendChild(el);
-        boxElements[p.id] = { el, label, data: p };
-      });
-
-      function update() {
-        if (!slider) return;
-        const thresh = parseFloat(slider.value);
-        valDisplay.textContent = thresh.toFixed(2);
-
-        let tp = 0, fp = 0, fn = 0;
-
-        Object.values(boxElements).forEach(item => {
-          const p = item.data;
-          const el = item.el;
-          const label = item.label;
-
-          let state = '';
-          if (p.conf >= thresh) {
-            if (p.isObject) {
-              state = 'tp';
-              label.innerText = p.class + ' ' + p.conf.toFixed(2);
-              tp++;
-            } else {
-              state = 'fp';
-              label.innerText = 'FP: ' + p.class + ' ' + p.conf.toFixed(2);
-              fp++;
-            }
-          } else {
-            if (p.isObject) {
-              state = 'fn';
-              label.innerText = 'Missed: ' + p.class; // FN missed
-              fn++;
-            } else {
-              state = 'tn'; // background ignored
-            }
-          }
-
-          el.className = 'bbox ' + state;
-        });
-
-        tpCount.textContent = tp;
-        fpCount.textContent = fp;
-        fnCount.textContent = fn;
-
-        if (thresh >= 0.8) {
-          msg.innerHTML = "Strict Model (High Threshold): <span style='color: #FFAB40;'>Misses true objects (Higher FN)</span>, but <span style='color: #00C9A7;'>prevents false alarms (Low FP)</span>.";
-        } else if (thresh <= 0.4) {
-          msg.innerHTML = "Loose Model (Low Threshold): <span style='color: #00C9A7;'>Catches almost everything (Low FN)</span>, but <span style='color: #FF5252;'>creates false alarms (Higher FP)</span>.";
-        } else {
-          msg.innerHTML = "Balanced Model: A reasonable trade-off between missing objects and false alarms.";
+    <meta charset="utf-8">
+    <title>Classification Threshold Interactive Demo</title>
+    <style>
+        * { box-sizing: border-box; }
+        html, body {
+            margin: 0; padding: 0; height: 100%; overflow: hidden;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            background-color: #f8f9fa; color: #333;
         }
-      }
-
-      if (slider) {
-        slider.addEventListener('input', update);
-        update();
-      }
-    });
-  </script>
+        .demo-container { display: flex; flex-direction: column; height: 100vh; padding: 8px; gap: 8px; }
+        .header-controls {
+            text-align: center; background: white; padding: 8px 15px; border-radius: 10px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05); flex-shrink: 0;
+        }
+        label { font-size: 1.1em; font-weight: bold; }
+        #confValue { color: #00C9A7; display: inline-block; min-width: 2em; }
+        input[type=range] { width: 80%; margin-top: 8px; accent-color: #00C9A7; height: 8px; display: block; margin-left: auto; margin-right: auto; }
+        .main-grid { display: flex; flex-direction: row; gap: 10px; flex: 1; min-height: 0; align-items: stretch; }
+        
+        .images-panel {
+            display: flex; flex-direction: row; gap: 10px; flex: 1; min-width: 0; justify-content: space-evenly; align-items: center;
+            background: #e9ecef; border-radius: 10px; padding: 10px; box-shadow: inset 0 2px 4px rgba(0,0,0,0.05);
+        }
+        .image-card {
+            display: flex; flex-direction: column; background: white; border-radius: 8px; overflow: hidden;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1); width: 30%; max-width: 250px; text-align: center;
+            border: 4px solid transparent; transition: all 0.2s ease-in-out;
+        }
+        .image-card img { width: 100%; aspect-ratio: 4/3; object-fit: cover; border-bottom: 2px solid #eee; }
+        .image-info { padding: 8px; display: flex; flex-direction: column; gap: 4px; }
+        .gt-label { font-size: 0.8em; color: #666; font-weight: bold; }
+        .score-label { font-size: 1.1em; font-weight: bold; color: #1C355E; }
+        .pred-label { font-size: 0.9em; font-weight: bold; padding: 4px; border-radius: 4px; margin-top: 4px; color: white; }
+        
+        .right-panel { display: flex; flex-direction: column; gap: 8px; flex: 0 0 220px; justify-content: center; }
+        .stats-panel { display: flex; flex-direction: column; gap: 8px; width: 100%; }
+        .stat-box {
+            padding: 10px 14px; border-radius: 8px; text-align: center; background: white;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05); display: flex; flex-direction: column; justify-content: center; align-items: center;
+        }
+        .tp-box { border-left: 6px solid #00C9A7; }
+        .fp-box { border-left: 6px solid #FF5252; }
+        .fn-box { border-left: 6px solid #FFAB40; }
+        .tn-box { border-left: 6px solid #B0BEC5; }
+        h3 { margin: 0 0 2px 0; font-size: 0.82em; text-align: center; }
+        h1 { margin: 0; font-size: 1.8em; }
+        .tradeoff-card { background: white; padding: 8px 12px; border-radius: 10px; text-align: center; box-shadow: 0 2px 4px rgba(0,0,0,0.05); }
+        #tradeoffMsg { font-weight: bold; font-size: 0.85em; margin: 0; line-height: 1.4; }
+        
+        /* State Colors */
+        .state-tp { border-color: #00C9A7; }
+        .state-tp .pred-label { background-color: #00C9A7; }
+        .state-fp { border-color: #FF5252; }
+        .state-fp .pred-label { background-color: #FF5252; }
+        .state-fn { border-color: #FFAB40; }
+        .state-fn .pred-label { background-color: #FFAB40; color: #333; }
+        .state-tn { border-color: #B0BEC5; }
+        .state-tn .pred-label { background-color: #B0BEC5; color: #333; }
+        
+    </style>
+</head>
+<body>
+    <div class="demo-container">
+        <div class="header-controls">
+            <label for="confSlider">Classification Threshold: <span id="confValue">0.50</span></label><br>
+            <input type="range" id="confSlider" min="0.1" max="0.99" step="0.01" value="0.50">
+        </div>
+        <div class="main-grid">
+            <div class="images-panel" id="imagesPanel">
+                <!-- Images injected via JS -->
+            </div>
+            <div class="right-panel">
+                <div class="stats-panel">
+                    <div class="stat-box tp-box"><h3 style="color: #00C9A7;">True Positives (TP)</h3><h1 id="tpCount">0</h1></div>
+                    <div class="stat-box fp-box"><h3 style="color: #FF5252;">False Positives (FP)</h3><h1 id="fpCount">0</h1></div>
+                    <div class="stat-box fn-box"><h3 style="color: #FFAB40;">False Negatives (FN)</h3><h1 id="fnCount">0</h1></div>
+                    <div class="stat-box tn-box"><h3 style="color: #78909C;">True Negatives (TN)</h3><h1 id="tnCount">0</h1></div>
+                </div>
+                <div class="tradeoff-card">
+                    <p id="tradeoffMsg"></p>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const slider = document.getElementById('confSlider');
+            const valDisplay = document.getElementById('confValue');
+            const tpCount = document.getElementById('tpCount');
+            const fpCount = document.getElementById('fpCount');
+            const fnCount = document.getElementById('fnCount');
+            const tnCount = document.getElementById('tnCount');
+            const msg = document.getElementById('tradeoffMsg');
+            const imagesPanel = document.getElementById('imagesPanel');
+            
+            // Define 3 images for binary classification (Car vs Not Car)
+            // Using local assets to ensure images load reliably
+            const images = [
+                { id: 1, src: "assets/sport_car.jpg", title: "Sport Car", isCar: true, score: 0.85 },
+                { id: 2, src: "assets/rainy_car.jpg", title: "Rainy Car", isCar: true, score: 0.40 },
+                { id: 3, src: "assets/van.jpg", title: "Van", isCar: false, score: 0.65 }
+            ];
+            
+            const cardElements = [];
+            
+            // Build UI
+            images.forEach(img => {
+                const card = document.createElement('div');
+                card.className = 'image-card';
+                
+                const imgEl = document.createElement('img');
+                imgEl.src = img.src;
+                imgEl.alt = img.title;
+                imgEl.title = img.title;
+                
+                const info = document.createElement('div');
+                info.className = 'image-info';
+                
+                const gt = document.createElement('div');
+                gt.className = 'gt-label';
+                gt.innerText = "Ground Truth: " + (img.isCar ? "Car" : "Not Car");
+                
+                const score = document.createElement('div');
+                score.className = 'score-label';
+                score.innerText = `Score: ${img.score.toFixed(2)}`;
+                
+                const pred = document.createElement('div');
+                pred.className = 'pred-label';
+                
+                info.appendChild(gt);
+                info.appendChild(score);
+                info.appendChild(pred);
+                card.appendChild(imgEl);
+                card.appendChild(info);
+                
+                imagesPanel.appendChild(card);
+                cardElements.push({ card, pred, data: img });
+            });
+            
+            function update() {
+                const thresh = parseFloat(slider.value);
+                valDisplay.textContent = thresh.toFixed(2);
+                
+                let tp = 0, fp = 0, fn = 0, tn = 0;
+                
+                cardElements.forEach(item => {
+                    const data = item.data;
+                    const predictedCar = data.score >= thresh;
+                    
+                    let state = '';
+                    let predText = '';
+                    
+                    if (predictedCar) {
+                        predText = "Pred: Car";
+                        if (data.isCar) {
+                            state = 'state-tp';
+                            predText += " (TP)";
+                            tp++;
+                        } else {
+                            state = 'state-fp';
+                            predText += " (FP)";
+                            fp++;
+                        }
+                    } else {
+                        predText = "Pred: Not Car";
+                        if (data.isCar) {
+                            state = 'state-fn';
+                            predText += " (FN)";
+                            fn++;
+                        } else {
+                            state = 'state-tn';
+                            predText += " (TN)";
+                            tn++;
+                        }
+                    }
+                    
+                    item.card.className = 'image-card ' + state;
+                    item.pred.innerText = predText;
+                });
+                
+                tpCount.textContent = tp;
+                fpCount.textContent = fp;
+                fnCount.textContent = fn;
+                tnCount.textContent = tn;
+                
+                if (thresh >= 0.8) {
+                    msg.innerHTML = "Strict Model (High Threshold): <span style='color: #FFAB40;'>Misses some cars (Higher FN)</span>, but <span style='color: #00C9A7;'>prevents false alarms (Low FP)</span>.";
+                } else if (thresh <= 0.4) {
+                    msg.innerHTML = "Loose Model (Low Threshold): <span style='color: #00C9A7;'>Catches all cars (Low FN)</span>, but <span style='color: #FF5252;'>creates false alarms (Higher FP)</span>.";
+                } else {
+                    msg.innerHTML = "Balanced Model: A reasonable trade-off between missing cars and false alarms.";
+                }
+            }
+            
+            slider.addEventListener('input', update);
+            update();
+        });
+    </script>
 </body>
-
 </html>

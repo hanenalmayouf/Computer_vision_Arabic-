@@ -1,21 +1,21 @@
 <!DOCTYPE html>
 <html lang="en"><head>
-<script src="Image_Foundations_files/libs/clipboard/clipboard.min.js"></script>
-<script src="Image_Foundations_files/libs/quarto-html/tabby.min.js"></script>
-<script src="Image_Foundations_files/libs/quarto-html/popper.min.js"></script>
-<script src="Image_Foundations_files/libs/quarto-html/tippy.umd.min.js"></script>
-<link href="Image_Foundations_files/libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="Image_Foundations_files/libs/quarto-html/light-border.css" rel="stylesheet">
-<link href="Image_Foundations_files/libs/quarto-html/quarto-syntax-highlighting-587c61ba64f3a5504c4d52d930310e48.css" rel="stylesheet" id="quarto-text-highlighting-styles"><meta charset="utf-8">
+<script src="Ultralytics_Foundations_3_Custom_Data_Training_files/libs/clipboard/clipboard.min.js"></script>
+<script src="Ultralytics_Foundations_3_Custom_Data_Training_files/libs/quarto-html/tabby.min.js"></script>
+<script src="Ultralytics_Foundations_3_Custom_Data_Training_files/libs/quarto-html/popper.min.js"></script>
+<script src="Ultralytics_Foundations_3_Custom_Data_Training_files/libs/quarto-html/tippy.umd.min.js"></script>
+<link href="Ultralytics_Foundations_3_Custom_Data_Training_files/libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="Ultralytics_Foundations_3_Custom_Data_Training_files/libs/quarto-html/light-border.css" rel="stylesheet">
+<link href="Ultralytics_Foundations_3_Custom_Data_Training_files/libs/quarto-html/quarto-syntax-highlighting-587c61ba64f3a5504c4d52d930310e48.css" rel="stylesheet" id="quarto-text-highlighting-styles"><meta charset="utf-8">
   <meta name="generator" content="quarto-1.8.26">
 
   <meta name="dcterms.date" content="2026-03-13">
-  <title>Digital Image Foundations</title>
+  <title>Ultralytics YOLO Foundations: Part 3</title>
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui">
-  <link rel="stylesheet" href="Image_Foundations_files/libs/revealjs/dist/reset.css">
-  <link rel="stylesheet" href="Image_Foundations_files/libs/revealjs/dist/reveal.css">
+  <link rel="stylesheet" href="Ultralytics_Foundations_3_Custom_Data_Training_files/libs/revealjs/dist/reset.css">
+  <link rel="stylesheet" href="Ultralytics_Foundations_3_Custom_Data_Training_files/libs/revealjs/dist/reveal.css">
   <style>
     code{white-space: pre-wrap;}
     span.smallcaps{font-variant: small-caps;}
@@ -95,13 +95,13 @@
     code span.vs { color: #20794d; } /* VerbatimString */
     code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
   </style>
-  <link rel="stylesheet" href="Image_Foundations_files/libs/revealjs/dist/theme/quarto-fec02f753a3bac5d9c24dfa8257e7610.css">
-  <link href="Image_Foundations_files/libs/revealjs/plugin/quarto-line-highlight/line-highlight.css" rel="stylesheet">
-  <link href="Image_Foundations_files/libs/revealjs/plugin/reveal-menu/menu.css" rel="stylesheet">
-  <link href="Image_Foundations_files/libs/revealjs/plugin/reveal-menu/quarto-menu.css" rel="stylesheet">
-  <link href="Image_Foundations_files/libs/revealjs/plugin/reveal-chalkboard/font-awesome/css/all.css" rel="stylesheet">
-  <link href="Image_Foundations_files/libs/revealjs/plugin/reveal-chalkboard/style.css" rel="stylesheet">
-  <link href="Image_Foundations_files/libs/revealjs/plugin/quarto-support/footer.css" rel="stylesheet">
+  <link rel="stylesheet" href="Ultralytics_Foundations_3_Custom_Data_Training_files/libs/revealjs/dist/theme/quarto-fec02f753a3bac5d9c24dfa8257e7610.css">
+  <link href="Ultralytics_Foundations_3_Custom_Data_Training_files/libs/revealjs/plugin/quarto-line-highlight/line-highlight.css" rel="stylesheet">
+  <link href="Ultralytics_Foundations_3_Custom_Data_Training_files/libs/revealjs/plugin/reveal-menu/menu.css" rel="stylesheet">
+  <link href="Ultralytics_Foundations_3_Custom_Data_Training_files/libs/revealjs/plugin/reveal-menu/quarto-menu.css" rel="stylesheet">
+  <link href="Ultralytics_Foundations_3_Custom_Data_Training_files/libs/revealjs/plugin/reveal-chalkboard/font-awesome/css/all.css" rel="stylesheet">
+  <link href="Ultralytics_Foundations_3_Custom_Data_Training_files/libs/revealjs/plugin/reveal-chalkboard/style.css" rel="stylesheet">
+  <link href="Ultralytics_Foundations_3_Custom_Data_Training_files/libs/revealjs/plugin/quarto-support/footer.css" rel="stylesheet">
   <style type="text/css">
     .reveal div.sourceCode {
       margin: 0;
@@ -197,8 +197,8 @@
     <div class="slides">
 
 <section id="title-slide" data-background-image="slides_template/assets/anim.svg" data-background-opacity="0.15" data-background-size="cover" class="quarto-title-block center">
-  <h1 class="title">Digital Image Foundations</h1>
-  <p class="subtitle">How computers perceive images</p>
+  <h1 class="title">Ultralytics YOLO Foundations: Part 3</h1>
+  <p class="subtitle">Custom Data &amp; Training</p>
 
 <div class="quarto-title-authors">
 </div>
@@ -206,192 +206,256 @@
   <p class="date">2026-03-13</p>
 </section>
 <section>
-<section id="digital-image-foundations" class="title-slide slide level1 sdaia-dark center" data-background-gradient="linear-gradient(135deg, #1C355E, #00C9A7)">
-<h1>1. Digital Image Foundations</h1>
-<p>How computers store images</p>
+<section id="training-ml-fundamentals" class="title-slide slide level1 sdaia-dark center" data-background-gradient="linear-gradient(135deg, #1C355E, #00C9A7)">
+<h1>4. Training &amp; ML Fundamentals</h1>
+<p>Teaching the model your custom data.</p>
 </section>
-<section id="how-we-see-light-and-the-human-eye" class="slide level2">
-<h2>How We See: Light and The Human Eye</h2>
-<div class="columns">
-<div class="column" style="width:50%;">
+<section id="key-training-concepts" class="slide level2">
+<h2>Key Training Concepts</h2>
+<p>Before we dive in, let’s lock down the terminology:</p>
 <ul>
-<li><strong>1. Illumination</strong>: Light from a source (e.g., the sun) hits an object.</li>
-<li><strong>2. Reflection</strong>: The object absorbs some colors and reflects others.</li>
-<li><strong>3. Capture</strong>: Reflected light enters the eye through the <strong>pupil</strong>.</li>
-<li><strong>4. Processing</strong>: The lens focuses light onto the <strong>retina</strong>. <em>Photoreceptors</em> (rods and cones) convert it to electrical signals for the brain.</li>
-</ul>
-</div><div class="column" style="width:50%;">
-<p><img data-src="../slides_template/assets/human_vision_sdaia.png" class="quarto-figure quarto-figure-center"> </p>
-</div></div>
-</section>
-<section id="how-computers-see-the-digital-camera" class="slide level2">
-<h2>How Computers “See”: The Digital Camera</h2>
-<div class="columns">
-<div class="column" style="width:50%;">
-<ul>
-<li><strong>1. Capture</strong>: Just like the eye, the camera captures reflected light.</li>
-<li><strong>2. Lens &amp; Aperture</strong>: Light enters through an opening (aperture) and is focused by glass lenses.</li>
-<li><strong>3. The Sensor</strong>: Instead of a retina, light hits a <strong>digital sensor</strong> (CMOS/CCD).</li>
-<li><strong>4. Digitization</strong>: Millions of sensor <em>pixels</em> convert incoming photons into an electrical charge, which is translated into a digital matrix.</li>
-</ul>
-</div><div class="column" style="width:50%;">
-<p><img data-src="../slides_template/assets/camera_vision_sdaia.png" class="quarto-figure quarto-figure-center"> </p>
-</div></div>
-</section>
-<section id="the-digital-sensor-capturing-light" class="slide level2">
-<h2>The Digital Sensor: Capturing Light</h2>
-<ul>
-<li><strong>Photodiodes</strong>: Each pixel on a sensor forms a tiny bucket collecting photons (light).</li>
-<li><strong>Charge</strong>: More light <span class="math inline">\(\rightarrow\)</span> more photons <span class="math inline">\(\rightarrow\)</span> higher electrical charge.</li>
-<li><strong>Bayer Filter</strong>: Sensors capture only light intensity (grayscale). To get color, a microscopic mosaic filter is placed over them so each pixel records only Red, Green, or Blue.</li>
-<li><strong>Digitization</strong>: An Analog-to-Digital Converter (ADC) turns the electrical charge into a discrete number, typically from <code>0</code> to <code>255</code>.</li>
+<li><strong>Model</strong>: The mathematical structure with learned weights (e.g., <code>yolo26n.pt</code>).</li>
+<li><strong>Epoch</strong>: One complete pass through your <em>entire</em> training dataset.</li>
+<li><strong>mAP (Mean Average Precision)</strong>: The ultimate grading score (0-100%). It grades how well the model finds the object AND correctly identifies it!</li>
 </ul>
 </section>
-<section id="grayscale-images-pixels-coordinates" class="slide level2">
-<h2>Grayscale Images: Pixels &amp; Coordinates</h2>
+<section id="train-vs.-validation" class="slide level2">
+<h2>Train vs.&nbsp;Validation</h2>
+<p>To train a robust AI, split your data:</p>
 <ul>
-<li>Images are 2D matrices of numbers. The origin <code>(0,0)</code> is top-left.</li>
-<li>Example: an 8x8 matrix where <code>0</code> is black and <code>1</code> is white.</li>
+<li><strong>Train Set (~80%)</strong>: Data the model actively learns from.</li>
+<li><strong>Validation Set (~20%)</strong>: Unseen data evaluated <em>during</em> training to measure performance (<code>mAP</code>).</li>
 </ul>
-<div class="columns">
-<div class="column" style="width:50%;">
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href=""></a><span class="co"># 8x8 matrix (0=black, 1=white)</span></span>
-<span id="cb1-2"><a href=""></a>img <span class="op">=</span> np.array([</span>
-<span id="cb1-3"><a href=""></a>    [<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">0</span>],</span>
-<span id="cb1-4"><a href=""></a>    [<span class="dv">0</span>,<span class="dv">1</span>,<span class="dv">1</span>,<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">1</span>,<span class="dv">1</span>,<span class="dv">0</span>],</span>
-<span id="cb1-5"><a href=""></a>    [<span class="dv">0</span>,<span class="dv">1</span>,<span class="dv">1</span>,<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">1</span>,<span class="dv">1</span>,<span class="dv">0</span>],</span>
-<span id="cb1-6"><a href=""></a>    [<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">0</span>],</span>
-<span id="cb1-7"><a href=""></a>    [<span class="dv">0</span>,<span class="dv">1</span>,<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">1</span>,<span class="dv">0</span>],</span>
-<span id="cb1-8"><a href=""></a>    [<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">1</span>,<span class="dv">1</span>,<span class="dv">1</span>,<span class="dv">1</span>,<span class="dv">0</span>,<span class="dv">0</span>],</span>
-<span id="cb1-9"><a href=""></a>    [<span class="dv">0</span>,<span class="dv">1</span>,<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">1</span>,<span class="dv">0</span>],</span>
-<span id="cb1-10"><a href=""></a>    [<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">0</span>]</span>
-<span id="cb1-11"><a href=""></a>])</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-</div><div class="column" style="width:50%;">
-<div id="3b8b16de" class="cell" data-execution_count="1">
-<div class="cell-output cell-output-display">
-<div class="quarto-figure quarto-figure-center">
-<figure>
-<p><img data-src="Image_Foundations_files/figure-revealjs/cell-2-output-1.png" class="quarto-figure quarto-figure-center" width="315" height="315"></p>
-</figure>
-</div>
-</div>
-</div>
-</div></div>
+<p><strong>Crucial</strong>: Never train on validation data! This causes a <strong>Data Leak</strong> (model memorizes answers but fails in the real world).</p>
+<p>Split your data into train and validation sets <a href="https://docs.ultralytics.com/reference/data/split/#ultralytics.data.split.autosplit">using Ultralytics Data Split</a> or <a href="https://docs.ultralytics.com/platform/data/datasets/">using thier Platform</a></p>
 </section>
-<section id="color-images-the-rgb-channels" class="slide level2 smaller">
-<h2>Color Images: The RGB Channels</h2>
+<section id="transfer-learning" class="slide level2">
+<h2>Transfer Learning</h2>
 <ul>
-<li>Images are 3D matrices (height × width × <strong>3 channels</strong>).</li>
-<li><strong>RGB</strong>: Red, Green, Blue. Values range from <code>0</code> (dark) to <code>255</code> (bright).</li>
+<li><strong><code>.pt</code> (Pretrained weights):</strong> Starts with general features (edges, shapes) from large datasets. Fast training, needs little data. (<em>Always recommended!</em>)</li>
+<li><strong><code>.yaml</code> (Architecture Definition):</strong> Blank blueprint. Random weights, meaning you train entirely from scratch.</li>
 </ul>
-<div id="036ca657" class="cell" data-execution_count="2">
-<div class="cell-output cell-output-display">
-<div class="quarto-figure quarto-figure-center">
-<figure>
-<p><img data-src="Image_Foundations_files/figure-revealjs/cell-3-output-1.png" class="quarto-figure quarto-figure-center" width="479" height="463"></p>
-</figure>
-</div>
-</div>
-</div>
+<p><em>Use a <code>.pt</code> model for all custom dataset training to leverage Transfer Learning.</em></p>
 </section>
-<section id="essential-image-libraries" class="slide level2">
-<h2>Essential Image Libraries</h2>
+<section id="understanding-the-data-setup" class="slide level2">
+<h2>Understanding the Data Setup</h2>
+<p>Different formats for different tasks:</p>
 <ul>
-<li><strong>OpenCV</strong>: Very fast C++ library mapped to Python. Uses <strong>BGR</strong> channel order by default. Great for video streams and low-level transforms.</li>
-<li><strong>Pillow (PIL)</strong>: Standard Python image library. Uses <strong>RGB</strong>. Easy to use for simple drawing and resizing.</li>
-<li><strong>NumPy</strong>: The core math library. Images in Python are fundamentally <code>numpy</code> multi-dimensional arrays (tensors).</li>
+<li><strong>Classification</strong>: Relies <em>entirely</em> on folder structure (e.g., <code>train/cat/</code>, <code>train/dog/</code>). No label files needed!</li>
+<li><strong>Detection &amp; Segmentation</strong>: Uses standard <strong>YOLO format</strong>, pairing images with <code>.txt</code> label files.</li>
 </ul>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode numberSource text number-lines code-with-copy"><code class="sourceCode"><span id="cb1-1"><a href=""></a>my_dataset/</span>
+<span id="cb1-2"><a href=""></a>├── images/</span>
+<span id="cb1-3"><a href=""></a>│   ├── train/</span>
+<span id="cb1-4"><a href=""></a>│   └── val/</span>
+<span id="cb1-5"><a href=""></a>└── labels/</span>
+<span id="cb1-6"><a href=""></a>    ├── train/</span>
+<span id="cb1-7"><a href=""></a>    └── val/</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </section>
-<section id="image-data-types-uint8-vs-floats" class="slide level2">
-<h2>Image Data Types: <code>uint8</code> vs Floats</h2>
+<section id="inside-the-labels" class="slide level2">
+<h2>Inside the Labels</h2>
 <ul>
-<li>Pixels are usually 8-bit unsigned integers (<strong><code>uint8</code></strong>), meaning values range from <code>0</code> to <code>255</code>.</li>
-<li><code>0</code> is Black. <code>255</code> is White (in grayscale) or full intensity (in RGB).</li>
-<li><strong>Deep Learning</strong>: Models like YOLO often prefer normalized inputs. We convert <code>0-255</code> to <strong>floats</strong> between <code>0.0</code> and <code>1.0</code> by dividing by <code>255.0</code>.</li>
+<li><p><strong>Object Detection</strong> (<code>.txt</code> Bounding Box): <code>&lt;class_index&gt; &lt;x_center&gt; &lt;y_center&gt; &lt;width&gt; &lt;height&gt;</code></p></li>
+<li><p><strong>Instance Segmentation</strong> (<code>.txt</code> Polygon): <code>&lt;class_index&gt; &lt;x1&gt; &lt;y1&gt; &lt;x2&gt; &lt;y2&gt; ... &lt;xn&gt; &lt;yn&gt;</code></p></li>
+<li><p><strong>Pose Estimation</strong> (<code>.txt</code> Keypoints): <code>&lt;class_index&gt; &lt;x_center&gt; &lt;y_center&gt; &lt;width&gt; &lt;height&gt; &lt;px1&gt; &lt;py1&gt; &lt;p1_vis&gt; ...</code></p></li>
 </ul>
+<p><strong>⚠ Note:</strong> Coordinates must <strong>always be normalized</strong> (0.0 to 1.0) to keep annotations independent of image resolution!</p>
 </section>
-<section id="coordinates-vs.-array-indexing-the-gotcha" class="slide level2">
-<h2>Coordinates vs.&nbsp;Array Indexing <br> (The “Gotcha”)</h2>
-<div class="columns">
-<div class="column" style="width:50%;">
-<ul>
-<li>We think in geometry: <code>(x, y)</code> = <code>(width, height)</code>.</li>
-<li><strong>NumPy</strong> thinks in matrices: <code>matrix[row, col]</code> = <code>matrix[y, x]</code>.</li>
-<li>This causes endless confusion when cropping with bounding boxes <code>(x1, y1, x2, y2)</code>.</li>
-</ul>
-</div><div class="column" style="width:50%;">
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href=""></a><span class="co"># Assuming a bounding box (x1, y1, x2, y2)</span></span>
-<span id="cb2-2"><a href=""></a></span>
-<span id="cb2-3"><a href=""></a><span class="co"># WRONG (Crops wrong area or crashes)</span></span>
-<span id="cb2-4"><a href=""></a>crop <span class="op">=</span> img[x1:x2, y1:y2] </span>
+<section id="the-data.yaml-file" class="slide level2">
+<h2>The <code>data.yaml</code> File</h2>
+<p>Linking indices to names.</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2"><pre class="sourceCode numberSource yaml number-lines code-with-copy"><code class="sourceCode yaml"><span id="cb2-1"><a href=""></a><span class="co"># data.yaml</span></span>
+<span id="cb2-2"><a href=""></a><span class="fu">path</span><span class="kw">:</span><span class="at"> ../my_dataset</span></span>
+<span id="cb2-3"><a href=""></a><span class="fu">train</span><span class="kw">:</span><span class="at"> images/train</span></span>
+<span id="cb2-4"><a href=""></a><span class="fu">val</span><span class="kw">:</span><span class="at"> images/val</span></span>
 <span id="cb2-5"><a href=""></a></span>
-<span id="cb2-6"><a href=""></a><span class="co"># CORRECT (y = row, x = col)</span></span>
-<span id="cb2-7"><a href=""></a>crop <span class="op">=</span> img[y1:y2, x1:x2] </span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-</div></div>
+<span id="cb2-6"><a href=""></a><span class="fu">names</span><span class="kw">:</span></span>
+<span id="cb2-7"><a href=""></a><span class="at">  </span><span class="fu">0</span><span class="kw">:</span><span class="at"> my_custom_object</span></span>
+<span id="cb2-8"><a href=""></a><span class="at">  </span><span class="fu">1</span><span class="kw">:</span><span class="at"> another_object</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</section></section>
+<section>
+<section id="custom-data-labeling" class="title-slide slide level1 sdaia-dark center" data-background-gradient="linear-gradient(135deg, #1C355E, #00C9A7)">
+<h1>5. Custom Data Labeling</h1>
+<p>The Ultralytics Platform</p>
 </section>
-<section id="the-smurf-effect-bgr-vs.-rgb" class="slide level2">
-<h2>The “Smurf Effect”: BGR vs.&nbsp;RGB</h2>
+<section id="labeling-your-own-data" class="slide level2 sdaia-dark" data-background-color="#1C355E">
+<h2>Labeling Your Own Data</h2>
+<p>Typing coordinates manually is impossible. Use <strong>Ultralytics HUB</strong>, Roboflow, or CVAT.</p>
+<ol type="1">
+<li>Upload your images.</li>
+<li>Draw bounding boxes or polygons visually.</li>
+<li>Export in <strong>YOLO format</strong> for a ready-to-train dataset structure!</li>
+</ol>
+<p><em>Docs Reference: <a href="https://docs.ultralytics.com/hub/">Ultralytics HUB</a></em></p>
+</section>
+<section id="autolabeling-with-sam" class="slide level2">
+<h2>AutoLabeling with SAM</h2>
+<p>Speed up the labeling process using foundational models:</p>
+<ol type="1">
+<li><strong>Zero-Shot Labeling:</strong> Bypass manual labeling using <strong>SAM</strong> (Segment Anything Model) or <strong>FastSAM</strong>.</li>
+<li>Run the model on your raw dataset to automatically generate masks and bounding boxes.</li>
+<li>These models understand objects generically without needing custom training!</li>
+<li>Simply review and correct the auto-generated labels—drastically faster than drawing every box or polygon manually!</li>
+</ol>
+<p><em>Docs Reference: <a href="https://docs.ultralytics.com/models/sam/">Segment Anything Models (SAM)</a></em></p>
+</section></section>
+<section>
+<section id="kickoff-training" class="title-slide slide level1 sdaia-dark center" data-background-gradient="linear-gradient(135deg, #1C355E, #00C9A7)">
+<h1>6. Kickoff Training</h1>
+<p>Hyperparameters and Configs</p>
+</section>
+<section id="training" class="slide level2">
+<h2>Training</h2>
+<p>We can start training directly from the command line or Python API:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3"><pre class="sourceCode numberSource bash number-lines code-with-copy"><code class="sourceCode bash"><span id="cb3-1"><a href=""></a><span class="ex">yolo</span> train model=yolo26n.pt data=data.yaml epochs=100 imgsz=640 batch=-1</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb4"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href=""></a><span class="co"># Python Equivalent</span></span>
+<span id="cb4-2"><a href=""></a><span class="im">from</span> ultralytics <span class="im">import</span> YOLO</span>
+<span id="cb4-3"><a href=""></a></span>
+<span id="cb4-4"><a href=""></a>model <span class="op">=</span> YOLO(<span class="st">"yolo26n.pt"</span>)</span>
+<span id="cb4-5"><a href=""></a>results <span class="op">=</span> model.train(data<span class="op">=</span><span class="st">"data.yaml"</span>, epochs<span class="op">=</span><span class="dv">100</span>, imgsz<span class="op">=</span><span class="dv">640</span>, batch<span class="op">=-</span><span class="dv">1</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</section>
+<section id="resuming-training" class="slide level2">
+<h2>Resuming Training</h2>
+<p>If your training is interrupted (e.g., power outage or Colab timeout), you can easily resume it from the last saved weights without losing progress!</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb5"><pre class="sourceCode numberSource bash number-lines code-with-copy"><code class="sourceCode bash"><span id="cb5-1"><a href=""></a><span class="co"># Resume training from the last saved checkpoint</span></span>
+<span id="cb5-2"><a href=""></a><span class="ex">yolo</span> train resume model=path/to/runs/train/exp/weights/last.pt</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb6"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href=""></a><span class="co"># Python Equivalent</span></span>
+<span id="cb6-2"><a href=""></a><span class="im">from</span> ultralytics <span class="im">import</span> YOLO</span>
+<span id="cb6-3"><a href=""></a></span>
+<span id="cb6-4"><a href=""></a><span class="co"># Load the last checkpoint</span></span>
+<span id="cb6-5"><a href=""></a>model <span class="op">=</span> YOLO(<span class="st">"path/to/runs/train/exp/weights/last.pt"</span>)</span>
+<span id="cb6-6"><a href=""></a></span>
+<span id="cb6-7"><a href=""></a><span class="co"># Resume training</span></span>
+<span id="cb6-8"><a href=""></a>results <span class="op">=</span> model.train(resume<span class="op">=</span><span class="va">True</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</section>
+<section id="deep-dive-into-hyperparameters" class="slide level2">
+<h2>Deep Dive into Hyperparameters</h2>
+<ul>
+<li><code>epochs</code> (Default: 100): Pass through the ENTIRE dataset. More = learns more, but risks <strong>overfitting</strong> (memorizing data).</li>
+<li><code>patience</code> (Default: 50): If metrics don’t improve for this many epochs, training stops early to save time!</li>
+<li><code>batch</code> (Default: 16): Images processed at once.
+<ul>
+<li>Higher = faster, stable, takes more GPU memory.</li>
+<li>Smaller = adds noise, longer training.</li>
+<li><em>Pro-tip</em>: Use <code>batch: -1</code> for <strong>AutoBatch</strong> to maximize your GPU memory without crashing!</li>
+</ul></li>
+</ul>
+</section>
+<section id="hyperparameters-optimizer" class="slide level2">
+<h2>Hyperparameters: Optimizer</h2>
+<ul>
+<li><code>optimizer</code> (Default: ‘auto’): Algorithm guiding learning (<code>SGD</code>, <code>AdamW</code>, etc.). <code>auto</code> works 99% of the time.</li>
+<li><code>lr0</code> (Default: 0.01): Initial Learning Rate (step size).
+<ul>
+<li>Too high: Loss explodes, model diverges.</li>
+<li>Too small: Converges slowly, might get stuck.</li>
+</ul></li>
+</ul>
+</section>
+<section id="hyperparameters-image-size-and-hardware" class="slide level2">
+<h2>Hyperparameters: Image Size and Hardware</h2>
+<ul>
+<li><code>imgsz</code> (Default: 640): Target image size. Larger sizes (e.g., 1024) capture more detail (great for tiny objects!) but use more RAM and are slower.
+<ul>
+<li>💡 <strong>Tip for Tiny Objects</strong>: Need to detect tiny objects in huge 4K images? Check out <strong><a href="https://docs.ultralytics.com/guides/sahi-tiled-inference/">SAHI (Slicing Aided Hyper Inference)</a></strong>! It slices large images into overlapping tiles, runs YOLO on each, and merges the results automatically.</li>
+</ul></li>
+<li><code>device</code> (Default: ’’): Specify GPUs (e.g., <code>device=0,1</code>) to trigger multi-GPU training!</li>
+</ul>
+</section>
+<section id="using-config-files-best-practice" class="slide level2">
+<h2>Using Config Files (Best Practice)</h2>
+<p>For reproducibility, put arguments into a <code>experiment.yaml</code> file:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb7"><pre class="sourceCode numberSource yaml number-lines code-with-copy"><code class="sourceCode yaml"><span id="cb7-1"><a href=""></a><span class="co"># experiment.yaml</span></span>
+<span id="cb7-2"><a href=""></a><span class="fu">task</span><span class="kw">:</span><span class="at"> detect</span></span>
+<span id="cb7-3"><a href=""></a><span class="fu">mode</span><span class="kw">:</span><span class="at"> train</span></span>
+<span id="cb7-4"><a href=""></a><span class="fu">model</span><span class="kw">:</span><span class="at"> yolo26s.pt</span></span>
+<span id="cb7-5"><a href=""></a><span class="fu">data</span><span class="kw">:</span><span class="at"> data.yaml    </span></span>
+<span id="cb7-6"><a href=""></a><span class="fu">epochs</span><span class="kw">:</span><span class="at"> </span><span class="dv">100</span></span>
+<span id="cb7-7"><a href=""></a><span class="fu">batch</span><span class="kw">:</span><span class="at"> </span><span class="dv">16</span></span>
+<span id="cb7-8"><a href=""></a><span class="fu">imgsz</span><span class="kw">:</span><span class="at"> </span><span class="dv">640</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>Run with:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb8"><pre class="sourceCode numberSource bash number-lines code-with-copy"><code class="sourceCode bash"><span id="cb8-1"><a href=""></a><span class="ex">yolo</span> cfg=experiment.yaml</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</section>
+<section id="using-config-files" class="slide level2">
+<h2>Using Config Files</h2>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb9"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href=""></a><span class="co"># Python Equivalent</span></span>
+<span id="cb9-2"><a href=""></a><span class="im">from</span> ultralytics <span class="im">import</span> YOLO</span>
+<span id="cb9-3"><a href=""></a></span>
+<span id="cb9-4"><a href=""></a>model <span class="op">=</span> YOLO(<span class="st">"yolo26s.pt"</span>)</span>
+<span id="cb9-5"><a href=""></a>model.train(cfg<span class="op">=</span><span class="st">"experiment.yaml"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</section>
+<section id="experiment-tracking" class="slide level2">
+<h2>Experiment Tracking</h2>
+<p>Ultralytics seamlessly integrates with popular MLOps tools to log <strong>metrics</strong> (mAP, loss) and <strong>matrices</strong> (confusion matrix) during training.</p>
 <div class="columns">
-<div class="column" style="width:50%;">
+<div class="column">
+<p><strong>Supported Integrations:</strong></p>
 <ul>
-<li>OpenCV historically uses <strong>B</strong>lue-<strong>G</strong>reen-<strong>R</strong>ed (<strong>BGR</strong>).</li>
-<li>Most other libraries (Matplotlib, Pillow) expect <strong>R</strong>ed-<strong>G</strong>reen-<strong>B</strong>lue (<strong>RGB</strong>).</li>
-<li>If you read an image with <code>cv2.imread()</code> and plot it directly in matplotlib, Red and Blue channels are swapped!</li>
-<li><em>Faces look blue, skies look red.</em></li>
+<li><strong>TensorBoard</strong> (Built-in)</li>
+<li><strong>Weights &amp; Biases (W&amp;B)</strong></li>
+<li><strong>Comet</strong></li>
+<li><strong>ClearML</strong></li>
+<li><strong>MLflow</strong></li>
 </ul>
-</div><div class="column" style="width:50%;">
-<h4 id="basic-io-operations">Basic I/O Operations</h4>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href=""></a><span class="im">import</span> cv2</span>
-<span id="cb3-2"><a href=""></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
-<span id="cb3-3"><a href=""></a></span>
-<span id="cb3-4"><a href=""></a><span class="co"># 1. Read image (OpenCV loads BGR)</span></span>
-<span id="cb3-5"><a href=""></a>img_bgr <span class="op">=</span> cv2.imread(<span class="st">'dog.jpg'</span>)</span>
-<span id="cb3-6"><a href=""></a></span>
-<span id="cb3-7"><a href=""></a><span class="co"># 2. Convert to RGB for accurate display</span></span>
-<span id="cb3-8"><a href=""></a>img_rgb <span class="op">=</span> cv2.cvtColor(img_bgr, cv2.COLOR_BGR2RGB)</span>
-<span id="cb3-9"><a href=""></a></span>
-<span id="cb3-10"><a href=""></a><span class="co"># 3. Display</span></span>
-<span id="cb3-11"><a href=""></a>plt.imshow(img_rgb)</span>
-<span id="cb3-12"><a href=""></a>plt.axis(<span class="st">'off'</span>)</span>
-<span id="cb3-13"><a href=""></a>plt.show()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div><div class="column">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb10"><pre class="sourceCode numberSource bash number-lines code-with-copy"><code class="sourceCode bash"><span id="cb10-1"><a href=""></a><span class="co"># Enable TensorBoard logging</span></span>
+<span id="cb10-2"><a href=""></a><span class="ex">yolo</span> settings tensorboard=True</span>
+<span id="cb10-3"><a href=""></a><span class="co"># In terminal</span></span>
+<span id="cb10-4"><a href=""></a><span class="ex">tensorboard</span> <span class="at">--logdir</span> runs/train</span>
+<span id="cb10-5"><a href=""></a><span class="co"># or in colab</span></span>
+<span id="cb10-6"><a href=""></a><span class="ex">%load_ext</span> tensorboard</span>
+<span id="cb10-7"><a href=""></a><span class="ex">%tensorboard</span> <span class="at">--logdir</span> path/to/runs</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div></div>
+<p><em>Docs Reference: <a href="https://docs.ultralytics.com/integrations/">Integrations</a></em></p>
 </section>
-<section id="image-resolution-and-resizing" class="slide level2">
-<h2>Image Resolution and Resizing</h2>
-<ul>
-<li><strong>Resolution</strong>: Dimensions of the image <code>(Width × Height)</code>.</li>
-<li>Deep Learning models typically require <strong>fixed input sizes</strong> (e.g., <code>640x640</code>).</li>
-<li><strong>Aspect Ratio</strong>: The ratio of width to height.</li>
-<li><em>Direct Resizing</em>: Squashes or stretches the image, changing the aspect ratio (causes distortion).</li>
-<li><em>Letterboxing</em>: Resizes while maintaining aspect ratio, then pads the remaining area with a solid color.</li>
-</ul>
+<section id="data-augmentation-python" class="slide level2 smaller">
+<h2>Data Augmentation (Python)</h2>
+<p>YOLO natively supports <strong>Albumentations</strong> to improve model robustness, applying default augmentations automatically if installed.</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb11"><pre class="sourceCode numberSource bash number-lines code-with-copy"><code class="sourceCode bash"><span id="cb11-1"><a href=""></a><span class="ex">pip</span> install albumentations ultralytics</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb12"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href=""></a><span class="im">import</span> albumentations <span class="im">as</span> A</span>
+<span id="cb12-2"><a href=""></a><span class="im">from</span> ultralytics <span class="im">import</span> YOLO</span>
+<span id="cb12-3"><a href=""></a></span>
+<span id="cb12-4"><a href=""></a>model <span class="op">=</span> YOLO(<span class="st">"yolo26n.pt"</span>)</span>
+<span id="cb12-5"><a href=""></a></span>
+<span id="cb12-6"><a href=""></a><span class="co"># Define custom Albumentations transforms</span></span>
+<span id="cb12-7"><a href=""></a>custom_transforms <span class="op">=</span> [</span>
+<span id="cb12-8"><a href=""></a>    A.Blur(blur_limit<span class="op">=</span><span class="dv">7</span>, p<span class="op">=</span><span class="fl">0.5</span>),</span>
+<span id="cb12-9"><a href=""></a>    A.CLAHE(clip_limit<span class="op">=</span><span class="fl">4.0</span>, p<span class="op">=</span><span class="fl">0.5</span>),</span>
+<span id="cb12-10"><a href=""></a>    A.RandomBrightnessContrast(brightness_limit<span class="op">=</span><span class="fl">0.2</span>, contrast_limit<span class="op">=</span><span class="fl">0.2</span>, p<span class="op">=</span><span class="fl">0.5</span>),</span>
+<span id="cb12-11"><a href=""></a>]</span>
+<span id="cb12-12"><a href=""></a></span>
+<span id="cb12-13"><a href=""></a><span class="co"># Train the model with custom transforms</span></span>
+<span id="cb12-14"><a href=""></a>model.train(data<span class="op">=</span><span class="st">"data.yaml"</span>, epochs<span class="op">=</span><span class="dv">100</span>, augmentations<span class="op">=</span>custom_transforms)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p><em>Docs Reference: <a href="https://docs.ultralytics.com/integrations/albumentations/">Albumentations Integration</a></em></p>
 </section></section>
 <section>
 <section id="conclusion" class="title-slide slide level1 sdaia-dark center" data-background-gradient="linear-gradient(135deg, #1C355E, #00C9A7)">
 <h1>Conclusion</h1>
-<p>Wrapping up Image Foundations</p>
+<p>Wrapping Up Custom Training</p>
 </section>
 <section id="summary" class="slide level2">
 <h2>Summary</h2>
 <ul>
-<li><strong>Light &amp; Cameras</strong>: How digital sensors capture light and turn it into data.</li>
-<li><strong>Pixels &amp; Channels</strong>: Grayscale (2D) vs.&nbsp;Color RGB (3D) representations.</li>
-<li><strong>Libraries</strong>: OpenCV, Pillow, and NumPy basics.</li>
-<li><strong>Gotchas</strong>: BGR vs RGB (The Smurf Effect) and Array Indexing vs Coordinates.</li>
+<li><strong>Data Setup</strong>: Formatting datasets correctly for YOLO tasks and avoiding data leaks.</li>
+<li><strong>Labeling tools</strong>: Using Ultralytics HUB and auto-labeling with SAM.</li>
+<li><strong>Training</strong>: Initiating and resuming training runs efficiently.</li>
+<li><strong>Hyperparameters</strong>: Understanding epochs, batch sizes, optimizers, and tracking experiments.</li>
 </ul>
 </section>
 <section id="next-steps" class="slide level2">
 <h2>Next Steps</h2>
-<p>Next up: <strong>YOLO Inference</strong></p>
+<p>Next up: <strong>Evaluation &amp; Deployment</strong></p>
 <ul>
-<li>Using these images with state-of-the-art Computer Vision models.</li>
-<li>Running inference directly out-of-the-box.</li>
+<li>How to measure your model’s real-world accuracy (mAP, Precision, Recall).</li>
+<li>Deploying your trained model to run blazingly fast in production.</li>
 </ul>
 </section>
 <section id="qa" class="slide level2 sdaia-dark" data-background-color="#1C355E">
 <h2>Q&amp;A</h2>
+<div class="r-fit-text">
 <p><strong>Thank You!</strong></p>
 <p>Any questions?</p>
+</div>
 
 </section></section>
     </div>
@@ -403,20 +467,20 @@
 </div></div>
 
   <script>window.backupDefine = window.define; window.define = undefined;</script>
-  <script src="Image_Foundations_files/libs/revealjs/dist/reveal.js"></script>
+  <script src="Ultralytics_Foundations_3_Custom_Data_Training_files/libs/revealjs/dist/reveal.js"></script>
   <!-- reveal.js plugins -->
-  <script src="Image_Foundations_files/libs/revealjs/plugin/quarto-line-highlight/line-highlight.js"></script>
-  <script src="Image_Foundations_files/libs/revealjs/plugin/pdf-export/pdfexport.js"></script>
-  <script src="Image_Foundations_files/libs/revealjs/plugin/reveal-menu/menu.js"></script>
-  <script src="Image_Foundations_files/libs/revealjs/plugin/reveal-menu/quarto-menu.js"></script>
-  <script src="Image_Foundations_files/libs/revealjs/plugin/reveal-chalkboard/plugin.js"></script>
-  <script src="Image_Foundations_files/libs/revealjs/plugin/quarto-support/support.js"></script>
+  <script src="Ultralytics_Foundations_3_Custom_Data_Training_files/libs/revealjs/plugin/quarto-line-highlight/line-highlight.js"></script>
+  <script src="Ultralytics_Foundations_3_Custom_Data_Training_files/libs/revealjs/plugin/pdf-export/pdfexport.js"></script>
+  <script src="Ultralytics_Foundations_3_Custom_Data_Training_files/libs/revealjs/plugin/reveal-menu/menu.js"></script>
+  <script src="Ultralytics_Foundations_3_Custom_Data_Training_files/libs/revealjs/plugin/reveal-menu/quarto-menu.js"></script>
+  <script src="Ultralytics_Foundations_3_Custom_Data_Training_files/libs/revealjs/plugin/reveal-chalkboard/plugin.js"></script>
+  <script src="Ultralytics_Foundations_3_Custom_Data_Training_files/libs/revealjs/plugin/quarto-support/support.js"></script>
   
 
-  <script src="Image_Foundations_files/libs/revealjs/plugin/notes/notes.js"></script>
-  <script src="Image_Foundations_files/libs/revealjs/plugin/search/search.js"></script>
-  <script src="Image_Foundations_files/libs/revealjs/plugin/zoom/zoom.js"></script>
-  <script src="Image_Foundations_files/libs/revealjs/plugin/math/math.js"></script>
+  <script src="Ultralytics_Foundations_3_Custom_Data_Training_files/libs/revealjs/plugin/notes/notes.js"></script>
+  <script src="Ultralytics_Foundations_3_Custom_Data_Training_files/libs/revealjs/plugin/search/search.js"></script>
+  <script src="Ultralytics_Foundations_3_Custom_Data_Training_files/libs/revealjs/plugin/zoom/zoom.js"></script>
+  <script src="Ultralytics_Foundations_3_Custom_Data_Training_files/libs/revealjs/plugin/math/math.js"></script>
   <script>window.define = window.backupDefine; window.backupDefine = undefined;</script>
 
   <script>

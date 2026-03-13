@@ -1,21 +1,21 @@
 <!DOCTYPE html>
 <html lang="en"><head>
-<script src="Image_Foundations_files/libs/clipboard/clipboard.min.js"></script>
-<script src="Image_Foundations_files/libs/quarto-html/tabby.min.js"></script>
-<script src="Image_Foundations_files/libs/quarto-html/popper.min.js"></script>
-<script src="Image_Foundations_files/libs/quarto-html/tippy.umd.min.js"></script>
-<link href="Image_Foundations_files/libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="Image_Foundations_files/libs/quarto-html/light-border.css" rel="stylesheet">
-<link href="Image_Foundations_files/libs/quarto-html/quarto-syntax-highlighting-587c61ba64f3a5504c4d52d930310e48.css" rel="stylesheet" id="quarto-text-highlighting-styles"><meta charset="utf-8">
+<script src="Ultralytics_Foundations_2_Real_World_Use_Cases_files/libs/clipboard/clipboard.min.js"></script>
+<script src="Ultralytics_Foundations_2_Real_World_Use_Cases_files/libs/quarto-html/tabby.min.js"></script>
+<script src="Ultralytics_Foundations_2_Real_World_Use_Cases_files/libs/quarto-html/popper.min.js"></script>
+<script src="Ultralytics_Foundations_2_Real_World_Use_Cases_files/libs/quarto-html/tippy.umd.min.js"></script>
+<link href="Ultralytics_Foundations_2_Real_World_Use_Cases_files/libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="Ultralytics_Foundations_2_Real_World_Use_Cases_files/libs/quarto-html/light-border.css" rel="stylesheet">
+<link href="Ultralytics_Foundations_2_Real_World_Use_Cases_files/libs/quarto-html/quarto-syntax-highlighting-587c61ba64f3a5504c4d52d930310e48.css" rel="stylesheet" id="quarto-text-highlighting-styles"><meta charset="utf-8">
   <meta name="generator" content="quarto-1.8.26">
 
   <meta name="dcterms.date" content="2026-03-13">
-  <title>Digital Image Foundations</title>
+  <title>Ultralytics YOLO Foundations: Part 2</title>
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui">
-  <link rel="stylesheet" href="Image_Foundations_files/libs/revealjs/dist/reset.css">
-  <link rel="stylesheet" href="Image_Foundations_files/libs/revealjs/dist/reveal.css">
+  <link rel="stylesheet" href="Ultralytics_Foundations_2_Real_World_Use_Cases_files/libs/revealjs/dist/reset.css">
+  <link rel="stylesheet" href="Ultralytics_Foundations_2_Real_World_Use_Cases_files/libs/revealjs/dist/reveal.css">
   <style>
     code{white-space: pre-wrap;}
     span.smallcaps{font-variant: small-caps;}
@@ -95,13 +95,13 @@
     code span.vs { color: #20794d; } /* VerbatimString */
     code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
   </style>
-  <link rel="stylesheet" href="Image_Foundations_files/libs/revealjs/dist/theme/quarto-fec02f753a3bac5d9c24dfa8257e7610.css">
-  <link href="Image_Foundations_files/libs/revealjs/plugin/quarto-line-highlight/line-highlight.css" rel="stylesheet">
-  <link href="Image_Foundations_files/libs/revealjs/plugin/reveal-menu/menu.css" rel="stylesheet">
-  <link href="Image_Foundations_files/libs/revealjs/plugin/reveal-menu/quarto-menu.css" rel="stylesheet">
-  <link href="Image_Foundations_files/libs/revealjs/plugin/reveal-chalkboard/font-awesome/css/all.css" rel="stylesheet">
-  <link href="Image_Foundations_files/libs/revealjs/plugin/reveal-chalkboard/style.css" rel="stylesheet">
-  <link href="Image_Foundations_files/libs/revealjs/plugin/quarto-support/footer.css" rel="stylesheet">
+  <link rel="stylesheet" href="Ultralytics_Foundations_2_Real_World_Use_Cases_files/libs/revealjs/dist/theme/quarto-fec02f753a3bac5d9c24dfa8257e7610.css">
+  <link href="Ultralytics_Foundations_2_Real_World_Use_Cases_files/libs/revealjs/plugin/quarto-line-highlight/line-highlight.css" rel="stylesheet">
+  <link href="Ultralytics_Foundations_2_Real_World_Use_Cases_files/libs/revealjs/plugin/reveal-menu/menu.css" rel="stylesheet">
+  <link href="Ultralytics_Foundations_2_Real_World_Use_Cases_files/libs/revealjs/plugin/reveal-menu/quarto-menu.css" rel="stylesheet">
+  <link href="Ultralytics_Foundations_2_Real_World_Use_Cases_files/libs/revealjs/plugin/reveal-chalkboard/font-awesome/css/all.css" rel="stylesheet">
+  <link href="Ultralytics_Foundations_2_Real_World_Use_Cases_files/libs/revealjs/plugin/reveal-chalkboard/style.css" rel="stylesheet">
+  <link href="Ultralytics_Foundations_2_Real_World_Use_Cases_files/libs/revealjs/plugin/quarto-support/footer.css" rel="stylesheet">
   <style type="text/css">
     .reveal div.sourceCode {
       margin: 0;
@@ -197,8 +197,8 @@
     <div class="slides">
 
 <section id="title-slide" data-background-image="slides_template/assets/anim.svg" data-background-opacity="0.15" data-background-size="cover" class="quarto-title-block center">
-  <h1 class="title">Digital Image Foundations</h1>
-  <p class="subtitle">How computers perceive images</p>
+  <h1 class="title">Ultralytics YOLO Foundations: Part 2</h1>
+  <p class="subtitle">Real World Use Cases &amp; Solutions</p>
 
 <div class="quarto-title-authors">
 </div>
@@ -206,192 +206,280 @@
   <p class="date">2026-03-13</p>
 </section>
 <section>
-<section id="digital-image-foundations" class="title-slide slide level1 sdaia-dark center" data-background-gradient="linear-gradient(135deg, #1C355E, #00C9A7)">
-<h1>1. Digital Image Foundations</h1>
-<p>How computers store images</p>
+<section id="real-world-use-cases-solutions" class="title-slide slide level1 sdaia-dark center" data-background-gradient="linear-gradient(135deg, #1C355E, #00C9A7)">
+<h1>3. Real World Use Cases &amp; Solutions</h1>
+<p>Beyond bounding boxes: actionable insights.</p>
 </section>
-<section id="how-we-see-light-and-the-human-eye" class="slide level2">
-<h2>How We See: Light and The Human Eye</h2>
-<div class="columns">
-<div class="column" style="width:50%;">
+<section id="the-after-of-training" class="slide level2">
+<h2>The “After” of Training</h2>
+<p>You now know how to build datasets, pick models, and train effectively.</p>
+<p>But what happens <strong>AFTER</strong> the model is trained?</p>
 <ul>
-<li><strong>1. Illumination</strong>: Light from a source (e.g., the sun) hits an object.</li>
-<li><strong>2. Reflection</strong>: The object absorbs some colors and reflects others.</li>
-<li><strong>3. Capture</strong>: Reflected light enters the eye through the <strong>pupil</strong>.</li>
-<li><strong>4. Processing</strong>: The lens focuses light onto the <strong>retina</strong>. <em>Photoreceptors</em> (rods and cones) convert it to electrical signals for the brain.</li>
-</ul>
-</div><div class="column" style="width:50%;">
-<p><img data-src="../slides_template/assets/human_vision_sdaia.png" class="quarto-figure quarto-figure-center"> </p>
-</div></div>
-</section>
-<section id="how-computers-see-the-digital-camera" class="slide level2">
-<h2>How Computers “See”: The Digital Camera</h2>
-<div class="columns">
-<div class="column" style="width:50%;">
-<ul>
-<li><strong>1. Capture</strong>: Just like the eye, the camera captures reflected light.</li>
-<li><strong>2. Lens &amp; Aperture</strong>: Light enters through an opening (aperture) and is focused by glass lenses.</li>
-<li><strong>3. The Sensor</strong>: Instead of a retina, light hits a <strong>digital sensor</strong> (CMOS/CCD).</li>
-<li><strong>4. Digitization</strong>: Millions of sensor <em>pixels</em> convert incoming photons into an electrical charge, which is translated into a digital matrix.</li>
-</ul>
-</div><div class="column" style="width:50%;">
-<p><img data-src="../slides_template/assets/camera_vision_sdaia.png" class="quarto-figure quarto-figure-center"> </p>
-</div></div>
-</section>
-<section id="the-digital-sensor-capturing-light" class="slide level2">
-<h2>The Digital Sensor: Capturing Light</h2>
-<ul>
-<li><strong>Photodiodes</strong>: Each pixel on a sensor forms a tiny bucket collecting photons (light).</li>
-<li><strong>Charge</strong>: More light <span class="math inline">\(\rightarrow\)</span> more photons <span class="math inline">\(\rightarrow\)</span> higher electrical charge.</li>
-<li><strong>Bayer Filter</strong>: Sensors capture only light intensity (grayscale). To get color, a microscopic mosaic filter is placed over them so each pixel records only Red, Green, or Blue.</li>
-<li><strong>Digitization</strong>: An Analog-to-Digital Converter (ADC) turns the electrical charge into a discrete number, typically from <code>0</code> to <code>255</code>.</li>
+<li>Often, you don’t just want bounding boxes drawn on an image.</li>
+<li>You want <strong>actionable insights</strong>.</li>
+<li>You want to trigger alerts, count items, or manage entire systems.</li>
 </ul>
 </section>
-<section id="grayscale-images-pixels-coordinates" class="slide level2">
-<h2>Grayscale Images: Pixels &amp; Coordinates</h2>
-<ul>
-<li>Images are 2D matrices of numbers. The origin <code>(0,0)</code> is top-left.</li>
-<li>Example: an 8x8 matrix where <code>0</code> is black and <code>1</code> is white.</li>
-</ul>
-<div class="columns">
-<div class="column" style="width:50%;">
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href=""></a><span class="co"># 8x8 matrix (0=black, 1=white)</span></span>
-<span id="cb1-2"><a href=""></a>img <span class="op">=</span> np.array([</span>
-<span id="cb1-3"><a href=""></a>    [<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">0</span>],</span>
-<span id="cb1-4"><a href=""></a>    [<span class="dv">0</span>,<span class="dv">1</span>,<span class="dv">1</span>,<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">1</span>,<span class="dv">1</span>,<span class="dv">0</span>],</span>
-<span id="cb1-5"><a href=""></a>    [<span class="dv">0</span>,<span class="dv">1</span>,<span class="dv">1</span>,<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">1</span>,<span class="dv">1</span>,<span class="dv">0</span>],</span>
-<span id="cb1-6"><a href=""></a>    [<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">0</span>],</span>
-<span id="cb1-7"><a href=""></a>    [<span class="dv">0</span>,<span class="dv">1</span>,<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">1</span>,<span class="dv">0</span>],</span>
-<span id="cb1-8"><a href=""></a>    [<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">1</span>,<span class="dv">1</span>,<span class="dv">1</span>,<span class="dv">1</span>,<span class="dv">0</span>,<span class="dv">0</span>],</span>
-<span id="cb1-9"><a href=""></a>    [<span class="dv">0</span>,<span class="dv">1</span>,<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">1</span>,<span class="dv">0</span>],</span>
-<span id="cb1-10"><a href=""></a>    [<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">0</span>]</span>
-<span id="cb1-11"><a href=""></a>])</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-</div><div class="column" style="width:50%;">
-<div id="3b8b16de" class="cell" data-execution_count="1">
-<div class="cell-output cell-output-display">
-<div class="quarto-figure quarto-figure-center">
-<figure>
-<p><img data-src="Image_Foundations_files/figure-revealjs/cell-2-output-1.png" class="quarto-figure quarto-figure-center" width="315" height="315"></p>
-</figure>
-</div>
-</div>
-</div>
-</div></div>
+<section id="ultralytics-solutions" class="slide level2">
+<h2>Ultralytics Solutions</h2>
+<p>Ultralytics provides a suite of high-level <strong>Solutions</strong> that act as wrappers around your trained model.</p>
+<p>They allow you to deploy world-class computer vision systems with just a few lines of code.</p>
 </section>
-<section id="color-images-the-rgb-channels" class="slide level2 smaller">
-<h2>Color Images: The RGB Channels</h2>
-<ul>
-<li>Images are 3D matrices (height × width × <strong>3 channels</strong>).</li>
-<li><strong>RGB</strong>: Red, Green, Blue. Values range from <code>0</code> (dark) to <code>255</code> (bright).</li>
-</ul>
-<div id="036ca657" class="cell" data-execution_count="2">
-<div class="cell-output cell-output-display">
-<div class="quarto-figure quarto-figure-center">
-<figure>
-<p><img data-src="Image_Foundations_files/figure-revealjs/cell-3-output-1.png" class="quarto-figure quarto-figure-center" width="479" height="463"></p>
-</figure>
-</div>
-</div>
-</div>
+<section id="solution-categories" class="slide level2">
+<h2>Solution Categories</h2>
+<ol type="1">
+<li><strong>Region and Boundary Analytics:</strong> Counting, Zones, Parking, Queues</li>
+<li><strong>Kinematic and Spatial Measurement:</strong> Speed, Distance, VisionEye</li>
+<li><strong>Data Aggregation and Visualization:</strong> Analytics, Heatmaps</li>
+<li><strong>Image Output Manipulation:</strong> Cropping, Blurring</li>
+<li><strong>Specialized Model Heads:</strong> Instance Segmentation Tracking, Workouts</li>
+<li><strong>External Integrations:</strong> Live Inference (Streamlit), Security Alarms</li>
+<li><strong>Multimodal Embeddings:</strong> Similarity Search</li>
+</ol>
+</section></section>
+<section>
+<section id="region-boundary-analytics" class="title-slide slide level1 sdaia-dark center" data-background-gradient="linear-gradient(135deg, #1C355E, #00C9A7)">
+<h1>Region &amp; Boundary Analytics</h1>
+<p>Counting, Zones, and Queues</p>
 </section>
-<section id="essential-image-libraries" class="slide level2">
-<h2>Essential Image Libraries</h2>
+<section id="region-and-boundary-analytics" class="slide level2">
+<h2>Region and Boundary Analytics</h2>
+<p>These solutions rely on defining geospatial boundaries (lines or polygons) in the frame and cross-referencing tracked object coordinates.</p>
 <ul>
-<li><strong>OpenCV</strong>: Very fast C++ library mapped to Python. Uses <strong>BGR</strong> channel order by default. Great for video streams and low-level transforms.</li>
-<li><strong>Pillow (PIL)</strong>: Standard Python image library. Uses <strong>RGB</strong>. Easy to use for simple drawing and resizing.</li>
-<li><strong>NumPy</strong>: The core math library. Images in Python are fundamentally <code>numpy</code> multi-dimensional arrays (tensors).</li>
+<li><strong>Object Counting:</strong> Evaluates line vector intersections.</li>
+<li><strong>Regions:</strong> Evaluates continuous occupancy inside a polygon.</li>
+<li><strong>Parking Management:</strong> Binary state (occupied/empty) for small polygons.</li>
+<li><strong>Queue Management:</strong> Measures object wait times in regions.</li>
+<li><strong>Track Objects in Zone:</strong> Masking filter to isolate tracking.</li>
 </ul>
 </section>
-<section id="image-data-types-uint8-vs-floats" class="slide level2">
-<h2>Image Data Types: <code>uint8</code> vs Floats</h2>
+<section id="example-object-counting" class="slide level2">
+<h2>Example: Object Counting</h2>
+<p>Count objects passing through an area or crossing a line. <em><a href="https://docs.ultralytics.com/guides/object-counting/">View Official Documentation</a></em></p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href=""></a><span class="im">import</span> cv2</span>
+<span id="cb1-2"><a href=""></a><span class="im">from</span> ultralytics <span class="im">import</span> solutions</span>
+<span id="cb1-3"><a href=""></a></span>
+<span id="cb1-4"><a href=""></a>cap <span class="op">=</span> cv2.VideoCapture(<span class="st">"videos/traffic.mp4"</span>)</span>
+<span id="cb1-5"><a href=""></a>line_points <span class="op">=</span> [(<span class="dv">100</span>, <span class="dv">500</span>), (<span class="dv">900</span>, <span class="dv">500</span>)]</span>
+<span id="cb1-6"><a href=""></a></span>
+<span id="cb1-7"><a href=""></a>counter <span class="op">=</span> solutions.ObjectCounter(</span>
+<span id="cb1-8"><a href=""></a>    show<span class="op">=</span><span class="va">True</span>, region<span class="op">=</span>line_points, model<span class="op">=</span><span class="st">"yolov8n.pt"</span></span>
+<span id="cb1-9"><a href=""></a>)</span>
+<span id="cb1-10"><a href=""></a></span>
+<span id="cb1-11"><a href=""></a><span class="cf">while</span> cap.isOpened():</span>
+<span id="cb1-12"><a href=""></a>    success, im0 <span class="op">=</span> cap.read()</span>
+<span id="cb1-13"><a href=""></a>    <span class="cf">if</span> <span class="kw">not</span> success: <span class="cf">break</span></span>
+<span id="cb1-14"><a href=""></a>    results <span class="op">=</span> counter(im0)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</section>
+<section id="example-parking-management" class="slide level2">
+<h2>Example: Parking Management</h2>
+<p>Organize and direct vehicle flow in parking areas. <em><a href="https://docs.ultralytics.com/guides/parking-management/">View Official Documentation</a></em></p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href=""></a><span class="im">import</span> cv2</span>
+<span id="cb2-2"><a href=""></a><span class="im">from</span> ultralytics <span class="im">import</span> solutions</span>
+<span id="cb2-3"><a href=""></a></span>
+<span id="cb2-4"><a href=""></a>cap <span class="op">=</span> cv2.VideoCapture(<span class="st">"videos/traffic.mp4"</span>)</span>
+<span id="cb2-5"><a href=""></a>parking_spots <span class="op">=</span> [</span>
+<span id="cb2-6"><a href=""></a>    [(<span class="dv">10</span>, <span class="dv">10</span>), (<span class="dv">10</span>, <span class="dv">50</span>), (<span class="dv">100</span>, <span class="dv">50</span>), (<span class="dv">100</span>, <span class="dv">10</span>)],</span>
+<span id="cb2-7"><a href=""></a>    [(<span class="dv">110</span>, <span class="dv">10</span>), (<span class="dv">110</span>, <span class="dv">50</span>), (<span class="dv">200</span>, <span class="dv">50</span>), (<span class="dv">200</span>, <span class="dv">10</span>)]</span>
+<span id="cb2-8"><a href=""></a>]</span>
+<span id="cb2-9"><a href=""></a></span>
+<span id="cb2-10"><a href=""></a>manager <span class="op">=</span> solutions.ParkingManagement(</span>
+<span id="cb2-11"><a href=""></a>    model<span class="op">=</span><span class="st">"yolov8n.pt"</span>, region<span class="op">=</span>parking_spots, show<span class="op">=</span><span class="va">True</span></span>
+<span id="cb2-12"><a href=""></a>)</span>
+<span id="cb2-13"><a href=""></a></span>
+<span id="cb2-14"><a href=""></a><span class="cf">while</span> cap.isOpened():</span>
+<span id="cb2-15"><a href=""></a>    success, im0 <span class="op">=</span> cap.read()</span>
+<span id="cb2-16"><a href=""></a>    <span class="cf">if</span> <span class="kw">not</span> success: <span class="cf">break</span></span>
+<span id="cb2-17"><a href=""></a>    results <span class="op">=</span> manager(im0)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</section></section>
+<section>
+<section id="kinematic-and-spatial-measurement" class="title-slide slide level1 sdaia-dark center" data-background-gradient="linear-gradient(135deg, #1C355E, #00C9A7)">
+<h1>Kinematic and Spatial Measurement</h1>
+<p>Speed, Distance, and Proximity</p>
+</section>
+<section id="kinematic-and-spatial-measurement-1" class="slide level2">
+<h2>Kinematic and Spatial Measurement</h2>
+<p>Calculate physical, real-world metrics based on relative 2D box positions.</p>
 <ul>
-<li>Pixels are usually 8-bit unsigned integers (<strong><code>uint8</code></strong>), meaning values range from <code>0</code> to <code>255</code>.</li>
-<li><code>0</code> is Black. <code>255</code> is White (in grayscale) or full intensity (in RGB).</li>
-<li><strong>Deep Learning</strong>: Models like YOLO often prefer normalized inputs. We convert <code>0-255</code> to <strong>floats</strong> between <code>0.0</code> and <code>1.0</code> by dividing by <code>255.0</code>.</li>
+<li><strong>Distance Calculation</strong>: Compares two moving objects to each other.</li>
+<li><strong>VisionEye View</strong>: Compares the distance from tracking objects to a single, static observer point.</li>
+<li><strong>Speed Estimation</strong>: Tracks the delta of an individual object’s position over time, accounting for perspective.</li>
 </ul>
 </section>
-<section id="coordinates-vs.-array-indexing-the-gotcha" class="slide level2">
-<h2>Coordinates vs.&nbsp;Array Indexing <br> (The “Gotcha”)</h2>
-<div class="columns">
-<div class="column" style="width:50%;">
-<ul>
-<li>We think in geometry: <code>(x, y)</code> = <code>(width, height)</code>.</li>
-<li><strong>NumPy</strong> thinks in matrices: <code>matrix[row, col]</code> = <code>matrix[y, x]</code>.</li>
-<li>This causes endless confusion when cropping with bounding boxes <code>(x1, y1, x2, y2)</code>.</li>
-</ul>
-</div><div class="column" style="width:50%;">
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href=""></a><span class="co"># Assuming a bounding box (x1, y1, x2, y2)</span></span>
-<span id="cb2-2"><a href=""></a></span>
-<span id="cb2-3"><a href=""></a><span class="co"># WRONG (Crops wrong area or crashes)</span></span>
-<span id="cb2-4"><a href=""></a>crop <span class="op">=</span> img[x1:x2, y1:y2] </span>
-<span id="cb2-5"><a href=""></a></span>
-<span id="cb2-6"><a href=""></a><span class="co"># CORRECT (y = row, x = col)</span></span>
-<span id="cb2-7"><a href=""></a>crop <span class="op">=</span> img[y1:y2, x1:x2] </span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-</div></div>
-</section>
-<section id="the-smurf-effect-bgr-vs.-rgb" class="slide level2">
-<h2>The “Smurf Effect”: BGR vs.&nbsp;RGB</h2>
-<div class="columns">
-<div class="column" style="width:50%;">
-<ul>
-<li>OpenCV historically uses <strong>B</strong>lue-<strong>G</strong>reen-<strong>R</strong>ed (<strong>BGR</strong>).</li>
-<li>Most other libraries (Matplotlib, Pillow) expect <strong>R</strong>ed-<strong>G</strong>reen-<strong>B</strong>lue (<strong>RGB</strong>).</li>
-<li>If you read an image with <code>cv2.imread()</code> and plot it directly in matplotlib, Red and Blue channels are swapped!</li>
-<li><em>Faces look blue, skies look red.</em></li>
-</ul>
-</div><div class="column" style="width:50%;">
-<h4 id="basic-io-operations">Basic I/O Operations</h4>
+<section id="example-speed-estimation" class="slide level2">
+<h2>Example: Speed Estimation</h2>
+<p>Estimate object speed using tracking techniques and perspective transformations. <em><a href="https://docs.ultralytics.com/guides/speed-estimation/">View Official Documentation</a></em></p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href=""></a><span class="im">import</span> cv2</span>
-<span id="cb3-2"><a href=""></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
+<span id="cb3-2"><a href=""></a><span class="im">from</span> ultralytics <span class="im">import</span> solutions</span>
 <span id="cb3-3"><a href=""></a></span>
-<span id="cb3-4"><a href=""></a><span class="co"># 1. Read image (OpenCV loads BGR)</span></span>
-<span id="cb3-5"><a href=""></a>img_bgr <span class="op">=</span> cv2.imread(<span class="st">'dog.jpg'</span>)</span>
-<span id="cb3-6"><a href=""></a></span>
-<span id="cb3-7"><a href=""></a><span class="co"># 2. Convert to RGB for accurate display</span></span>
-<span id="cb3-8"><a href=""></a>img_rgb <span class="op">=</span> cv2.cvtColor(img_bgr, cv2.COLOR_BGR2RGB)</span>
-<span id="cb3-9"><a href=""></a></span>
-<span id="cb3-10"><a href=""></a><span class="co"># 3. Display</span></span>
-<span id="cb3-11"><a href=""></a>plt.imshow(img_rgb)</span>
-<span id="cb3-12"><a href=""></a>plt.axis(<span class="st">'off'</span>)</span>
-<span id="cb3-13"><a href=""></a>plt.show()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-</div></div>
+<span id="cb3-4"><a href=""></a>cap <span class="op">=</span> cv2.VideoCapture(<span class="st">"videos/traffic.mp4"</span>)</span>
+<span id="cb3-5"><a href=""></a><span class="co"># ... extract fps</span></span>
+<span id="cb3-6"><a href=""></a>speedestimator <span class="op">=</span> solutions.SpeedEstimator(</span>
+<span id="cb3-7"><a href=""></a>    show<span class="op">=</span><span class="va">True</span>, model<span class="op">=</span><span class="st">"yolov8n.pt"</span>,</span>
+<span id="cb3-8"><a href=""></a>    fps<span class="op">=</span><span class="dv">30</span>, meter_per_pixel<span class="op">=</span><span class="fl">0.05</span>, </span>
+<span id="cb3-9"><a href=""></a>)</span>
+<span id="cb3-10"><a href=""></a></span>
+<span id="cb3-11"><a href=""></a><span class="cf">while</span> cap.isOpened():</span>
+<span id="cb3-12"><a href=""></a>    success, im0 <span class="op">=</span> cap.read()</span>
+<span id="cb3-13"><a href=""></a>    <span class="cf">if</span> <span class="kw">not</span> success: <span class="cf">break</span></span>
+<span id="cb3-14"><a href=""></a>    results <span class="op">=</span> speedestimator(im0)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</section></section>
+<section>
+<section id="data-aggregation-visualization" class="title-slide slide level1 sdaia-dark center" data-background-gradient="linear-gradient(135deg, #1C355E, #00C9A7)">
+<h1>Data Aggregation &amp; Visualization</h1>
+<p>Analytics and Heatmaps</p>
 </section>
-<section id="image-resolution-and-resizing" class="slide level2">
-<h2>Image Resolution and Resizing</h2>
+<section id="data-aggregation-visualization-1" class="slide level2">
+<h2>Data Aggregation &amp; Visualization</h2>
+<p>Aggregate detection and tracking data over time to produce high-level visual summaries and distributions.</p>
 <ul>
-<li><strong>Resolution</strong>: Dimensions of the image <code>(Width × Height)</code>.</li>
-<li>Deep Learning models typically require <strong>fixed input sizes</strong> (e.g., <code>640x640</code>).</li>
-<li><strong>Aspect Ratio</strong>: The ratio of width to height.</li>
-<li><em>Direct Resizing</em>: Squashes or stretches the image, changing the aspect ratio (causes distortion).</li>
-<li><em>Letterboxing</em>: Resizes while maintaining aspect ratio, then pads the remaining area with a solid color.</li>
+<li><strong>Analytics</strong>: Plots statistical temporal trends (line graphs, pie charts) of class frequencies.</li>
+<li><strong>Heatmaps</strong>: Plots spatial density and accumulated movement paths directly onto the original image matrix.</li>
 </ul>
+</section>
+<section id="example-analytics" class="slide level2">
+<h2>Example: Analytics</h2>
+<p>Discover patterns and make informed decisions (Line, Bar, Area, Pie). <em><a href="https://docs.ultralytics.com/guides/analytics/">View Official Documentation</a></em></p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb4"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href=""></a><span class="im">import</span> cv2</span>
+<span id="cb4-2"><a href=""></a><span class="im">from</span> ultralytics <span class="im">import</span> solutions</span>
+<span id="cb4-3"><a href=""></a></span>
+<span id="cb4-4"><a href=""></a>cap <span class="op">=</span> cv2.VideoCapture(<span class="st">"videos/people.mp4"</span>)</span>
+<span id="cb4-5"><a href=""></a>analytics <span class="op">=</span> solutions.Analytics(</span>
+<span id="cb4-6"><a href=""></a>    show<span class="op">=</span><span class="va">True</span>,</span>
+<span id="cb4-7"><a href=""></a>    analytics_type<span class="op">=</span><span class="st">"line"</span>, <span class="co"># "pie", "bar", "area"</span></span>
+<span id="cb4-8"><a href=""></a>    model<span class="op">=</span><span class="st">"yolov8n.pt"</span>, </span>
+<span id="cb4-9"><a href=""></a>)</span>
+<span id="cb4-10"><a href=""></a></span>
+<span id="cb4-11"><a href=""></a>frame_count <span class="op">=</span> <span class="dv">0</span></span>
+<span id="cb4-12"><a href=""></a><span class="cf">while</span> cap.isOpened():</span>
+<span id="cb4-13"><a href=""></a>    success, im0 <span class="op">=</span> cap.read()</span>
+<span id="cb4-14"><a href=""></a>    <span class="cf">if</span> <span class="kw">not</span> success: <span class="cf">break</span></span>
+<span id="cb4-15"><a href=""></a>    frame_count <span class="op">+=</span> <span class="dv">1</span></span>
+<span id="cb4-16"><a href=""></a>    results <span class="op">=</span> analytics(im0, frame_count) </span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</section></section>
+<section>
+<section id="image-output-manipulation" class="title-slide slide level1 sdaia-dark center" data-background-gradient="linear-gradient(135deg, #1C355E, #00C9A7)">
+<h1>Image Output Manipulation</h1>
+<p>Cropping and Blurring</p>
+</section>
+<section id="image-output-manipulation-1" class="slide level2">
+<h2>Image Output Manipulation</h2>
+<p>Act purely as downstream image processing steps utilizing box/mask coordinates.</p>
+<ul>
+<li><strong>Object Cropping</strong>: Slices out regions based on boxes and saves them as isolated image files (useful for dataset extraction).</li>
+<li><strong>Object Blurring</strong>: Applies a filter to obscure regions in the original full frame (privacy compliance).</li>
+</ul>
+</section>
+<section id="example-object-blurring" class="slide level2">
+<h2>Example: Object Blurring</h2>
+<p>Automatically blur bounding boxes or segmentation masks to protect privacy. <em><a href="https://docs.ultralytics.com/guides/object-blurring/">View Official Documentation</a></em></p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb5"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href=""></a><span class="im">import</span> cv2</span>
+<span id="cb5-2"><a href=""></a><span class="im">from</span> ultralytics <span class="im">import</span> solutions</span>
+<span id="cb5-3"><a href=""></a></span>
+<span id="cb5-4"><a href=""></a>cap <span class="op">=</span> cv2.VideoCapture(<span class="st">"videos/people.mp4"</span>)</span>
+<span id="cb5-5"><a href=""></a>blurrer <span class="op">=</span> solutions.ObjectBlurrer(</span>
+<span id="cb5-6"><a href=""></a>    show<span class="op">=</span><span class="va">True</span>,</span>
+<span id="cb5-7"><a href=""></a>    model<span class="op">=</span><span class="st">"yolov8n.pt"</span>, </span>
+<span id="cb5-8"><a href=""></a>    blur_ratio<span class="op">=</span><span class="fl">0.5</span>, <span class="co"># percentage of blur intensity</span></span>
+<span id="cb5-9"><a href=""></a>)</span>
+<span id="cb5-10"><a href=""></a></span>
+<span id="cb5-11"><a href=""></a><span class="cf">while</span> cap.isOpened():</span>
+<span id="cb5-12"><a href=""></a>    success, im0 <span class="op">=</span> cap.read()</span>
+<span id="cb5-13"><a href=""></a>    <span class="cf">if</span> <span class="kw">not</span> success: <span class="cf">break</span></span>
+<span id="cb5-14"><a href=""></a>    results <span class="op">=</span> blurrer(im0)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</section></section>
+<section>
+<section id="specialized-model-heads" class="title-slide slide level1 sdaia-dark center" data-background-gradient="linear-gradient(135deg, #1C355E, #00C9A7)">
+<h1>Specialized Model Heads</h1>
+<p>Segmentation and Pose</p>
+</section>
+<section id="specialized-model-heads-1" class="slide level2">
+<h2>Specialized Model Heads</h2>
+<p>Utilize specific YOLO architectures (<code>YOLO-seg</code>, <code>YOLO-pose</code>) to extract granular, non-rectangular spatial data.</p>
+<ul>
+<li><strong>Instance Seg Tracking</strong>: Combines pixel-perfect masks with continuous track IDs.</li>
+<li><strong>Workouts Monitoring</strong>: Tracks human skeletal connections (pose keypoints) to evaluate biomechanical form.</li>
+</ul>
+</section>
+<section id="example-workouts-monitoring" class="slide level2">
+<h2>Example: Workouts Monitoring</h2>
+<p>Track and evaluate exercise form (like pushups) using YOLO Pose keypoints. <em><a href="https://docs.ultralytics.com/guides/workouts-monitoring/">View Official Documentation</a></em></p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb6"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href=""></a><span class="im">import</span> cv2</span>
+<span id="cb6-2"><a href=""></a><span class="im">from</span> ultralytics <span class="im">import</span> solutions</span>
+<span id="cb6-3"><a href=""></a></span>
+<span id="cb6-4"><a href=""></a>cap <span class="op">=</span> cv2.VideoCapture(<span class="st">"videos/people.mp4"</span>)</span>
+<span id="cb6-5"><a href=""></a>gym <span class="op">=</span> solutions.AIGym(</span>
+<span id="cb6-6"><a href=""></a>    show<span class="op">=</span><span class="va">True</span>,</span>
+<span id="cb6-7"><a href=""></a>    kpts<span class="op">=</span>[<span class="dv">6</span>, <span class="dv">8</span>, <span class="dv">10</span>], <span class="co"># default keypoints for pushups</span></span>
+<span id="cb6-8"><a href=""></a>    model<span class="op">=</span><span class="st">"yolov8n-pose.pt"</span>, </span>
+<span id="cb6-9"><a href=""></a>)</span>
+<span id="cb6-10"><a href=""></a></span>
+<span id="cb6-11"><a href=""></a><span class="cf">while</span> cap.isOpened():</span>
+<span id="cb6-12"><a href=""></a>    success, im0 <span class="op">=</span> cap.read()</span>
+<span id="cb6-13"><a href=""></a>    <span class="cf">if</span> <span class="kw">not</span> success: <span class="cf">break</span></span>
+<span id="cb6-14"><a href=""></a>    results <span class="op">=</span> gym(im0)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</section></section>
+<section>
+<section id="external-system-integrations" class="title-slide slide level1 sdaia-dark center" data-background-gradient="linear-gradient(135deg, #1C355E, #00C9A7)">
+<h1>External System Integrations</h1>
+<p>Alarms, Web Apps, Embeddings</p>
+</section>
+<section id="external-integrations-embeddings" class="slide level2">
+<h2>External Integrations &amp; Embeddings</h2>
+<ul>
+<li><strong>Live Inference with Streamlit</strong>: Host a real-time, interactive web GUI for easy browser access.</li>
+<li><strong>Security Alarm System</strong>: Runs headless, communicates over SMTP to push email notifications upon triggers.</li>
+<li><em>(Bonus)</em> <strong>Similarity Search</strong>: Utilizes neural embeddings (CLIP) and Meta FAISS for natural language image retrieval.</li>
+</ul>
+</section>
+<section id="example-security-alarm-system" class="slide level2">
+<h2>Example: Security Alarm System</h2>
+<p>Trigger email alerts upon detecting specific objects. <em><a href="https://docs.ultralytics.com/guides/security-alarm-system/">View Official Documentation</a></em></p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb7"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href=""></a><span class="im">import</span> cv2</span>
+<span id="cb7-2"><a href=""></a><span class="im">from</span> ultralytics <span class="im">import</span> solutions</span>
+<span id="cb7-3"><a href=""></a></span>
+<span id="cb7-4"><a href=""></a>cap <span class="op">=</span> cv2.VideoCapture(<span class="st">"videos/people.mp4"</span>)</span>
+<span id="cb7-5"><a href=""></a>securityalarm <span class="op">=</span> solutions.SecurityAlarm(</span>
+<span id="cb7-6"><a href=""></a>    show<span class="op">=</span><span class="va">True</span>, model<span class="op">=</span><span class="st">"yolov8n.pt"</span>,</span>
+<span id="cb7-7"><a href=""></a>    records<span class="op">=</span><span class="dv">1</span>, <span class="co"># send email after 1 detection</span></span>
+<span id="cb7-8"><a href=""></a>)</span>
+<span id="cb7-9"><a href=""></a></span>
+<span id="cb7-10"><a href=""></a><span class="co"># Remember to use an App Password here if using Gmail!</span></span>
+<span id="cb7-11"><a href=""></a>securityalarm.authenticate(<span class="st">"sen@email"</span>, <span class="st">"PASS"</span>, <span class="st">"rec@email"</span>) </span>
+<span id="cb7-12"><a href=""></a></span>
+<span id="cb7-13"><a href=""></a><span class="cf">while</span> cap.isOpened():</span>
+<span id="cb7-14"><a href=""></a>    success, im0 <span class="op">=</span> cap.read()</span>
+<span id="cb7-15"><a href=""></a>    <span class="cf">if</span> <span class="kw">not</span> success: <span class="cf">break</span></span>
+<span id="cb7-16"><a href=""></a>    results <span class="op">=</span> securityalarm(im0)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </section></section>
 <section>
 <section id="conclusion" class="title-slide slide level1 sdaia-dark center" data-background-gradient="linear-gradient(135deg, #1C355E, #00C9A7)">
 <h1>Conclusion</h1>
-<p>Wrapping up Image Foundations</p>
+<p>Course Wrap-up</p>
 </section>
 <section id="summary" class="slide level2">
 <h2>Summary</h2>
 <ul>
-<li><strong>Light &amp; Cameras</strong>: How digital sensors capture light and turn it into data.</li>
-<li><strong>Pixels &amp; Channels</strong>: Grayscale (2D) vs.&nbsp;Color RGB (3D) representations.</li>
-<li><strong>Libraries</strong>: OpenCV, Pillow, and NumPy basics.</li>
-<li><strong>Gotchas</strong>: BGR vs RGB (The Smurf Effect) and Array Indexing vs Coordinates.</li>
+<li><strong>Solutions</strong>: High-level wrappers for tracking, counting, and geospatial analysis.</li>
+<li><strong>Analytics</strong>: Generating heatmaps and time-series data from detections.</li>
+<li><strong>Integration</strong>: Deploying security alarms and web demos.</li>
 </ul>
 </section>
 <section id="next-steps" class="slide level2">
 <h2>Next Steps</h2>
-<p>Next up: <strong>YOLO Inference</strong></p>
+<p>Next up: <strong>Custom Data &amp; Training</strong></p>
 <ul>
-<li>Using these images with state-of-the-art Computer Vision models.</li>
-<li>Running inference directly out-of-the-box.</li>
+<li>Learn how to prepare your own datasets for YOLO.</li>
+<li>Train custom models to detect specific objects.</li>
+<li>Understand hyperparameter tuning and model tracking.</li>
 </ul>
 </section>
 <section id="qa" class="slide level2 sdaia-dark" data-background-color="#1C355E">
 <h2>Q&amp;A</h2>
+<div class="r-fit-text">
 <p><strong>Thank You!</strong></p>
 <p>Any questions?</p>
+</div>
 
 </section></section>
     </div>
@@ -403,20 +491,20 @@
 </div></div>
 
   <script>window.backupDefine = window.define; window.define = undefined;</script>
-  <script src="Image_Foundations_files/libs/revealjs/dist/reveal.js"></script>
+  <script src="Ultralytics_Foundations_2_Real_World_Use_Cases_files/libs/revealjs/dist/reveal.js"></script>
   <!-- reveal.js plugins -->
-  <script src="Image_Foundations_files/libs/revealjs/plugin/quarto-line-highlight/line-highlight.js"></script>
-  <script src="Image_Foundations_files/libs/revealjs/plugin/pdf-export/pdfexport.js"></script>
-  <script src="Image_Foundations_files/libs/revealjs/plugin/reveal-menu/menu.js"></script>
-  <script src="Image_Foundations_files/libs/revealjs/plugin/reveal-menu/quarto-menu.js"></script>
-  <script src="Image_Foundations_files/libs/revealjs/plugin/reveal-chalkboard/plugin.js"></script>
-  <script src="Image_Foundations_files/libs/revealjs/plugin/quarto-support/support.js"></script>
+  <script src="Ultralytics_Foundations_2_Real_World_Use_Cases_files/libs/revealjs/plugin/quarto-line-highlight/line-highlight.js"></script>
+  <script src="Ultralytics_Foundations_2_Real_World_Use_Cases_files/libs/revealjs/plugin/pdf-export/pdfexport.js"></script>
+  <script src="Ultralytics_Foundations_2_Real_World_Use_Cases_files/libs/revealjs/plugin/reveal-menu/menu.js"></script>
+  <script src="Ultralytics_Foundations_2_Real_World_Use_Cases_files/libs/revealjs/plugin/reveal-menu/quarto-menu.js"></script>
+  <script src="Ultralytics_Foundations_2_Real_World_Use_Cases_files/libs/revealjs/plugin/reveal-chalkboard/plugin.js"></script>
+  <script src="Ultralytics_Foundations_2_Real_World_Use_Cases_files/libs/revealjs/plugin/quarto-support/support.js"></script>
   
 
-  <script src="Image_Foundations_files/libs/revealjs/plugin/notes/notes.js"></script>
-  <script src="Image_Foundations_files/libs/revealjs/plugin/search/search.js"></script>
-  <script src="Image_Foundations_files/libs/revealjs/plugin/zoom/zoom.js"></script>
-  <script src="Image_Foundations_files/libs/revealjs/plugin/math/math.js"></script>
+  <script src="Ultralytics_Foundations_2_Real_World_Use_Cases_files/libs/revealjs/plugin/notes/notes.js"></script>
+  <script src="Ultralytics_Foundations_2_Real_World_Use_Cases_files/libs/revealjs/plugin/search/search.js"></script>
+  <script src="Ultralytics_Foundations_2_Real_World_Use_Cases_files/libs/revealjs/plugin/zoom/zoom.js"></script>
+  <script src="Ultralytics_Foundations_2_Real_World_Use_Cases_files/libs/revealjs/plugin/math/math.js"></script>
   <script>window.define = window.backupDefine; window.backupDefine = undefined;</script>
 
   <script>
