@@ -21,11 +21,11 @@ format:
 
 Beyond bounding boxes: actionable insights.
 
-## The "After" of Training
+## The "After" of Inference
 
-You now know how to build datasets, pick models, and train effectively.
+You now know how to run tasks like detection and segmentation using pre-trained models.
 
-But what happens **AFTER** the model is trained? 
+But what happens **AFTER** the model outputs its predictions? 
 
 - Often, you don't just want bounding boxes drawn on an image. 
 - You want **actionable insights**. 
@@ -33,7 +33,7 @@ But what happens **AFTER** the model is trained?
 
 ## Ultralytics Solutions
 
-Ultralytics provides a suite of high-level **Solutions** that act as wrappers around your trained model.
+Ultralytics provides a suite of high-level **Solutions** that act as wrappers around your AI model.
 
 They allow you to deploy world-class computer vision systems with just a few lines of code.
 
@@ -279,7 +279,7 @@ while cap.isOpened():
 
 # Conclusion {.sdaia-dark background-gradient="linear-gradient(135deg, #1C355E, #00C9A7)"}
 
-Course Wrap-up
+Module Wrap-up
 
 ## Summary
 

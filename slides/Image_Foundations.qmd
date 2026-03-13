@@ -273,7 +273,8 @@ Next up: **YOLO Inference**
 
 ## Q&A {.sdaia-dark background-color="#1C355E"}
 
+::: {.r-fit-text}
 **Thank You!**
 
 Any questions?
-
+:::
