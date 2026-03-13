@@ -11,6 +11,11 @@
 !labs/
 !labs/**
 
+!slides/
+!slides/**
+
+!_quarto.yml
+
 # And the README
 !README.md
 

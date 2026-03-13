@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Classification Threshold Interactive Demo</title>
+    <style>
+        * { box-sizing: border-box; }
+        html, body {
+            margin: 0; padding: 0; height: 100%; overflow: hidden;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            background-color: #f8f9fa; color: #333;
+        }
+        .demo-container { display: flex; flex-direction: column; height: 100vh; padding: 8px; gap: 8px; }
+        .header-controls {
+            text-align: center; background: white; padding: 8px 15px; border-radius: 10px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05); flex-shrink: 0;
+        }
+        label { font-size: 1.1em; font-weight: bold; }
+        #confValue { color: #00C9A7; display: inline-block; min-width: 2em; }
+        input[type=range] { width: 80%; margin-top: 8px; accent-color: #00C9A7; height: 8px; display: block; margin-left: auto; margin-right: auto; }
+        .main-grid { display: flex; flex-direction: row; gap: 10px; flex: 1; min-height: 0; align-items: stretch; }
+        
+        .images-panel {
+            display: flex; flex-direction: row; gap: 10px; flex: 1; min-width: 0; justify-content: space-evenly; align-items: center;
+            background: #e9ecef; border-radius: 10px; padding: 10px; box-shadow: inset 0 2px 4px rgba(0,0,0,0.05);
+        }
+        .image-card {
+            display: flex; flex-direction: column; background: white; border-radius: 8px; overflow: hidden;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1); width: 30%; max-width: 250px; text-align: center;
+            border: 4px solid transparent; transition: all 0.2s ease-in-out;
+        }
+        .image-card img { width: 100%; aspect-ratio: 4/3; object-fit: cover; border-bottom: 2px solid #eee; }
+        .image-info { padding: 8px; display: flex; flex-direction: column; gap: 4px; }
+        .gt-label { font-size: 0.8em; color: #666; font-weight: bold; }
+        .score-label { font-size: 1.1em; font-weight: bold; color: #1C355E; }
+        .pred-label { font-size: 0.9em; font-weight: bold; padding: 4px; border-radius: 4px; margin-top: 4px; color: white; }
+        
+        .right-panel { display: flex; flex-direction: column; gap: 8px; flex: 0 0 220px; justify-content: center; }
+        .stats-panel { display: flex; flex-direction: column; gap: 8px; width: 100%; }
+        .stat-box {
+            padding: 10px 14px; border-radius: 8px; text-align: center; background: white;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05); display: flex; flex-direction: column; justify-content: center; align-items: center;
+        }
+        .tp-box { border-left: 6px solid #00C9A7; }
+        .fp-box { border-left: 6px solid #FF5252; }
+        .fn-box { border-left: 6px solid #FFAB40; }
+        .tn-box { border-left: 6px solid #B0BEC5; }
+        h3 { margin: 0 0 2px 0; font-size: 0.82em; text-align: center; }
+        h1 { margin: 0; font-size: 1.8em; }
+        .tradeoff-card { background: white; padding: 8px 12px; border-radius: 10px; text-align: center; box-shadow: 0 2px 4px rgba(0,0,0,0.05); }
+        #tradeoffMsg { font-weight: bold; font-size: 0.85em; margin: 0; line-height: 1.4; }
+        
+        /* State Colors */
+        .state-tp { border-color: #00C9A7; }
+        .state-tp .pred-label { background-color: #00C9A7; }
+        .state-fp { border-color: #FF5252; }
+        .state-fp .pred-label { background-color: #FF5252; }
+        .state-fn { border-color: #FFAB40; }
+        .state-fn .pred-label { background-color: #FFAB40; color: #333; }
+        .state-tn { border-color: #B0BEC5; }
+        .state-tn .pred-label { background-color: #B0BEC5; color: #333; }
+        
+    </style>
+</head>
+<body>
+    <div class="demo-container">
+        <div class="header-controls">
+            <label for="confSlider">Classification Threshold: <span id="confValue">0.50</span></label><br>
+            <input type="range" id="confSlider" min="0.1" max="0.99" step="0.01" value="0.50">
+        </div>
+        <div class="main-grid">
+            <div class="images-panel" id="imagesPanel">
+                <!-- Images injected via JS -->
+            </div>
+            <div class="right-panel">
+                <div class="stats-panel">
+                    <div class="stat-box tp-box"><h3 style="color: #00C9A7;">True Positives (TP)</h3><h1 id="tpCount">0</h1></div>
+                    <div class="stat-box fp-box"><h3 style="color: #FF5252;">False Positives (FP)</h3><h1 id="fpCount">0</h1></div>
+                    <div class="stat-box fn-box"><h3 style="color: #FFAB40;">False Negatives (FN)</h3><h1 id="fnCount">0</h1></div>
+                    <div class="stat-box tn-box"><h3 style="color: #78909C;">True Negatives (TN)</h3><h1 id="tnCount">0</h1></div>
+                </div>
+                <div class="tradeoff-card">
+                    <p id="tradeoffMsg"></p>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const slider = document.getElementById('confSlider');
+            const valDisplay = document.getElementById('confValue');
+            const tpCount = document.getElementById('tpCount');
+            const fpCount = document.getElementById('fpCount');
+            const fnCount = document.getElementById('fnCount');
+            const tnCount = document.getElementById('tnCount');
+            const msg = document.getElementById('tradeoffMsg');
+            const imagesPanel = document.getElementById('imagesPanel');
+            
+            // Define 3 images for binary classification (Car vs Not Car)
+            // Using local assets to ensure images load reliably
+            const images = [
+                { id: 1, src: "assets/sport_car.jpg", title: "Sport Car", isCar: true, score: 0.85 },
+                { id: 2, src: "assets/rainy_car.jpg", title: "Rainy Car", isCar: true, score: 0.40 },
+                { id: 3, src: "assets/van.jpg", title: "Van", isCar: false, score: 0.65 }
+            ];
+            
+            const cardElements = [];
+            
+            // Build UI
+            images.forEach(img => {
+                const card = document.createElement('div');
+                card.className = 'image-card';
+                
+                const imgEl = document.createElement('img');
+                imgEl.src = img.src;
+                imgEl.alt = img.title;
+                imgEl.title = img.title;
+                
+                const info = document.createElement('div');
+                info.className = 'image-info';
+                
+                const gt = document.createElement('div');
+                gt.className = 'gt-label';
+                gt.innerText = "Ground Truth: " + (img.isCar ? "Car" : "Not Car");
+                
+                const score = document.createElement('div');
+                score.className = 'score-label';
+                score.innerText = `Score: ${img.score.toFixed(2)}`;
+                
+                const pred = document.createElement('div');
+                pred.className = 'pred-label';
+                
+                info.appendChild(gt);
+                info.appendChild(score);
+                info.appendChild(pred);
+                card.appendChild(imgEl);
+                card.appendChild(info);
+                
+                imagesPanel.appendChild(card);
+                cardElements.push({ card, pred, data: img });
+            });
+            
+            function update() {
+                const thresh = parseFloat(slider.value);
+                valDisplay.textContent = thresh.toFixed(2);
+                
+                let tp = 0, fp = 0, fn = 0, tn = 0;
+                
+                cardElements.forEach(item => {
+                    const data = item.data;
+                    const predictedCar = data.score >= thresh;
+                    
+                    let state = '';
+                    let predText = '';
+                    
+                    if (predictedCar) {
+                        predText = "Pred: Car";
+                        if (data.isCar) {
+                            state = 'state-tp';
+                            predText += " (TP)";
+                            tp++;
+                        } else {
+                            state = 'state-fp';
+                            predText += " (FP)";
+                            fp++;
+                        }
+                    } else {
+                        predText = "Pred: Not Car";
+                        if (data.isCar) {
+                            state = 'state-fn';
+                            predText += " (FN)";
+                            fn++;
+                        } else {
+                            state = 'state-tn';
+                            predText += " (TN)";
+                            tn++;
+                        }
+                    }
+                    
+                    item.card.className = 'image-card ' + state;
+                    item.pred.innerText = predText;
+                });
+                
+                tpCount.textContent = tp;
+                fpCount.textContent = fp;
+                fnCount.textContent = fn;
+                tnCount.textContent = tn;
+                
+                if (thresh >= 0.8) {
+                    msg.innerHTML = "Strict Model (High Threshold): <span style='color: #FFAB40;'>Misses some cars (Higher FN)</span>, but <span style='color: #00C9A7;'>prevents false alarms (Low FP)</span>.";
+                } else if (thresh <= 0.4) {
+                    msg.innerHTML = "Loose Model (Low Threshold): <span style='color: #00C9A7;'>Catches all cars (Low FN)</span>, but <span style='color: #FF5252;'>creates false alarms (Higher FP)</span>.";
+                } else {
+                    msg.innerHTML = "Balanced Model: A reasonable trade-off between missing cars and false alarms.";
+                }
+            }
+            
+            slider.addEventListener('input', update);
+            update();
+        });
+    </script>
+</body>
+</html>

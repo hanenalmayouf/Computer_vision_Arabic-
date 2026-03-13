@@ -1,0 +1,279 @@
+---
+title: "Digital Image Foundations"
+subtitle: "How computers perceive images"
+date: today
+format:
+  revealjs:
+    theme: [default, slides_template/assets/sdaia.scss]
+    logo: slides_template/assets/sdaia.svg
+    transition: slide
+    background-transition: fade
+    slide-number: true
+    controls: true
+    progress: true
+    center-title-slide: true
+    title-slide-attributes:
+      data-background-image: "slides_template/assets/anim.svg"
+      data-background-opacity: "0.15"
+---
+
+# 1. Digital Image Foundations {.sdaia-dark background-gradient="linear-gradient(135deg, #1C355E, #00C9A7)"}
+
+How computers store images
+
+## How We See: Light and The Human Eye
+
+:::: {.columns}
+::: {.column width="50%"}
+- **1. Illumination**: Light from a source (e.g., the sun) hits an object.
+- **2. Reflection**: The object absorbs some colors and reflects others.
+- **3. Capture**: Reflected light enters the eye through the **pupil**.
+- **4. Processing**: The lens focuses light onto the **retina**. *Photoreceptors* (rods and cones) convert it to electrical signals for the brain.
+:::
+::: {.column width="50%"}
+![](../slides_template/assets/human_vision_sdaia.png){fig-align="center"}
+<!-- Branded infographic of light reflecting into a human eye -->
+:::
+::::
+
+## How Computers "See": The Digital Camera
+
+:::: {.columns}
+::: {.column width="50%"}
+- **1. Capture**: Just like the eye, the camera captures reflected light.
+- **2. Lens & Aperture**: Light enters through an opening (aperture) and is focused by glass lenses.
+- **3. The Sensor**: Instead of a retina, light hits a **digital sensor** (CMOS/CCD).
+- **4. Digitization**: Millions of sensor *pixels* convert incoming photons into an electrical charge, which is translated into a digital matrix.
+:::
+::: {.column width="50%"}
+![](../slides_template/assets/camera_vision_sdaia.png){fig-align="center"}
+<!-- Branded infographic of light reflecting into a digital camera lens -->
+:::
+::::
+
+## The Digital Sensor: Capturing Light
+
+- **Photodiodes**: Each pixel on a sensor forms a tiny bucket collecting photons (light).
+- **Charge**: More light $\rightarrow$ more photons $\rightarrow$ higher electrical charge.
+- **Bayer Filter**: Sensors capture only light intensity (grayscale). To get color, a microscopic mosaic filter is placed over them so each pixel records only Red, Green, or Blue.
+- **Digitization**: An Analog-to-Digital Converter (ADC) turns the electrical charge into a discrete number, typically from `0` to `255`.
+
+## Grayscale Images: Pixels & Coordinates
+
+- Images are 2D matrices of numbers. The origin `(0,0)` is top-left.
+- Example: an 8x8 matrix where `0` is black and `1` is white.
+
+
+::::: {.columns}
+
+:::: {.column width="50%"}
+
+```python
+# 8x8 matrix (0=black, 1=white)
+img = np.array([
+    [0,0,0,0,0,0,0,0],
+    [0,1,1,0,0,1,1,0],
+    [0,1,1,0,0,1,1,0],
+    [0,0,0,0,0,0,0,0],
+    [0,1,0,0,0,0,1,0],
+    [0,0,1,1,1,1,0,0],
+    [0,1,0,0,0,0,1,0],
+    [0,0,0,0,0,0,0,0]
+])
+
+```
+
+::::
+
+:::: {.column width="50%"}
+
+```{python}
+#| echo: false
+#| fig-align: center
+
+import numpy as np
+import matplotlib.pyplot as plt
+
+# 8x8 matrix (0=black, 1=white)
+img = np.array([
+    [0,0,0,0,0,0,0,0],
+    [0,1,1,0,0,1,1,0],
+    [0,1,1,0,0,1,1,0],
+    [0,0,0,0,0,0,0,0],
+    [0,1,0,0,0,0,1,0],
+    [0,0,1,1,1,1,0,0],
+    [0,1,0,0,0,0,1,0],
+    [0,0,0,0,0,0,0,0]
+])
+
+fig, ax = plt.subplots(figsize=(4, 4))
+ax.imshow(img, cmap='gray')
+
+# Annotate pixels with their values
+for i in range(8):
+    for j in range(8):
+        color = 'black' if img[i, j] == 1 else 'white'
+        ax.text(j, i, img[i, j], ha='center', va='center', color=color)
+
+ax.axis('off')
+plt.show()
+```
+::::
+:::::
+
+## Color Images: The RGB Channels {.smaller}
+
+- Images are 3D matrices (height × width × **3 channels**).
+- **RGB**: Red, Green, Blue. Values range from `0` (dark) to `255` (bright).
+
+```{python}
+#| echo: false
+#| fig-align: center
+
+import numpy as np
+import matplotlib.pyplot as plt
+
+# 4x4 image, 3 channels
+H, W, C = 4, 4, 3
+
+fig = plt.figure(figsize=(6, 6))
+ax = fig.add_subplot(111, projection='3d')
+
+# Voxels need to be boolean arrays
+# Channels on X, Width on Y, Height on Z
+voxels = np.ones((C, W, H), dtype=bool)
+
+# Define colors for each voxel
+colors = np.empty(voxels.shape, dtype=object)
+
+# Assign colors for each channel layer
+colors[0, :, :] = '#ff6666'  # Red channel
+colors[1, :, :] = '#66ff66'  # Green channel
+colors[2, :, :] = '#6666ff'  # Blue channel
+
+# Plot voxels
+# Note: alpha adds slight transparency so back layers are partially visible
+ax.voxels(voxels, facecolors=colors, edgecolor='black', linewidth=0.5, alpha=0.8)
+
+# Labels
+ax.set_xlabel('Channels (X)', labelpad=10)
+ax.set_ylabel('Width (Y)', labelpad=10)
+ax.set_zlabel('Height (Z)', labelpad=10)
+
+# Adjust 3D view angle to favor looking at the screen (Y-Z plane)
+ax.view_init(elev=20, azim=-35)
+
+# Remove grid and panes for cleaner look
+ax.grid(False)
+# Remove tick labels but keep ticks so axis labels are drawn accurately
+ax.set_xticklabels([])
+ax.set_yticklabels([])
+ax.set_zticklabels([])
+
+ax.xaxis.pane.fill = False
+ax.yaxis.pane.fill = False
+ax.zaxis.pane.fill = False
+ax.xaxis.pane.set_edgecolor('w')
+ax.yaxis.pane.set_edgecolor('w')
+ax.zaxis.pane.set_edgecolor('w')
+
+plt.tight_layout()
+plt.show()
+```
+
+
+## Essential Image Libraries
+
+- **OpenCV**: Very fast C++ library mapped to Python. Uses **BGR** channel order by default. Great for video streams and low-level transforms.
+- **Pillow (PIL)**: Standard Python image library. Uses **RGB**. Easy to use for simple drawing and resizing.
+- **NumPy**: The core math library. Images in Python are fundamentally `numpy` multi-dimensional arrays (tensors).
+
+## Image Data Types: `uint8` vs Floats
+
+- Pixels are usually 8-bit unsigned integers (**`uint8`**), meaning values range from `0` to `255`.
+- `0` is Black. `255` is White (in grayscale) or full intensity (in RGB).
+- **Deep Learning**: Models like YOLO often prefer normalized inputs. We convert `0-255` to **floats** between `0.0` and `1.0` by dividing by `255.0`.
+
+## Coordinates vs. Array Indexing <br> (The "Gotcha")
+
+:::: {.columns}
+::: {.column width="50%"}
+- We think in geometry: `(x, y)` = `(width, height)`.
+- **NumPy** thinks in matrices: `matrix[row, col]` = `matrix[y, x]`.
+- This causes endless confusion when cropping with bounding boxes `(x1, y1, x2, y2)`.
+:::
+::: {.column width="50%"}
+```python
+# Assuming a bounding box (x1, y1, x2, y2)
+
+# WRONG (Crops wrong area or crashes)
+crop = img[x1:x2, y1:y2] 
+
+# CORRECT (y = row, x = col)
+crop = img[y1:y2, x1:x2] 
+```
+:::
+::::
+
+## The "Smurf Effect": BGR vs. RGB
+
+:::: {.columns}
+::: {.column width="50%"}
+- OpenCV historically uses **B**lue-**G**reen-**R**ed (**BGR**).
+- Most other libraries (Matplotlib, Pillow) expect **R**ed-**G**reen-**B**lue (**RGB**).
+- If you read an image with `cv2.imread()` and plot it directly in matplotlib, Red and Blue channels are swapped!
+- *Faces look blue, skies look red.*
+:::
+::: {.column width="50%"}
+#### Basic I/O Operations
+```python
+import cv2
+import matplotlib.pyplot as plt
+
+# 1. Read image (OpenCV loads BGR)
+img_bgr = cv2.imread('dog.jpg')
+
+# 2. Convert to RGB for accurate display
+img_rgb = cv2.cvtColor(img_bgr, cv2.COLOR_BGR2RGB)
+
+# 3. Display
+plt.imshow(img_rgb)
+plt.axis('off')
+plt.show()
+```
+:::
+::::
+
+## Image Resolution and Resizing
+
+- **Resolution**: Dimensions of the image `(Width × Height)`.
+- Deep Learning models typically require **fixed input sizes** (e.g., `640x640`). 
+- **Aspect Ratio**: The ratio of width to height. 
+- *Direct Resizing*: Squashes or stretches the image, changing the aspect ratio (causes distortion).
+- *Letterboxing*: Resizes while maintaining aspect ratio, then pads the remaining area with a solid color.
+
+
+# Conclusion {.sdaia-dark background-gradient="linear-gradient(135deg, #1C355E, #00C9A7)"}
+
+Wrapping up Image Foundations
+
+## Summary
+
+- **Light & Cameras**: How digital sensors capture light and turn it into data.
+- **Pixels & Channels**: Grayscale (2D) vs. Color RGB (3D) representations.
+- **Libraries**: OpenCV, Pillow, and NumPy basics.
+- **Gotchas**: BGR vs RGB (The Smurf Effect) and Array Indexing vs Coordinates.
+
+## Next Steps
+
+Next up: **YOLO Inference**
+
+- Using these images with state-of-the-art Computer Vision models.
+- Running inference directly out-of-the-box.
+
+## Q&A {.sdaia-dark background-color="#1C355E"}
+
+**Thank You!**
+
+Any questions?
+
