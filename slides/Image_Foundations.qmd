@@ -15,6 +15,8 @@ format:
     title-slide-attributes:
       data-background-image: "slides_template/assets/anim.svg"
       data-background-opacity: "0.15"
+resources:
+  - "assets/**"
 ---
 
 # 1. Digital Image Foundations {.sdaia-dark background-gradient="linear-gradient(135deg, #1C355E, #00C9A7)"}
@@ -31,7 +33,7 @@ How computers store images
 - **4. Processing**: The lens focuses light onto the **retina**. *Photoreceptors* (rods and cones) convert it to electrical signals for the brain.
 :::
 ::: {.column width="50%"}
-![](../slides_template/assets/human_vision_sdaia.png){fig-align="center"}
+![](assets/human_vision_sdaia.png){fig-align="center"}
 <!-- Branded infographic of light reflecting into a human eye -->
 :::
 ::::
@@ -46,7 +48,7 @@ How computers store images
 - **4. Digitization**: Millions of sensor *pixels* convert incoming photons into an electrical charge, which is translated into a digital matrix.
 :::
 ::: {.column width="50%"}
-![](../slides_template/assets/camera_vision_sdaia.png){fig-align="center"}
+![](assets/camera_vision_sdaia.png){fig-align="center"}
 <!-- Branded infographic of light reflecting into a digital camera lens -->
 :::
 ::::
