@@ -9,7 +9,7 @@
 <link href="Ultralytics_Foundations_1_Tasks_Inference_files/libs/quarto-html/quarto-syntax-highlighting-587c61ba64f3a5504c4d52d930310e48.css" rel="stylesheet" id="quarto-text-highlighting-styles"><meta charset="utf-8">
   <meta name="generator" content="quarto-1.8.26">
 
-  <meta name="dcterms.date" content="2026-03-13">
+  <meta name="dcterms.date" content="2026-03-31">
   <title>Ultralytics YOLO Foundations: Part 1</title>
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
@@ -203,7 +203,7 @@
 <div class="quarto-title-authors">
 </div>
 
-  <p class="date">2026-03-13</p>
+  <p class="date">2026-03-31</p>
 </section>
 <section>
 <section id="first-steps-what-can-yolo-do" class="title-slide slide level1 sdaia-dark center" data-background-gradient="linear-gradient(135deg, #1C355E, #00C9A7)">
@@ -241,7 +241,7 @@
 <h2>Image Classification Output Concept</h2>
 <div class="columns">
 <div class="column" style="width:55%;">
-<div id="aef39bbf" class="cell" data-execution_count="2">
+<div id="ad9da287" class="cell" data-execution_count="2">
 <div class="cell-output cell-output-display">
 <div class="quarto-figure quarto-figure-center">
 <figure>
@@ -251,17 +251,67 @@
 </div>
 </div>
 </div><div class="column" style="width:45%;">
-<p>Model Output (Probabilities):</p>
+<p>The model outputs <strong><code>probs</code></strong>, a probability for <strong>every</strong> possible class:</p>
+<table class="caption-top">
+<thead>
+<tr class="header">
+<th>Class ID</th>
+<th>Class Name</th>
+<th>Probability</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>0</td>
+<td>car</td>
+<td><strong>0.95</strong></td>
+</tr>
+<tr class="even">
+<td>1</td>
+<td>bus</td>
+<td>0.03</td>
+</tr>
+<tr class="odd">
+<td>2</td>
+<td>person</td>
+<td>0.01</td>
+</tr>
+<tr class="even">
+<td>…</td>
+<td>…</td>
+<td>…</td>
+</tr>
+</tbody>
+</table>
+<p>. . .</p>
+<p>💡 <em>How would you pick the single most likely class from this array?</em></p>
+</div></div>
+</section>
+<section id="from-probs-to-top1-ultralytics-does-it-for-you" class="slide level2">
+<h2>From <code>probs</code> to <code>top1</code> — Ultralytics Does It For You</h2>
+<div class="columns">
+<div class="column" style="width:55%;">
+<div id="0b37e743" class="cell" data-execution_count="3">
+<div class="cell-output cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure>
+<p><img data-src="Ultralytics_Foundations_1_Tasks_Inference_files/figure-revealjs/cell-4-output-1.png" class="quarto-figure quarto-figure-center" width="451" height="451"></p>
+</figure>
+</div>
+</div>
+</div>
+</div><div class="column" style="width:45%;">
+<p>Ultralytics pre-computes the answer for us:</p>
 <ul>
-<li class="fragment"><strong><code>top1</code></strong> (0): The most likely class ID.</li>
-<li class="fragment"><strong><code>top1conf</code> (0.95)</strong>: Confidence score of the top class.</li>
-<li class="fragment"><strong><code>probs</code></strong>: Array of probabilities for <em>all</em> possible classes.</li>
+<li class="fragment"><strong><code>probs</code></strong>: Raw probability array for <em>all</em> classes.</li>
+<li class="fragment"><strong><code>probs.top1</code></strong> → <code>0</code> : Index of the highest-probability class.</li>
+<li class="fragment"><strong><code>probs.top1conf</code></strong> → <code>0.95</code> : Its confidence score.</li>
 </ul>
 </div></div>
 <div class="callout callout-note no-icon callout-style-simple">
 <div class="callout-body">
 <div class="callout-content">
-<p><strong>Multi-Label Classification</strong> Since <code>probs</code> evaluates <em>every</em> class, we can predict <strong>multiple labels</strong> for a single image by applying a confidence threshold (e.g., keeping all classes with <code>prob &gt; 0.50</code>) instead of just taking the <code>top1</code> prediction.</p>
+<p><strong>Single-Class vs.&nbsp;Multi-Label Classification</strong> We just read <code>top1</code> that is <strong>single-class</strong> (one winner). But because <code>probs</code> scores <em>every</em> class, we can also do <strong>multi-label</strong> classification: keep all classes whose probability exceeds a threshold (e.g., <code>prob &gt; 0.50</code>) to assign several labels to one image.</p>
 </div>
 </div>
 </div>
@@ -283,15 +333,19 @@
 <span id="cb2-11"><a href=""></a><span class="bu">print</span>(<span class="ss">f"All Probabilities: </span><span class="sc">{</span>probs<span class="sc">.</span>data<span class="sc">}</span><span class="ss">"</span>)    <span class="co"># Tensor of all class probabilities</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p><em>Docs Reference: <a href="https://docs.ultralytics.com/tasks/classify/">Classification</a></em></p>
 </section>
+<section id="classification-output-example" class="slide level2">
+<h2>Classification Output Example</h2>
+
+<img data-src="outputs/classification_output.png" class="r-stretch quarto-figure-center"><p class="caption">Classification Real Output</p></section>
 <section id="object-detection-output-confidence" class="slide level2" data-auto-animate="true">
 <h2 data-id="quarto-animate-title">Object Detection Output &amp; Confidence</h2>
 <div class="columns" data-id="model-output">
 <div class="column" style="width:55%;">
-<div id="2203bef8" class="cell" data-execution_count="3">
+<div id="2a28ba25" class="cell" data-execution_count="4">
 <div class="cell-output cell-output-display">
 <div class="quarto-figure quarto-figure-center">
 <figure>
-<p><img data-src="Ultralytics_Foundations_1_Tasks_Inference_files/figure-revealjs/cell-4-output-1.png" class="quarto-figure quarto-figure-center" width="451" height="451"></p>
+<p><img data-src="Ultralytics_Foundations_1_Tasks_Inference_files/figure-revealjs/cell-5-output-1.png" class="quarto-figure quarto-figure-center" width="451" height="451"></p>
 </figure>
 </div>
 </div>
@@ -313,15 +367,33 @@
 </div>
 </div>
 </section>
+<section id="confidence-models-belief-vs.-ground-truth" class="slide level2">
+<h2>Confidence: Model’s Belief vs.&nbsp;Ground Truth</h2>
+<ul>
+<li><strong>Question:</strong> Does <code>conf=1.0</code> mean there is a true object 100% of the time?</li>
+</ul>
+<div class="fragment">
+<ul>
+<li><strong>Answer:</strong> <strong>No.</strong></li>
+</ul>
+<ul>
+<li class="fragment"><strong>Confidence</strong> is just a “feeling”: How strongly the model <strong>believes</strong> this is the answer.</li>
+<li class="fragment">It does <strong>NOT</strong> guarantee the answer is correct in the real world.</li>
+</ul>
+<div class="fragment">
+<p>You’ll learn how to actually measure correctness in <strong>Part 4</strong> using Precision and Recall</p>
+</div>
+</div>
+</section>
 <section id="mapping-to-bounding-boxes" class="slide level2" data-auto-animate="true">
 <h2 data-id="quarto-animate-title">Mapping to Bounding Boxes</h2>
 <div class="columns" data-id="model-output">
 <div class="column" style="width:55%;">
-<div id="b3de23fa" class="cell" data-execution_count="4">
+<div id="b3a5a1e1" class="cell" data-execution_count="5">
 <div class="cell-output cell-output-display">
 <div class="quarto-figure quarto-figure-center">
 <figure>
-<p><img data-src="Ultralytics_Foundations_1_Tasks_Inference_files/figure-revealjs/cell-5-output-1.png" class="quarto-figure quarto-figure-center" width="460" height="460"></p>
+<p><img data-src="Ultralytics_Foundations_1_Tasks_Inference_files/figure-revealjs/cell-6-output-1.png" class="quarto-figure quarto-figure-center" width="460" height="460"></p>
 </figure>
 </div>
 </div>
@@ -342,17 +414,10 @@ y_{max} &amp;= cy + \frac{h}{2} = 7.5 + 3.5 = 11.0
 <h2>The Concept of N Objects</h2>
 <p>Rarely does an image contain exactly one object!</p>
 <ul>
-<li>YOLO evaluates the image and can predict multiple bounding boxes at once.</li>
-<li>The single 6-element array <code>[cx, cy, w, h, conf, cls]</code> is stacked <span class="math inline">\(N\)</span> times.</li>
-<li>Resulting Output Shape: <strong><span class="math inline">\((N, 6)\)</span></strong> (where <span class="math inline">\(N\)</span> is the number of detected objects).</li>
+<li class="fragment">YOLO evaluates the image and can predict multiple bounding boxes at once.</li>
+<li class="fragment">The single 6-element array <code>[cx, cy, w, h, conf, cls]</code> is stacked <span class="math inline">\(N\)</span> times.</li>
+<li class="fragment">Resulting Output Shape: <strong><span class="math inline">\((N, 6)\)</span></strong> (where <span class="math inline">\(N\)</span> is the number of detected objects).</li>
 </ul>
-<div class="callout callout-note no-icon callout-style-simple">
-<div class="callout-body">
-<div class="callout-content">
-<p><strong>Wait, how does it know the class?</strong> Behind the scenes, each of those <span class="math inline">\(N\)</span> bounding boxes <em>also</em> predicted probabilities for ALL 80 classes, just like Image Classification! The final <code>cls</code> ID shown in the output is simply the class that scored the highest probability for that specific box.</p>
-</div>
-</div>
-</div>
 </section>
 <section id="object-detection-in-action" class="slide level2">
 <h2>Object Detection in Action</h2>
@@ -370,6 +435,10 @@ y_{max} &amp;= cy + \frac{h}{2} = 7.5 + 3.5 = 11.0
 <span id="cb4-9"><a href=""></a><span class="bu">print</span>(<span class="ss">f"Boxes shape: </span><span class="sc">{</span>boxes<span class="sc">.</span>shape<span class="sc">}</span><span class="ss">"</span>)  <span class="co"># (N, 6) -&gt; N boxes: x1, y1, x2, y2, conf, cls</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p><em>Docs Reference: <a href="https://docs.ultralytics.com/tasks/detect/">Detection</a></em></p>
 </section>
+<section id="detection-output-example" class="slide level2">
+<h2>Detection Output Example</h2>
+
+<img data-src="outputs/detection_output.png" class="r-stretch quarto-figure-center"><p class="caption">Detection Real Output</p></section>
 <section id="the-problem-with-absolute-pixels" class="slide level2">
 <h2>The Problem with Absolute Pixels</h2>
 <p>Why not just train the model on absolute pixel values like <code>w = 8.0</code>?</p>
@@ -411,11 +480,11 @@ y_{max} &amp;= cy + \frac{h}{2} = 7.5 + 3.5 = 11.0
 <h2>Instance Segmentation Output Concept</h2>
 <div class="columns">
 <div class="column" style="width:55%;">
-<div id="5ecc1f4c" class="cell" data-execution_count="5">
+<div id="d2cd34da" class="cell" data-execution_count="6">
 <div class="cell-output cell-output-display">
 <div class="quarto-figure quarto-figure-center">
 <figure>
-<p><img data-src="Ultralytics_Foundations_1_Tasks_Inference_files/figure-revealjs/cell-6-output-1.png" class="quarto-figure quarto-figure-center" width="451" height="451"></p>
+<p><img data-src="Ultralytics_Foundations_1_Tasks_Inference_files/figure-revealjs/cell-7-output-1.png" class="quarto-figure quarto-figure-center" width="451" height="451"></p>
 </figure>
 </div>
 </div>
@@ -447,15 +516,19 @@ y_{max} &amp;= cy + \frac{h}{2} = 7.5 + 3.5 = 11.0
 <span id="cb6-10"><a href=""></a><span class="bu">print</span>(masks.xy)                            <span class="co"># Polygon coordinates</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p><em>Docs Reference: <a href="https://docs.ultralytics.com/tasks/segment/">Segmentation</a></em></p>
 </section>
+<section id="segmentation-output-example" class="slide level2">
+<h2>Segmentation Output Example</h2>
+
+<img data-src="outputs/segmentation_output.png" class="r-stretch quarto-figure-center"><p class="caption">Segmentation Real Output</p></section>
 <section id="pose-estimation-output-concept" class="slide level2">
 <h2>Pose Estimation Output Concept</h2>
 <div class="columns">
 <div class="column" style="width:55%;">
-<div id="27c0d13b" class="cell" data-execution_count="6">
+<div id="a00dea09" class="cell" data-execution_count="7">
 <div class="cell-output cell-output-display">
 <div class="quarto-figure quarto-figure-center">
 <figure>
-<p><img data-src="Ultralytics_Foundations_1_Tasks_Inference_files/figure-revealjs/cell-7-output-1.png" class="quarto-figure quarto-figure-center" width="451" height="451"></p>
+<p><img data-src="Ultralytics_Foundations_1_Tasks_Inference_files/figure-revealjs/cell-8-output-1.png" class="quarto-figure quarto-figure-center" width="451" height="451"></p>
 </figure>
 </div>
 </div>
@@ -464,7 +537,6 @@ y_{max} &amp;= cy + \frac{h}{2} = 7.5 + 3.5 = 11.0
 <p>Model Output (Keypoints):</p>
 <ul>
 <li class="fragment"><strong><code>x, y</code></strong>: Coordinate pair for each predefined keypoint.</li>
-<li class="fragment"><strong><code>visibility</code></strong>: Whether the keypoint is visible (i.e., not occluded).</li>
 <li class="fragment"><strong><code>kp_conf</code></strong> (per keypoint): Confidence score for each keypoint’s location.</li>
 <li class="fragment"><strong><code>conf</code> (0.92)</strong>: Overall person detection confidence score.</li>
 <li class="fragment"><strong><code>cls</code> (0)</strong>: Class ID (always 0 = person for pose models).</li>
@@ -488,15 +560,19 @@ y_{max} &amp;= cy + \frac{h}{2} = 7.5 + 3.5 = 11.0
 <span id="cb8-10"><a href=""></a><span class="bu">print</span>(keypoints.xy)                                <span class="co"># Keypoint coordinates</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p><em>Docs Reference: <a href="https://docs.ultralytics.com/tasks/pose/">Pose</a></em></p>
 </section>
+<section id="pose-estimation-output-example" class="slide level2">
+<h2>Pose Estimation Output Example</h2>
+
+<img data-src="outputs/pose_output.png" class="r-stretch quarto-figure-center"><p class="caption">Pose Real Output</p></section>
 <section id="obb-oriented-bounding-box-output-concept" class="slide level2">
 <h2>OBB (Oriented Bounding Box) Output Concept</h2>
 <div class="columns">
 <div class="column" style="width:55%;">
-<div id="0f2b3840" class="cell" data-execution_count="7">
+<div id="c9198353" class="cell" data-execution_count="8">
 <div class="cell-output cell-output-display">
 <div class="quarto-figure quarto-figure-center">
 <figure>
-<p><img data-src="Ultralytics_Foundations_1_Tasks_Inference_files/figure-revealjs/cell-8-output-1.png" class="quarto-figure quarto-figure-center" width="451" height="451"></p>
+<p><img data-src="Ultralytics_Foundations_1_Tasks_Inference_files/figure-revealjs/cell-9-output-1.png" class="quarto-figure quarto-figure-center" width="451" height="451"></p>
 </figure>
 </div>
 </div>
@@ -527,6 +603,10 @@ y_{max} &amp;= cy + \frac{h}{2} = 7.5 + 3.5 = 11.0
 <span id="cb10-9"><a href=""></a><span class="bu">print</span>(obb.xywhr)                       <span class="co"># Center x, y, width, height, rotation angle</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p><em>Docs Reference: <a href="https://docs.ultralytics.com/tasks/obb/">OBB</a></em></p>
 </section>
+<section id="obb-output-example" class="slide level2">
+<h2>OBB Output Example</h2>
+
+<img data-src="outputs/obb_output.png" class="r-stretch quarto-figure-center"><p class="caption">OBB Real Output</p></section>
 <section id="object-tracking-in-action" class="slide level2 smaller">
 <h2>Object Tracking in Action</h2>
 <p>Assign distinct IDs to objects and track them continuously across video frames!</p>
@@ -546,6 +626,10 @@ y_{max} &amp;= cy + \frac{h}{2} = 7.5 + 3.5 = 11.0
 <span id="cb12-13"><a href=""></a>        <span class="bu">print</span>(<span class="ss">f"Tracking IDs: </span><span class="sc">{</span>ids<span class="sc">}</span><span class="ss">"</span>)  <span class="co"># e.g., [1, 2]</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p><em>Docs Reference: <a href="https://docs.ultralytics.com/modes/track/">Tracking</a></em></p>
 </section>
+<section id="tracking-output-example" class="slide level2">
+<h2>Tracking Output Example</h2>
+
+<img data-src="outputs/tracking_output.avif" class="r-stretch quarto-figure-center"><p class="caption">Tracking Real Output</p></section>
 <section id="predict-usage-python-batch-input" class="slide level2">
 <h2>Predict Usage (Python): Batch Input</h2>
 <p>Process multiple sources or directories efficiently!</p>
