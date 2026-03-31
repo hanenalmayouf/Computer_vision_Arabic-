@@ -35,7 +35,7 @@ To train a robust AI, split your data:
 - **Train Set (~80%)**: Data the model actively learns from.
 - **Validation Set (~20%)**: Unseen data evaluated *during* training to measure performance (`mAP`).
 
-**Crucial**: Never train on validation data! This causes a **Data Leak** (model memorizes answers but fails in the real world).
+**Crucial**: Never train on validation data! This causes a **Data Leak** (model memorizes answers but fails in the real world). *See Part 4: "Data Leakage" for full details on how to avoid it.*
 
 Split your data into train and validation sets [using Ultralytics Data Split](https://docs.ultralytics.com/reference/data/split/#ultralytics.data.split.autosplit) or [using thier Platform](https://docs.ultralytics.com/platform/data/datasets/)
 
@@ -159,27 +159,39 @@ model = YOLO("path/to/runs/train/exp/weights/last.pt")
 results = model.train(resume=True)
 ```
 
-## Deep Dive into Hyperparameters
+## Important Hyperparameters
 
-- `epochs` (Default: 100): Pass through the ENTIRE dataset. More = learns more, but risks **overfitting** (memorizing data).
-- `patience` (Default: 50): If metrics don't improve for this many epochs, training stops early to save time!
+- `epochs` (Default: 100): Pass through the ENTIRE dataset. More = learns more, but risks overfitting.
 - `batch` (Default: 16): Images processed at once.
   - Higher = faster, stable, takes more GPU memory.
   - Smaller = adds noise, longer training.
   - *Pro-tip*: Use `batch: -1` for **AutoBatch** to maximize your GPU memory without crashing!
 
-## Hyperparameters: Optimizer
-
-- `optimizer` (Default: 'auto'): Algorithm guiding learning (`SGD`, `AdamW`, etc.). `auto` works 99% of the time.
-- `lr0` (Default: 0.01): Initial Learning Rate (step size).
-  - Too high: Loss explodes, model diverges.
-  - Too small: Converges slowly, might get stuck.
-
 ## Hyperparameters: Image Size and Hardware
 
 - `imgsz` (Default: 640): Target image size. Larger sizes (e.g., 1024) capture more detail (great for tiny objects!) but use more RAM and are slower.
-  - 💡 **Tip for Tiny Objects**: Need to detect tiny objects in huge 4K images? Check out **[SAHI (Slicing Aided Hyper Inference)](https://docs.ultralytics.com/guides/sahi-tiled-inference/)**! It slices large images into overlapping tiles, runs YOLO on each, and merges the results automatically. 
 - `device` (Default: ''): Specify GPUs (e.g., `device=0,1`) to trigger multi-GPU training!
+
+## 💡 Tip for Tiny Objects: SAHI
+
+::::{.columns}
+
+:::{.column width="40%" .incremental}
+**Problem:** A 4K image resized to 640px makes tiny objects *invisible* to YOLO.
+
+**Solution — [SAHI](https://docs.ultralytics.com/guides/sahi-tiled-inference/) (Slicing Aided Hyper Inference):**
+
+1. **Slice** the large image into small, overlapping tiles
+2. **Run YOLO** on each tile at full resolution
+3. **Merge** all detections back together automatically
+
+:::
+
+:::{.column width="60%" .fragment}
+![SAHI Sliced Inference Overview](outputs/sahi-sliced-inference-overview.avif)
+:::
+
+::::
 
 ## Using Config Files (Best Practice)
 
@@ -244,31 +256,11 @@ tensorboard --logdir runs/train
 
 
 
-## Data Augmentation (Python) {.smaller}
-
+## Data Augmentation {.smaller}
 
 YOLO natively supports **Albumentations** to improve model robustness, applying default augmentations automatically if installed.
 
-```bash
-pip install albumentations ultralytics
-```
-
-```python
-import albumentations as A
-from ultralytics import YOLO
-
-model = YOLO("yolo26n.pt")
-
-# Define custom Albumentations transforms
-custom_transforms = [
-    A.Blur(blur_limit=7, p=0.5),
-    A.CLAHE(clip_limit=4.0, p=0.5),
-    A.RandomBrightnessContrast(brightness_limit=0.2, contrast_limit=0.2, p=0.5),
-]
-
-# Train the model with custom transforms
-model.train(data="data.yaml", epochs=100, augmentations=custom_transforms)
-```
+**Teaser:** You'll learn why and when to use data augmentation in Part 4 — it's your key weapon against overfitting!
 
 *Docs Reference: [Albumentations Integration](https://docs.ultralytics.com/integrations/albumentations/)*
 

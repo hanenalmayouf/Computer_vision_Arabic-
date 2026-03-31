@@ -77,23 +77,59 @@ plt.show()
 ```
 ::::
 
-:::: {.column width="45%" .incremental}
+:::: {.column width="45%"}
 
-Model Output (Probabilities):
+The model outputs **`probs`**, a probability for **every** possible class:
 
-- **`top1`** (0): The most likely class ID.
-- **`top1conf` (0.95)**: Confidence score of the top class.
-- **`probs`**: Array of probabilities for *all* possible classes.
+| Class ID | Class Name | Probability |
+|----------|------------|-------------|
+| 0        | car        | **0.95**    |
+| 1        | bus        | 0.03        |
+| 2        | person     | 0.01        |
+| …        | …          | …           |
 
 ::::
 
 
 :::::
 
+
+## From `probs` to `top1` — Ultralytics Does It For You
+
+::::: {.columns}
+
+:::: {.column width="55%"}
+```{python}
+#| echo: false
+#| fig-align: center
+fig, ax = plt.subplots(figsize=(4.8, 4.8))
+fig.patch.set_alpha(0.0)
+ax.patch.set_alpha(1.0)
+ax.set_facecolor('white')
+
+draw_base_car(ax)
+
+plt.tight_layout()
+plt.show()
+```
+::::
+
+:::: {.column width="45%" .incremental}
+
+Ultralytics pre-computes the answer for us:
+
+- **`probs`**: Raw probability array for *all* classes.
+- **`probs.top1`** → `0` : Index of the highest-probability class.
+- **`probs.top1conf`** → `0.95` : Its confidence score.
+
+::::
+
+:::::
+
 ::: {.callout-note appearance="simple" icon="false"}
-**Multi-Label Classification**
-Since `probs` evaluates *every* class, we can predict **multiple labels** for a single image by applying a confidence threshold (e.g., keeping all classes with `prob > 0.50`) instead of just taking the `top1` prediction.
-:::
+**Single-Class vs. Multi-Label Classification**
+We just read `top1` that is **single-class** (one winner). But because `probs` scores *every* class, we can also do **multi-label** classification: keep all classes whose probability exceeds a threshold (e.g., `prob > 0.50`) to assign several labels to one image.
+:::  
 
 
 ## Image Classification in Action
@@ -119,6 +155,11 @@ print(f"All Probabilities: {probs.data}")    # Tensor of all class probabilities
 ```
 
 *Docs Reference: [Classification](https://docs.ultralytics.com/tasks/classify/)*
+
+
+## Classification Output Example
+
+![Classification Real Output](outputs/classification_output.png)
 
 
 ## Object Detection Output & Confidence {auto-animate=true}
@@ -176,6 +217,25 @@ Model Output:
 **Filtering Predictions**
 We use a **Confidence Threshold** to automatically drop weak predictions (e.g., ignoring any box with `conf < 0.50`).
 :::
+
+
+## Confidence: Model's Belief vs. Ground Truth
+
+- **Question:** Does `conf=1.0` mean there is a true object 100% of the time?
+ 
+. . .
+
+- **Answer:** **No.**
+
+::: {.incremental}
+- **Confidence** is just a "feeling": How strongly the model **believes** this is the answer.
+- It does **NOT** guarantee the answer is correct in the real world.
+:::
+
+::: {.fragment}
+You'll learn how to actually measure correctness in **Part 4** using Precision and Recall
+:::
+
 
 ## Mapping to Bounding Boxes {auto-animate=true}
 
@@ -246,15 +306,11 @@ $$
 
 Rarely does an image contain exactly one object!
 
+:::{.incremental}
 - YOLO evaluates the image and can predict multiple bounding boxes at once.
 - The single 6-element array `[cx, cy, w, h, conf, cls]` is stacked $N$ times.
 - Resulting Output Shape: **$(N, 6)$** (where $N$ is the number of detected objects).
-
-::: {.callout-note appearance="simple" icon="false"}
-**Wait, how does it know the class?**
-Behind the scenes, each of those $N$ bounding boxes *also* predicted probabilities for ALL 80 classes, just like Image Classification! The final `cls` ID shown in the output is simply the class that scored the highest probability for that specific box.
 :::
-
 
 ## Object Detection in Action 
 
@@ -277,7 +333,13 @@ boxes = results[0].boxes
 print(f"Boxes shape: {boxes.shape}")  # (N, 6) -> N boxes: x1, y1, x2, y2, conf, cls
 ```
 
+
 *Docs Reference: [Detection](https://docs.ultralytics.com/tasks/detect/)*
+
+
+## Detection Output Example
+
+![Detection Real Output](outputs/detection_output.png)
 
 
 ## The Problem with Absolute Pixels
@@ -407,6 +469,12 @@ print(masks.xy)                            # Polygon coordinates
 
 *Docs Reference: [Segmentation](https://docs.ultralytics.com/tasks/segment/)*
 
+
+## Segmentation Output Example
+
+![Segmentation Real Output](outputs/segmentation_output.png)
+
+
 ## Pose Estimation Output Concept
 
 ::::: {.columns}
@@ -448,7 +516,6 @@ plt.show()
 Model Output (Keypoints):
 
 - **`x, y`**: Coordinate pair for each predefined keypoint.
-- **`visibility`**: Whether the keypoint is visible (i.e., not occluded).
 - **`kp_conf`** (per keypoint): Confidence score for each keypoint's location.
 - **`conf` (0.92)**: Overall person detection confidence score.
 - **`cls` (0)**: Class ID (always 0 = person for pose models).
@@ -481,6 +548,11 @@ print(keypoints.xy)                                # Keypoint coordinates
 ```
 
 *Docs Reference: [Pose](https://docs.ultralytics.com/tasks/pose/)*
+
+
+## Pose Estimation Output Example
+
+![Pose Real Output](outputs/pose_output.png)
 
 
 ## OBB (Oriented Bounding Box) Output Concept
@@ -535,14 +607,14 @@ Model Output (Oriented Box):
 Detect objects with oriented bounding boxes (useful for aerial/satellite imagery or rotated objects).
 
 ```bash
-yolo task=obb mode=predict model=yolo11n-obb.pt source="https://ultralytics.com/images/bus.jpg"
+yolo task=obb mode=predict model=yolo26n-obb.pt source="https://ultralytics.com/images/boats.jpg"
 ```
 
 ```python
 from ultralytics import YOLO
 
-model = YOLO("yolo11n-obb.pt")
-results = model.predict(source="https://ultralytics.com/images/bus.jpg")
+model = YOLO("yolo26n-obb.pt")
+results = model.predict(source="https://ultralytics.com/images/boats.jpg")
 
 # Access Output Shape and Data
 obb = results[0].obb
@@ -551,6 +623,11 @@ print(obb.xywhr)                       # Center x, y, width, height, rotation an
 ```
 
 *Docs Reference: [OBB](https://docs.ultralytics.com/tasks/obb/)*
+
+
+## OBB Output Example
+
+![OBB Real Output](outputs/obb_output.png)
 
 
 ## Object Tracking in Action {.smaller}
@@ -578,6 +655,11 @@ for result in results:
 ```
 
 *Docs Reference: [Tracking](https://docs.ultralytics.com/modes/track/)*
+
+
+## Tracking Output Example
+
+![Tracking Real Output](outputs/tracking_output.avif)
 
 
 ## Predict Usage (Python): Batch Input

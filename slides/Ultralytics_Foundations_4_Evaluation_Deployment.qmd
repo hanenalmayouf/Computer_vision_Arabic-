@@ -441,6 +441,295 @@ metrics = model.val(data="data.yaml")
 *Docs Reference: [Model Evaluation Insights](https://docs.ultralytics.com/guides/model-evaluation-insights/)*
 
 
+## Reading Your Results: Running `val()`
+
+When you run `model.val()`, you get a metrics object with all the key numbers:
+
+```python
+from ultralytics import YOLO
+
+model = YOLO("best.pt")
+metrics = model.val(data="data.yaml")
+
+# Key metrics to access:
+print(f"mAP@0.5:   {metrics.box.map50}")    # Generous IoU threshold
+print(f"mAP@0.5:95 {metrics.box.map}")      # Strict across 10 IoU thresholds
+print(f"Precision: {metrics.box.mp}")       # Overall precision
+print(f"Recall:    {metrics.box.mr}")       # Overall recall
+```
+
+**Where to find per-class AP:**
+- Check `metrics.box.ap_class_index` for class names
+- `metrics.box.ap` contains AP for each class individually
+
+*Docs Reference: [Validation Results](https://docs.ultralytics.com/modes/val/)*
+
+
+## Reading the Confusion Matrix
+
+The confusion matrix shows **what your model predicted vs. what was actually there**.
+
+:::: {.columns}
+
+::: {.column width="50%"}
+**Good Matrix:**
+
+- Strong diagonal (high values on the diagonal)
+- Low off-diagonal values
+- Model rarely confuses classes
+
+```
+           pred
+           car  trck
+actual car  95    3
+       trck  2    88
+```
+:::
+
+::: {.column width="50%"}
+**Bad Matrix:**
+
+- High values in wrong rows (e.g., truck predicted as car)
+- Indicates: model can't distinguish between these classes
+
+```
+           pred  
+           car  trck
+actual car  60   40   ← Model confuse
+       trck  45   35
+```
+:::
+
+::::
+
+**If your 'truck' column has high values in the 'car' row, your model can't tell them apart — consider more diverse training data!**
+
+
+## mAP50 vs mAP50-95: When to Use Each
+
+| Metric | When to Use | Why |
+|--------|-------------|-----|
+| **mAP50** | Iterating fast, quick sanity check | Only requires IoU > 0.50, which is generous |
+| **mAP50-95** | Production readiness | Strict — averages across 10 IoU thresholds (0.50, 0.55, ..., 0.95) |
+
+::: {.callout-tip appearance="simple" icon="false"}
+**Rule of Thumb:**
+- Use **mAP50** during rapid experimentation
+- Use **mAP50-95** when you're ready to ship to production
+:::
+
+
+## Overfitting vs. Underfitting
+
+:::: {.columns}
+
+::: {.column width="50%"}
+**Overfitting** (Memorizing)
+- Train loss drops, val loss stops improving or gets worse
+- Model memorized training data instead of learning general patterns
+- **Key sign:** If train mAP >> val mAP, you're overfitting
+:::
+
+::: {.column width="50%"}
+**Underfitting** (Too Simple)
+- Both train and val loss stay high
+- Model is too simple to capture the patterns
+- Needs a bigger model or more data
+:::
+
+::::
+
+**Visual (loss curves):**
+- 🟢 **Healthy:** Train and val loss converge together
+- 🔴 **Overfitting:** Gap between train and val loss widens
+- 🟠 **Underfitting:** Both losses are flat and high
+
+
+## Data Leakage: The Silent Killer
+
+**What it is:** Validation/test data accidentally ends up in the training set.
+
+**How it happens:**
+- Same image appears in both train and val folders
+- Temporal data split wrong (e.g., future data in training)
+- Preprocessing fit on full dataset before splitting
+
+**Why it's catastrophic:**
+- Val metrics look great, but model fails in production
+- You can't trust ANY evaluation number
+
+**How to avoid:**
+- Use `autosplit()` from Ultralytics to split your data
+- Never manually copy images between train/val folders
+- Check for duplicate images before training
+
+::: {.callout-warning appearance="simple" icon="false"}
+**If val metrics are suspiciously perfect, check for data leakage!**
+:::
+
+
+## What Data Augmentation Does
+
+**Concept:** Artificially increase training data variety by applying transformations to existing images.
+
+```{python}
+#| echo: false
+#| fig-align: center
+import matplotlib.pyplot as plt
+import numpy as np
+import matplotlib.patches as patches
+from PIL import Image
+import sys; import os; sys.path.insert(0, os.path.abspath('.')); sys.path.insert(0, os.path.abspath('slides')); from plot_utils import draw_base_car
+
+fig, axes = plt.subplots(1, 5, figsize=(15, 3))
+fig.patch.set_alpha(0.0)
+
+# Original
+ax = axes[0]
+ax.patch.set_alpha(1.0)
+ax.set_facecolor('white')
+draw_base_car(ax)
+ax.set_title('Original', fontsize=10, fontweight='bold')
+ax.set_xticks([]); ax.set_yticks([])
+for sp in ax.spines.values(): sp.set_visible(False)
+
+# Flipped
+ax = axes[1]
+ax.patch.set_alpha(1.0)
+ax.set_facecolor('white')
+draw_base_car(ax)
+ax.set_xlim(16, 0)  # Flip horizontally
+ax.set_title('Flip', fontsize=10, fontweight='bold')
+ax.set_xticks([]); ax.set_yticks([])
+for sp in ax.spines.values(): sp.set_visible(False)
+
+# Brightness
+ax = axes[2]
+ax.patch.set_alpha(1.0)
+ax.set_facecolor('lightyellow')
+ax.text(0.5, 0.5, 'Car', transform=ax.transAxes, fontsize=20, ha='center', va='center', color='#888', fontweight='bold')
+ax.set_title('Brightness', fontsize=10, fontweight='bold')
+ax.set_xticks([]); ax.set_yticks([])
+for sp in ax.spines.values(): sp.set_visible(False)
+
+# Blur
+ax = axes[3]
+ax.patch.set_alpha(1.0)
+ax.set_facecolor('white')
+draw_base_car(ax)
+ax.set_title('Blur', fontsize=10, fontweight='bold')
+ax.set_xticks([]); ax.set_yticks([])
+for sp in ax.spines.values(): sp.set_visible(False)
+
+# Rotation
+ax = axes[4]
+ax.patch.set_alpha(1.0)
+ax.set_facecolor('white')
+draw_base_car(ax)
+ax.set_title('Rotation', fontsize=10, fontweight='bold')
+ax.set_xticks([]); ax.set_yticks([])
+for sp in ax.spines.values(): sp.set_visible(False)
+
+plt.tight_layout()
+plt.show()
+```
+
+**You're teaching the model: a car is still a car upside down, in shadow, or slightly blurry.**
+
+**When it helps:**
+- Overfitting (model needs more variety)
+- Small datasets
+- Domain shift (different lighting/angles in production)
+
+
+## Spotting Problems in Your Training
+
+| Symptom | Root Cause | Fix |
+|---------|------------|-----|
+| Train mAP high, val mAP low | **Overfitting** | Use augmentation + increase data |
+| Train mAP and val mAP both low | **Underfitting** | Use bigger model or more data |
+| Val mAP suspiciously perfect | **Data Leakage** | Re-check your train/val split |
+
+**Where to check:**
+- `results.csv` (in your training run folder)
+- TensorBoard curves
+
+::: {.callout-note appearance="simple" icon="false"}
+**Example:** If your train mAP is 0.85 but val mAP is 0.45, you have an overfitting problem. The model memorized the training data!
+:::
+
+
+## Now You Know the Problems. Here's How to Fix Them
+
+Now that you understand overfitting and data augmentation, let's look at the hyperparameters that help:
+
+**Coming from Part 3:**
+- `epochs`, `batch`, `imgsz`, `device`, `optimizer`, config files
+
+**New tuning knobs for fixing your model:**
+- `lr0`: Adjust learning rate — lower if loss explodes
+- `weight_decay`: Regularization to fight overfitting
+- `patience`: Early stopping to prevent overfitting
+- Data Augmentation: The Albumentations code from Part 3
+
+
+## Hyperparameters: Learning Rate
+
+- `lr0` (Default: 0.01): Initial Learning Rate (step size).
+  - **Too high:** Loss explodes, model diverges.
+  - **Too small:** Converges slowly, might get stuck.
+  - *Rule:* If loss looks like random noise, lower `lr0`.
+
+- `weight_decay` (Default: 0.0005): L2 regularization to fight overfitting.
+  - Penalizes large weights to improve generalization.
+  - Increase if overfitting is detected.
+
+
+## Hyperparameters: Early Stopping
+
+- `patience` (Default: 50): If validation metrics don't improve for this many epochs, training stops automatically.
+
+**Why this helps:**
+- Prevents overfitting by stopping before the model memorizes training data
+- Saves time — no need to manually monitor training
+
+```python
+from ultralytics import YOLO
+
+model = YOLO("yolo26n.pt")
+# Train with early stopping: stop if no improvement for 10 epochs
+model.train(data="data.yaml", epochs=100, patience=10)
+```
+
+
+## Data Augmentation (Python) {.smaller}
+
+YOLO natively supports **Albumentations** to improve model robustness:
+
+```bash
+pip install albumentations ultralytics
+```
+
+```python
+import albumentations as A
+from ultralytics import YOLO
+
+model = YOLO("yolo26n.pt")
+
+# Define custom Albumentations transforms
+custom_transforms = [
+    A.Blur(blur_limit=7, p=0.5),
+    A.CLAHE(clip_limit=4.0, p=0.5),
+    A.RandomBrightnessContrast(brightness_limit=0.2, contrast_limit=0.2, p=0.5),
+]
+
+# Train the model with custom transforms
+model.train(data="data.yaml", epochs=100, augmentations=custom_transforms)
+```
+
+*Docs Reference: [Albumentations Integration](https://docs.ultralytics.com/integrations/albumentations/)*
+
+
 # 8. Deployment {.sdaia-dark background-gradient="linear-gradient(135deg, #1C355E, #00C9A7)"}
 
 Taking it to production.
