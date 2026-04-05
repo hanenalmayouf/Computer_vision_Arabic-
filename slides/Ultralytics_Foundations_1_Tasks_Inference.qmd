@@ -21,7 +21,77 @@ format:
 
 Start using AI immediately without training!
 
-## The YOLO CLI Structure {.sdaia-dark background-color="#1C355E"}
+## Programs vs. Machine Learning
+
+```{dot}
+//| echo: false
+//| fig-width: 10
+//| fig-height: 4.2
+digraph concept {
+    graph [rankdir=LR fontname="Helvetica" nodesep=0.4 ranksep=1.5]
+    node  [fontname="Helvetica" fontcolor=white style=filled shape=box penwidth=0 margin="0.25,0.15" fontsize=13]
+    edge  [penwidth=2.5 arrowsize=1.0 fontname="Helvetica" fontsize=12]
+
+    // ── Traditional row ──
+    subgraph cluster_trad {
+        label="Traditional Programming" fontcolor="#8899bb" fontsize=13 style=dashed color="#3A5070" margin=18
+        ti [label="Input" fillcolor="#2D4E7E"]
+        tf [label="f(x)\nyou write it" fillcolor="#4a4a6a"]
+        to [label="Output" fillcolor="#2D4E7E"]
+        ti -> tf [color="#8899bb"]
+        tf -> to [color="#8899bb"]
+    }
+
+    // ── Machine Learning row ──
+    subgraph cluster_ml {
+        label="Machine Learning" fontcolor="#00C9A7" fontsize=13 style=dashed color="#00C9A7" margin=18
+        mi   [label="Input" fillcolor="#2D4E7E"]
+        mf   [label="f(x)\nlearned from data" fillcolor="#00C9A7" fontcolor="#1C355E" fontname="Helvetica-Bold"]
+        mo   [label="Output" fillcolor="#2D4E7E"]
+        data [label="Data" fillcolor="#1a4060" shape=cylinder]
+        { rank=same; mf; data }
+        mi   -> mf [color="#00C9A7"]
+        mf   -> mo [color="#00C9A7"]
+        data -> mf [label="trains" color="#5599aa" style=dashed fontcolor="#5599aa" fontsize=11]
+    }
+}
+```
+
+::: {.fragment}
+We'll explore each of these output shapes hands-on during this session!
+:::
+
+
+## AI Model for Computer Vision
+
+```{dot}
+//| echo: false
+//| fig-width: 10
+//| fig-height: 4.2
+digraph cv {
+    graph [rankdir=LR fontname="Helvetica" nodesep=0.55 ranksep=1.4]
+    node  [fontname="Helvetica" fontcolor=white style=filled shape=box penwidth=0 margin="0.2,0.13" fontsize=12]
+    edge  [color="#00C9A7" penwidth=2.5 arrowsize=0.9]
+
+    input [label="Image / Video" shape=cylinder fillcolor="#2D4E7E" fontsize=13]
+    model [label="Learned f(x)\n(AI Model)" fillcolor="#00C9A7" fontcolor="#1C355E" fontname="Helvetica-Bold" fontsize=13 width=1.6]
+
+    cls  [label="Classification\n(C,)"        fillcolor="#3A6186"]
+    det  [label="Detection\n(N, 6)"           fillcolor="#3A6186"]
+    seg  [label="Segmentation\n(N, H, W)"     fillcolor="#3A6186"]
+    pose [label="Pose\n(N, 17, 3)"            fillcolor="#3A6186"]
+
+    { rank=same; cls det seg pose }
+
+    input -> model
+    model -> cls
+    model -> det
+    model -> seg
+    model -> pose
+}
+```
+
+## The YOLO CLI Structure
 
 Interacting with Ultralytics is simple:
 
@@ -94,7 +164,7 @@ The model outputs **`probs`**, a probability for **every** possible class:
 :::::
 
 
-## From `probs` to `top1` — Ultralytics Does It For You
+## From `probs` to `top1`
 
 ::::: {.columns}
 
@@ -126,7 +196,7 @@ Ultralytics pre-computes the answer for us:
 
 :::::
 
-::: {.callout-note appearance="simple" icon="false"}
+::: {.callout-note appearance="simple" icon="false" .fragment}
 **Single-Class vs. Multi-Label Classification**
 We just read `top1` that is **single-class** (one winner). But because `probs` scores *every* class, we can also do **multi-label** classification: keep all classes whose probability exceeds a threshold (e.g., `prob > 0.50`) to assign several labels to one image.
 :::  
@@ -159,7 +229,7 @@ print(f"All Probabilities: {probs.data}")    # Tensor of all class probabilities
 
 ## Classification Output Example
 
-![Classification Real Output](outputs/classification_output.png)
+![](outputs/classification_output.png)
 
 
 ## Object Detection Output & Confidence {auto-animate=true}
@@ -336,10 +406,34 @@ print(f"Boxes shape: {boxes.shape}")  # (N, 6) -> N boxes: x1, y1, x2, y2, conf,
 
 *Docs Reference: [Detection](https://docs.ultralytics.com/tasks/detect/)*
 
+## Deep Dive: Accessing Bounding Boxes
+
+The `result.boxes` object provides several ways to access coordinates:
+
+- **`.xyxy`**: $[x_{min}, y_{min}, x_{max}, y_{max}]$ (Top-left, Bottom-right)
+- **`.xywh`**: $[c_x, c_y, w, h]$ (Center coordinates, width, height)
+- **`.xyxyn` / `.xywhn`**: Normalized versions (values between 0.0 and 1.0)
+
+**Code Example:**
+```python
+# Accessing raw tensors
+boxes = result.boxes.xyxy   # [N, 4] tensor
+conf = result.boxes.conf    # [N] tensor
+cls = result.boxes.cls      # [N] tensor
+
+# Extracting first detection
+x1, y1, x2, y2 = boxes[0].tolist() 
+```
+
+::: {.callout-tip}
+Always use `.xyxy` when you want to crop images using Pillow!
+:::
+
+
 
 ## Detection Output Example
 
-![Detection Real Output](outputs/detection_output.png)
+![](outputs/detection_output.png)
 
 
 ## The Problem with Absolute Pixels
@@ -472,7 +566,7 @@ print(masks.xy)                            # Polygon coordinates
 
 ## Segmentation Output Example
 
-![Segmentation Real Output](outputs/segmentation_output.png)
+![](outputs/segmentation_output.png)
 
 
 ## Pose Estimation Output Concept
@@ -552,7 +646,7 @@ print(keypoints.xy)                                # Keypoint coordinates
 
 ## Pose Estimation Output Example
 
-![Pose Real Output](outputs/pose_output.png)
+![](outputs/pose_output.png)
 
 
 ## OBB (Oriented Bounding Box) Output Concept
@@ -627,7 +721,7 @@ print(obb.xywhr)                       # Center x, y, width, height, rotation an
 
 ## OBB Output Example
 
-![OBB Real Output](outputs/obb_output.png)
+![](outputs/obb_output.png)
 
 
 ## Object Tracking in Action {.smaller}
@@ -659,7 +753,7 @@ for result in results:
 
 ## Tracking Output Example
 
-![Tracking Real Output](outputs/tracking_output.avif)
+![](outputs/tracking_output.avif)
 
 
 ## Predict Usage (Python): Batch Input

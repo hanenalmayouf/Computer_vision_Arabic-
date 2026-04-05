@@ -47,6 +47,25 @@ They allow you to deploy world-class computer vision systems with just a few lin
 6. **External Integrations:** Live Inference (Streamlit), Security Alarms
 7. **Multimodal Embeddings:** Similarity Search
 
+## Where are my results saved?
+
+By default, Ultralytics creates a `runs/` directory in your current working directory.
+
+```text
+project_root/
+└── runs/
+    ├── detect/
+    │   ├── predict/          # CLI predictions
+    │   └── train/            # Training results (weights, plots)
+    ├── segment/
+    │   └── predict/
+    └── solutions/            # Logged frames & data
+```
+
+::: {.callout-note}
+You can change the output directory using the `project` and `name` arguments in both CLI and Python.
+:::
+
 # Region & Boundary Analytics {.sdaia-dark background-gradient="linear-gradient(135deg, #1C355E, #00C9A7)"}
 
 Counting, Zones, and Queues
