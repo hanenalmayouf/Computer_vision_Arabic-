@@ -9,7 +9,7 @@
 <link href="Ultralytics_Foundations_1_Tasks_Inference_files/libs/quarto-html/quarto-syntax-highlighting-587c61ba64f3a5504c4d52d930310e48.css" rel="stylesheet" id="quarto-text-highlighting-styles"><meta charset="utf-8">
   <meta name="generator" content="quarto-1.8.26">
 
-  <meta name="dcterms.date" content="2026-03-31">
+  <meta name="dcterms.date" content="2026-04-05">
   <title>Ultralytics YOLO Foundations: Part 1</title>
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
@@ -95,7 +95,7 @@
     code span.vs { color: #20794d; } /* VerbatimString */
     code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
   </style>
-  <link rel="stylesheet" href="Ultralytics_Foundations_1_Tasks_Inference_files/libs/revealjs/dist/theme/quarto-fec02f753a3bac5d9c24dfa8257e7610.css">
+  <link rel="stylesheet" href="Ultralytics_Foundations_1_Tasks_Inference_files/libs/revealjs/dist/theme/quarto-090e625264d31d7a518ad9f601b8a232.css">
   <link href="Ultralytics_Foundations_1_Tasks_Inference_files/libs/revealjs/plugin/quarto-line-highlight/line-highlight.css" rel="stylesheet">
   <link href="Ultralytics_Foundations_1_Tasks_Inference_files/libs/revealjs/plugin/reveal-menu/menu.css" rel="stylesheet">
   <link href="Ultralytics_Foundations_1_Tasks_Inference_files/libs/revealjs/plugin/reveal-menu/quarto-menu.css" rel="stylesheet">
@@ -203,18 +203,217 @@
 <div class="quarto-title-authors">
 </div>
 
-  <p class="date">2026-03-31</p>
+  <p class="date">2026-04-05</p>
 </section>
 <section>
 <section id="first-steps-what-can-yolo-do" class="title-slide slide level1 sdaia-dark center" data-background-gradient="linear-gradient(135deg, #1C355E, #00C9A7)">
 <h1>1. First Steps: What can YOLO do?</h1>
 <p>Start using AI immediately without training!</p>
 </section>
-<section id="the-yolo-cli-structure" class="slide level2 sdaia-dark" data-background-color="#1C355E">
+<section id="programs-vs.-machine-learning" class="slide level2">
+<h2>Programs vs.&nbsp;Machine Learning</h2>
+<div class="cell" data-fig-width="10" data-fig-height="4.2" data-layout-align="default">
+<div class="cell-output-display">
+<div>
+<p></p><figure class=""><p></p>
+<div>
+<svg width="960" height="403" viewbox="0.00 0.00 545.61 367.00" xmlns="http://www.w3.org/2000/svg" xlink="http://www.w3.org/1999/xlink" style="; max-width: none; max-height: none; display: block; margin: auto auto auto auto">
+<g id="graph0" class="graph" transform="scale(1 1) rotate(0) translate(4 363)">
+<title>concept</title>
+<polygon fill="white" stroke="transparent" points="-4,4 -4,-363 541.61,-363 541.61,4 -4,4"></polygon>
+<g id="clust1" class="cluster">
+<title>cluster_trad</title>
+<polygon fill="none" stroke="#3a5070" stroke-dasharray="5,2" points="8,-8 8,-121 529.61,-121 529.61,-8 8,-8"></polygon>
+<text text-anchor="middle" x="268.81" y="-105.3" font-family="Helvetica,sans-Serif" font-size="13.00" fill="#8899bb">Traditional Programming</text>
+</g>
+<g id="clust2" class="cluster">
+<title>cluster_ml</title>
+<polygon fill="none" stroke="#00c9a7" stroke-dasharray="5,2" points="8,-129 8,-351 529.61,-351 529.61,-129 8,-129"></polygon>
+<text text-anchor="middle" x="268.81" y="-335.3" font-family="Helvetica,sans-Serif" font-size="13.00" fill="#00c9a7">Machine Learning</text>
+</g>
+<!-- ti -->
+<g id="node1" class="node">
+<title>ti</title>
+<polygon fill="#2d4e7e" stroke="black" stroke-width="0" points="90.87,-71.6 26.04,-71.6 26.04,-34.4 90.87,-34.4 90.87,-71.6"></polygon>
+<text text-anchor="middle" x="58.46" y="-49.1" font-family="Helvetica,sans-Serif" font-size="13.00" fill="white">Input</text>
+</g>
+<!-- tf -->
+<g id="node2" class="node">
+<title>tf</title>
+<polygon fill="#4a4a6a" stroke="black" stroke-width="0" points="312.88,-79.7 214.62,-79.7 214.62,-26.3 312.88,-26.3 312.88,-79.7"></polygon>
+<text text-anchor="middle" x="263.75" y="-56.9" font-family="Helvetica,sans-Serif" font-size="13.00" fill="white">f(x)</text>
+<text text-anchor="middle" x="263.75" y="-41.3" font-family="Helvetica,sans-Serif" font-size="13.00" fill="white">you write it</text>
+</g>
+<!-- ti&#45;&gt;tf -->
+<g id="edge1" class="edge">
+<title>ti-&gt;tf</title>
+<path fill="none" stroke="#8899bb" stroke-width="2.5" d="M91.22,-53C121.44,-53 167.62,-53 204.45,-53"></path>
+<polygon fill="#8899bb" stroke="#8899bb" stroke-width="2.5" points="204.57,-56.5 214.57,-53 204.57,-49.5 204.57,-56.5"></polygon>
+</g>
+<!-- to -->
+<g id="node3" class="node">
+<title>to</title>
+<polygon fill="#2d4e7e" stroke="black" stroke-width="0" points="511.62,-71.6 436.57,-71.6 436.57,-34.4 511.62,-34.4 511.62,-71.6"></polygon>
+<text text-anchor="middle" x="474.1" y="-49.1" font-family="Helvetica,sans-Serif" font-size="13.00" fill="white">Output</text>
+</g>
+<!-- tf&#45;&gt;to -->
+<g id="edge2" class="edge">
+<title>tf-&gt;to</title>
+<path fill="none" stroke="#8899bb" stroke-width="2.5" d="M313.07,-53C347.17,-53 392.61,-53 426.35,-53"></path>
+<polygon fill="#8899bb" stroke="#8899bb" stroke-width="2.5" points="426.42,-56.5 436.42,-53 426.42,-49.5 426.42,-56.5"></polygon>
+</g>
+<!-- mi -->
+<g id="node4" class="node">
+<title>mi</title>
+<polygon fill="#2d4e7e" stroke="black" stroke-width="0" points="90.87,-301.6 26.04,-301.6 26.04,-264.4 90.87,-264.4 90.87,-301.6"></polygon>
+<text text-anchor="middle" x="58.46" y="-279.1" font-family="Helvetica,sans-Serif" font-size="13.00" fill="white">Input</text>
+</g>
+<!-- mf -->
+<g id="node5" class="node">
+<title>mf</title>
+<polygon fill="#00c9a7" stroke="black" stroke-width="0" points="327.42,-309.7 200.08,-309.7 200.08,-256.3 327.42,-256.3 327.42,-309.7"></polygon>
+<text text-anchor="middle" x="263.75" y="-286.9" font-family="Helvetica,sans-Serif" font-weight="bold" font-size="13.00" fill="#1c355e">f(x)</text>
+<text text-anchor="middle" x="263.75" y="-271.3" font-family="Helvetica,sans-Serif" font-weight="bold" font-size="13.00" fill="#1c355e">learned from data</text>
+</g>
+<!-- mi&#45;&gt;mf -->
+<g id="edge3" class="edge">
+<title>mi-&gt;mf</title>
+<path fill="none" stroke="#00c9a7" stroke-width="2.5" d="M91.22,-283C117.43,-283 155.66,-283 189.38,-283"></path>
+<polygon fill="#00c9a7" stroke="#00c9a7" stroke-width="2.5" points="189.68,-286.5 199.68,-283 189.68,-279.5 189.68,-286.5"></polygon>
+</g>
+<!-- mo -->
+<g id="node6" class="node">
+<title>mo</title>
+<polygon fill="#2d4e7e" stroke="black" stroke-width="0" points="511.62,-301.6 436.57,-301.6 436.57,-264.4 511.62,-264.4 511.62,-301.6"></polygon>
+<text text-anchor="middle" x="474.1" y="-279.1" font-family="Helvetica,sans-Serif" font-size="13.00" fill="white">Output</text>
+</g>
+<!-- mf&#45;&gt;mo -->
+<g id="edge4" class="edge">
+<title>mf-&gt;mo</title>
+<path fill="none" stroke="#00c9a7" stroke-width="2.5" d="M327.54,-283C359.24,-283 397.03,-283 426.17,-283"></path>
+<polygon fill="#00c9a7" stroke="#00c9a7" stroke-width="2.5" points="426.48,-286.5 436.48,-283 426.48,-279.5 426.48,-286.5"></polygon>
+</g>
+<!-- data -->
+<g id="node7" class="node">
+<title>data</title>
+<path fill="#1a4060" stroke="black" stroke-width="0" d="M295.71,-194.03C295.71,-196.61 281.39,-198.7 263.75,-198.7 246.11,-198.7 231.79,-196.61 231.79,-194.03 231.79,-194.03 231.79,-151.97 231.79,-151.97 231.79,-149.39 246.11,-147.3 263.75,-147.3 281.39,-147.3 295.71,-149.39 295.71,-151.97 295.71,-151.97 295.71,-194.03 295.71,-194.03"></path>
+<path fill="none" stroke="black" stroke-width="0" d="M295.71,-194.03C295.71,-191.45 281.39,-189.36 263.75,-189.36 246.11,-189.36 231.79,-191.45 231.79,-194.03"></path>
+<text text-anchor="middle" x="263.75" y="-169.1" font-family="Helvetica,sans-Serif" font-size="13.00" fill="white">Data</text>
+</g>
+<!-- data&#45;&gt;mf -->
+<g id="edge5" class="edge">
+<title>data-&gt;mf</title>
+<path fill="none" stroke="#5599aa" stroke-width="2.5" stroke-dasharray="5,2" d="M263.75,-198.79C263.75,-212.82 263.75,-230.43 263.75,-245.91"></path>
+<polygon fill="#5599aa" stroke="#5599aa" stroke-width="2.5" points="260.25,-246.22 263.75,-256.22 267.25,-246.22 260.25,-246.22"></polygon>
+<text text-anchor="middle" x="254.15" y="-224.32" font-family="Helvetica,sans-Serif" font-size="11.00" fill="#5599aa">trains</text>
+</g>
+</g>
+</svg>
+</div>
+<p></p></figure><p></p>
+</div>
+</div>
+</div>
+<div class="fragment">
+<p>We’ll explore each of these output shapes hands-on during this session!</p>
+</div>
+</section>
+<section id="ai-model-for-computer-vision" class="slide level2">
+<h2>AI Model for Computer Vision</h2>
+<div class="cell" data-fig-width="10" data-fig-height="4.2" data-layout-align="default">
+<div class="cell-output-display">
+<div>
+<p></p><figure class=""><p></p>
+<div>
+<svg width="960" height="403" viewbox="0.00 0.00 535.27 315.80" xmlns="http://www.w3.org/2000/svg" xlink="http://www.w3.org/1999/xlink" style="; max-width: none; max-height: none; display: block; margin: auto auto auto auto">
+<g id="graph0" class="graph" transform="scale(1 1) rotate(0) translate(4 311.8)">
+<title>cv</title>
+<polygon fill="white" stroke="transparent" points="-4,4 -4,-311.8 531.27,-311.8 531.27,4 -4,4"></polygon>
+<!-- input -->
+<g id="node1" class="node">
+<title>input</title>
+<path fill="#2d4e7e" stroke="black" stroke-width="0" d="M108.32,-172.38C108.32,-174.71 84.02,-176.6 54.11,-176.6 24.19,-176.6 -0.11,-174.71 -0.11,-172.38 -0.11,-172.38 -0.11,-134.42 -0.11,-134.42 -0.11,-132.09 24.19,-130.2 54.11,-130.2 84.02,-130.2 108.32,-132.09 108.32,-134.42 108.32,-134.42 108.32,-172.38 108.32,-172.38"></path>
+<path fill="none" stroke="black" stroke-width="0" d="M108.32,-172.38C108.32,-170.05 84.02,-168.16 54.11,-168.16 24.19,-168.16 -0.11,-170.05 -0.11,-172.38"></path>
+<text text-anchor="middle" x="54.11" y="-149.5" font-family="Helvetica,sans-Serif" font-size="13.00" fill="white">Image / Video</text>
+</g>
+<!-- model -->
+<g id="node2" class="node">
+<title>model</title>
+<polygon fill="#00c9a7" stroke="black" stroke-width="0" points="324.22,-178.1 209.22,-178.1 209.22,-128.7 324.22,-128.7 324.22,-178.1"></polygon>
+<text text-anchor="middle" x="266.72" y="-157.3" font-family="Helvetica,sans-Serif" font-weight="bold" font-size="13.00" fill="#1c355e">Learned f(x)</text>
+<text text-anchor="middle" x="266.72" y="-141.7" font-family="Helvetica,sans-Serif" font-weight="bold" font-size="13.00" fill="#1c355e">(AI Model)</text>
+</g>
+<!-- input&#45;&gt;model -->
+<g id="edge1" class="edge">
+<title>input-&gt;model</title>
+<path fill="none" stroke="#00c9a7" stroke-width="2.5" d="M108.25,-153.4C135.96,-153.4 170.12,-153.4 199.53,-153.4"></path>
+<polygon fill="#00c9a7" stroke="#00c9a7" stroke-width="2.5" points="199.9,-156.55 208.9,-153.4 199.9,-150.25 199.9,-156.55"></polygon>
+</g>
+<!-- cls -->
+<g id="node3" class="node">
+<title>cls</title>
+<polygon fill="#3a6186" stroke="black" stroke-width="0" points="525.43,-307.7 427.05,-307.7 427.05,-261.1 525.43,-261.1 525.43,-307.7"></polygon>
+<text text-anchor="middle" x="476.24" y="-288" font-family="Helvetica,sans-Serif" font-size="12.00" fill="white">Classification</text>
+<text text-anchor="middle" x="476.24" y="-273.6" font-family="Helvetica,sans-Serif" font-size="12.00" fill="white">(C,)</text>
+</g>
+<!-- model&#45;&gt;cls -->
+<g id="edge2" class="edge">
+<title>model-&gt;cls</title>
+<path fill="none" stroke="#00c9a7" stroke-width="2.5" d="M306.75,-178.04C341.94,-200.25 393.66,-232.9 430.5,-256.16"></path>
+<polygon fill="#00c9a7" stroke="#00c9a7" stroke-width="2.5" points="428.83,-258.83 438.13,-260.97 432.2,-253.5 428.83,-258.83"></polygon>
+</g>
+<!-- det -->
+<g id="node4" class="node">
+<title>det</title>
+<polygon fill="#3a6186" stroke="black" stroke-width="0" points="515.44,-220.7 437.04,-220.7 437.04,-174.1 515.44,-174.1 515.44,-220.7"></polygon>
+<text text-anchor="middle" x="476.24" y="-201" font-family="Helvetica,sans-Serif" font-size="12.00" fill="white">Detection</text>
+<text text-anchor="middle" x="476.24" y="-186.6" font-family="Helvetica,sans-Serif" font-size="12.00" fill="white">(N, 6)</text>
+</g>
+<!-- model&#45;&gt;det -->
+<g id="edge3" class="edge">
+<title>model-&gt;det</title>
+<path fill="none" stroke="#00c9a7" stroke-width="2.5" d="M324.42,-165.42C356.97,-172.32 397.36,-180.89 428.15,-187.41"></path>
+<polygon fill="#00c9a7" stroke="#00c9a7" stroke-width="2.5" points="427.51,-190.5 436.97,-189.28 428.81,-184.34 427.51,-190.5"></polygon>
+</g>
+<!-- seg -->
+<g id="node5" class="node">
+<title>seg</title>
+<polygon fill="#3a6186" stroke="black" stroke-width="0" points="527.29,-133.7 425.19,-133.7 425.19,-87.1 527.29,-87.1 527.29,-133.7"></polygon>
+<text text-anchor="middle" x="476.24" y="-114" font-family="Helvetica,sans-Serif" font-size="12.00" fill="white">Segmentation</text>
+<text text-anchor="middle" x="476.24" y="-99.6" font-family="Helvetica,sans-Serif" font-size="12.00" fill="white">(N, H, W)</text>
+</g>
+<!-- model&#45;&gt;seg -->
+<g id="edge4" class="edge">
+<title>model-&gt;seg</title>
+<path fill="none" stroke="#00c9a7" stroke-width="2.5" d="M324.42,-141.65C352.79,-135.77 387.12,-128.66 415.85,-122.71"></path>
+<polygon fill="#00c9a7" stroke="#00c9a7" stroke-width="2.5" points="416.8,-125.73 424.97,-120.82 415.52,-119.56 416.8,-125.73"></polygon>
+</g>
+<!-- pose -->
+<g id="node6" class="node">
+<title>pose</title>
+<polygon fill="#3a6186" stroke="black" stroke-width="0" points="515.26,-46.7 437.23,-46.7 437.23,-0.1 515.26,-0.1 515.26,-46.7"></polygon>
+<text text-anchor="middle" x="476.24" y="-27" font-family="Helvetica,sans-Serif" font-size="12.00" fill="white">Pose</text>
+<text text-anchor="middle" x="476.24" y="-12.6" font-family="Helvetica,sans-Serif" font-size="12.00" fill="white">(N, 17, 3)</text>
+</g>
+<!-- model&#45;&gt;pose -->
+<g id="edge5" class="edge">
+<title>model-&gt;pose</title>
+<path fill="none" stroke="#00c9a7" stroke-width="2.5" d="M307.24,-128.64C342.22,-106.73 393.27,-74.75 429.91,-51.8"></path>
+<polygon fill="#00c9a7" stroke="#00c9a7" stroke-width="2.5" points="432,-54.2 437.96,-46.75 428.66,-48.86 432,-54.2"></polygon>
+</g>
+</g>
+</svg>
+</div>
+<p></p></figure><p></p>
+</div>
+</div>
+</div>
+</section>
+<section id="the-yolo-cli-structure" class="slide level2">
 <h2>The YOLO CLI Structure</h2>
 <p>Interacting with Ultralytics is simple:</p>
-<div class="r-fit-text">
-<p><code>yolo TASK MODE ARGS</code></p>
+<div class="r-fit-text" style="text-align: center; background: rgba(0, 193, 222, 0.1); border: 1px solid rgba(0, 193, 222, 0.2); border-radius: 12px; padding: 0.25em 0.5em; font-family: 'JetBrains Mono', monospace; white-space: nowrap; margin-bottom: 0.5em;">
+<p>yolo TASK MODE ARGS</p>
 </div>
 <ul>
 <li><strong>TASK</strong>: What to solve? (<code>detect</code>, <code>segment</code>, <code>classify</code>, <code>pose</code>, <code>obb</code>)</li>
@@ -241,7 +440,7 @@
 <h2>Image Classification Output Concept</h2>
 <div class="columns">
 <div class="column" style="width:55%;">
-<div id="ad9da287" class="cell" data-execution_count="2">
+<div id="ecd009a6" class="cell" data-execution_count="2">
 <div class="cell-output cell-output-display">
 <div class="quarto-figure quarto-figure-center">
 <figure>
@@ -283,15 +482,13 @@
 </tr>
 </tbody>
 </table>
-<p>. . .</p>
-<p>💡 <em>How would you pick the single most likely class from this array?</em></p>
 </div></div>
 </section>
-<section id="from-probs-to-top1-ultralytics-does-it-for-you" class="slide level2">
-<h2>From <code>probs</code> to <code>top1</code> — Ultralytics Does It For You</h2>
+<section id="from-probs-to-top1" class="slide level2">
+<h2>From <code>probs</code> to <code>top1</code></h2>
 <div class="columns">
 <div class="column" style="width:55%;">
-<div id="0b37e743" class="cell" data-execution_count="3">
+<div id="81459f49" class="cell" data-execution_count="3">
 <div class="cell-output cell-output-display">
 <div class="quarto-figure quarto-figure-center">
 <figure>
@@ -308,10 +505,12 @@
 <li class="fragment"><strong><code>probs.top1conf</code></strong> → <code>0.95</code> : Its confidence score.</li>
 </ul>
 </div></div>
+<div class="fragment">
 <div class="callout callout-note no-icon callout-style-simple">
 <div class="callout-body">
 <div class="callout-content">
 <p><strong>Single-Class vs.&nbsp;Multi-Label Classification</strong> We just read <code>top1</code> that is <strong>single-class</strong> (one winner). But because <code>probs</code> scores <em>every</em> class, we can also do <strong>multi-label</strong> classification: keep all classes whose probability exceeds a threshold (e.g., <code>prob &gt; 0.50</code>) to assign several labels to one image.</p>
+</div>
 </div>
 </div>
 </div>
@@ -336,12 +535,12 @@
 <section id="classification-output-example" class="slide level2">
 <h2>Classification Output Example</h2>
 
-<img data-src="outputs/classification_output.png" class="r-stretch quarto-figure-center"><p class="caption">Classification Real Output</p></section>
+<img data-src="outputs/classification_output.png" class="r-stretch"></section>
 <section id="object-detection-output-confidence" class="slide level2" data-auto-animate="true">
 <h2 data-id="quarto-animate-title">Object Detection Output &amp; Confidence</h2>
 <div class="columns" data-id="model-output">
 <div class="column" style="width:55%;">
-<div id="2a28ba25" class="cell" data-execution_count="4">
+<div id="6523e3a5" class="cell" data-execution_count="4">
 <div class="cell-output cell-output-display">
 <div class="quarto-figure quarto-figure-center">
 <figure>
@@ -389,7 +588,7 @@
 <h2 data-id="quarto-animate-title">Mapping to Bounding Boxes</h2>
 <div class="columns" data-id="model-output">
 <div class="column" style="width:55%;">
-<div id="b3a5a1e1" class="cell" data-execution_count="5">
+<div id="2e8bd582" class="cell" data-execution_count="5">
 <div class="cell-output cell-output-display">
 <div class="quarto-figure quarto-figure-center">
 <figure>
@@ -435,10 +634,27 @@ y_{max} &amp;= cy + \frac{h}{2} = 7.5 + 3.5 = 11.0
 <span id="cb4-9"><a href=""></a><span class="bu">print</span>(<span class="ss">f"Boxes shape: </span><span class="sc">{</span>boxes<span class="sc">.</span>shape<span class="sc">}</span><span class="ss">"</span>)  <span class="co"># (N, 6) -&gt; N boxes: x1, y1, x2, y2, conf, cls</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p><em>Docs Reference: <a href="https://docs.ultralytics.com/tasks/detect/">Detection</a></em></p>
 </section>
+<section id="deep-dive-accessing-bounding-boxes" class="slide level2">
+<h2>Deep Dive: Accessing Bounding Boxes</h2>
+<p>The <code>result.boxes</code> object provides several ways to access coordinates:</p>
+<ul>
+<li><strong><code>.xyxy</code></strong>: <span class="math inline">\([x_{min}, y_{min}, x_{max}, y_{max}]\)</span> (Top-left, Bottom-right)</li>
+<li><strong><code>.xywh</code></strong>: <span class="math inline">\([c_x, c_y, w, h]\)</span> (Center coordinates, width, height)</li>
+<li><strong><code>.xyxyn</code> / <code>.xywhn</code></strong>: Normalized versions (values between 0.0 and 1.0)</li>
+</ul>
+<p><strong>Code Example:</strong></p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb5"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href=""></a><span class="co"># Accessing raw tensors</span></span>
+<span id="cb5-2"><a href=""></a>boxes <span class="op">=</span> result.boxes.xyxy   <span class="co"># [N, 4] tensor</span></span>
+<span id="cb5-3"><a href=""></a>conf <span class="op">=</span> result.boxes.conf    <span class="co"># [N] tensor</span></span>
+<span id="cb5-4"><a href=""></a>cls <span class="op">=</span> result.boxes.cls      <span class="co"># [N] tensor</span></span>
+<span id="cb5-5"><a href=""></a></span>
+<span id="cb5-6"><a href=""></a><span class="co"># Extracting first detection</span></span>
+<span id="cb5-7"><a href=""></a>x1, y1, x2, y2 <span class="op">=</span> boxes[<span class="dv">0</span>].tolist() </span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</section>
 <section id="detection-output-example" class="slide level2">
 <h2>Detection Output Example</h2>
 
-<img data-src="outputs/detection_output.png" class="r-stretch quarto-figure-center"><p class="caption">Detection Real Output</p></section>
+<img data-src="outputs/detection_output.png" class="r-stretch"></section>
 <section id="the-problem-with-absolute-pixels" class="slide level2">
 <h2>The Problem with Absolute Pixels</h2>
 <p>Why not just train the model on absolute pixel values like <code>w = 8.0</code>?</p>
@@ -480,7 +696,7 @@ y_{max} &amp;= cy + \frac{h}{2} = 7.5 + 3.5 = 11.0
 <h2>Instance Segmentation Output Concept</h2>
 <div class="columns">
 <div class="column" style="width:55%;">
-<div id="d2cd34da" class="cell" data-execution_count="6">
+<div id="03cab806" class="cell" data-execution_count="6">
 <div class="cell-output cell-output-display">
 <div class="quarto-figure quarto-figure-center">
 <figure>
@@ -502,29 +718,29 @@ y_{max} &amp;= cy + \frac{h}{2} = 7.5 + 3.5 = 11.0
 <section id="instance-segmentation-in-action" class="slide level2">
 <h2>Instance Segmentation in Action</h2>
 <p>Outline the exact shape (pixels) of each object instance.</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb5"><pre class="sourceCode numberSource bash number-lines code-with-copy"><code class="sourceCode bash"><span id="cb5-1"><a href=""></a><span class="co"># Live Example: See the masks!</span></span>
-<span id="cb5-2"><a href=""></a><span class="ex">yolo</span> task=segment mode=predict model=yolo26n-seg.pt source=<span class="st">"https://ultralytics.com/images/bus.jpg"</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb6"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href=""></a><span class="co"># Python Equivalent</span></span>
-<span id="cb6-2"><a href=""></a><span class="im">from</span> ultralytics <span class="im">import</span> YOLO</span>
-<span id="cb6-3"><a href=""></a></span>
-<span id="cb6-4"><a href=""></a>model <span class="op">=</span> YOLO(<span class="st">"yolo26n-seg.pt"</span>)</span>
-<span id="cb6-5"><a href=""></a>results <span class="op">=</span> model.predict(source<span class="op">=</span><span class="st">"https://ultralytics.com/images/bus.jpg"</span>)</span>
-<span id="cb6-6"><a href=""></a></span>
-<span id="cb6-7"><a href=""></a><span class="co"># Access Output Shape and Data</span></span>
-<span id="cb6-8"><a href=""></a>masks <span class="op">=</span> results[<span class="dv">0</span>].masks</span>
-<span id="cb6-9"><a href=""></a><span class="bu">print</span>(<span class="ss">f"Masks shape: </span><span class="sc">{</span>masks<span class="sc">.</span>data<span class="sc">.</span>shape<span class="sc">}</span><span class="ss">"</span>)  <span class="co"># (N, H, W) -&gt; N masks of HxW size</span></span>
-<span id="cb6-10"><a href=""></a><span class="bu">print</span>(masks.xy)                            <span class="co"># Polygon coordinates</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb6"><pre class="sourceCode numberSource bash number-lines code-with-copy"><code class="sourceCode bash"><span id="cb6-1"><a href=""></a><span class="co"># Live Example: See the masks!</span></span>
+<span id="cb6-2"><a href=""></a><span class="ex">yolo</span> task=segment mode=predict model=yolo26n-seg.pt source=<span class="st">"https://ultralytics.com/images/bus.jpg"</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb7"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href=""></a><span class="co"># Python Equivalent</span></span>
+<span id="cb7-2"><a href=""></a><span class="im">from</span> ultralytics <span class="im">import</span> YOLO</span>
+<span id="cb7-3"><a href=""></a></span>
+<span id="cb7-4"><a href=""></a>model <span class="op">=</span> YOLO(<span class="st">"yolo26n-seg.pt"</span>)</span>
+<span id="cb7-5"><a href=""></a>results <span class="op">=</span> model.predict(source<span class="op">=</span><span class="st">"https://ultralytics.com/images/bus.jpg"</span>)</span>
+<span id="cb7-6"><a href=""></a></span>
+<span id="cb7-7"><a href=""></a><span class="co"># Access Output Shape and Data</span></span>
+<span id="cb7-8"><a href=""></a>masks <span class="op">=</span> results[<span class="dv">0</span>].masks</span>
+<span id="cb7-9"><a href=""></a><span class="bu">print</span>(<span class="ss">f"Masks shape: </span><span class="sc">{</span>masks<span class="sc">.</span>data<span class="sc">.</span>shape<span class="sc">}</span><span class="ss">"</span>)  <span class="co"># (N, H, W) -&gt; N masks of HxW size</span></span>
+<span id="cb7-10"><a href=""></a><span class="bu">print</span>(masks.xy)                            <span class="co"># Polygon coordinates</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p><em>Docs Reference: <a href="https://docs.ultralytics.com/tasks/segment/">Segmentation</a></em></p>
 </section>
 <section id="segmentation-output-example" class="slide level2">
 <h2>Segmentation Output Example</h2>
 
-<img data-src="outputs/segmentation_output.png" class="r-stretch quarto-figure-center"><p class="caption">Segmentation Real Output</p></section>
+<img data-src="outputs/segmentation_output.png" class="r-stretch"></section>
 <section id="pose-estimation-output-concept" class="slide level2">
 <h2>Pose Estimation Output Concept</h2>
 <div class="columns">
 <div class="column" style="width:55%;">
-<div id="a00dea09" class="cell" data-execution_count="7">
+<div id="fa6142d3" class="cell" data-execution_count="7">
 <div class="cell-output cell-output-display">
 <div class="quarto-figure quarto-figure-center">
 <figure>
@@ -546,29 +762,29 @@ y_{max} &amp;= cy + \frac{h}{2} = 7.5 + 3.5 = 11.0
 <section id="pose-estimation-in-action" class="slide level2">
 <h2>Pose Estimation in Action</h2>
 <p>Estimate human body keypoints (elbows, knees).</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb7"><pre class="sourceCode numberSource bash number-lines code-with-copy"><code class="sourceCode bash"><span id="cb7-1"><a href=""></a><span class="co"># Live Example: Track keypoints!</span></span>
-<span id="cb7-2"><a href=""></a><span class="ex">yolo</span> task=pose mode=predict model=yolo26n-pose.pt source=<span class="st">"https://ultralytics.com/images/bus.jpg"</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb8"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href=""></a><span class="co"># Python Equivalent</span></span>
-<span id="cb8-2"><a href=""></a><span class="im">from</span> ultralytics <span class="im">import</span> YOLO</span>
-<span id="cb8-3"><a href=""></a></span>
-<span id="cb8-4"><a href=""></a>model <span class="op">=</span> YOLO(<span class="st">"yolo26n-pose.pt"</span>)</span>
-<span id="cb8-5"><a href=""></a>results <span class="op">=</span> model.predict(source<span class="op">=</span><span class="st">"https://ultralytics.com/images/bus.jpg"</span>)</span>
-<span id="cb8-6"><a href=""></a></span>
-<span id="cb8-7"><a href=""></a><span class="co"># Access Output Shape and Data</span></span>
-<span id="cb8-8"><a href=""></a>keypoints <span class="op">=</span> results[<span class="dv">0</span>].keypoints</span>
-<span id="cb8-9"><a href=""></a><span class="bu">print</span>(<span class="ss">f"Keypoints shape: </span><span class="sc">{</span>keypoints<span class="sc">.</span>data<span class="sc">.</span>shape<span class="sc">}</span><span class="ss">"</span>)  <span class="co"># (N, 17, 3) -&gt; N persons, 17 keypoints, (x, y, conf)</span></span>
-<span id="cb8-10"><a href=""></a><span class="bu">print</span>(keypoints.xy)                                <span class="co"># Keypoint coordinates</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb8"><pre class="sourceCode numberSource bash number-lines code-with-copy"><code class="sourceCode bash"><span id="cb8-1"><a href=""></a><span class="co"># Live Example: Track keypoints!</span></span>
+<span id="cb8-2"><a href=""></a><span class="ex">yolo</span> task=pose mode=predict model=yolo26n-pose.pt source=<span class="st">"https://ultralytics.com/images/bus.jpg"</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb9"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href=""></a><span class="co"># Python Equivalent</span></span>
+<span id="cb9-2"><a href=""></a><span class="im">from</span> ultralytics <span class="im">import</span> YOLO</span>
+<span id="cb9-3"><a href=""></a></span>
+<span id="cb9-4"><a href=""></a>model <span class="op">=</span> YOLO(<span class="st">"yolo26n-pose.pt"</span>)</span>
+<span id="cb9-5"><a href=""></a>results <span class="op">=</span> model.predict(source<span class="op">=</span><span class="st">"https://ultralytics.com/images/bus.jpg"</span>)</span>
+<span id="cb9-6"><a href=""></a></span>
+<span id="cb9-7"><a href=""></a><span class="co"># Access Output Shape and Data</span></span>
+<span id="cb9-8"><a href=""></a>keypoints <span class="op">=</span> results[<span class="dv">0</span>].keypoints</span>
+<span id="cb9-9"><a href=""></a><span class="bu">print</span>(<span class="ss">f"Keypoints shape: </span><span class="sc">{</span>keypoints<span class="sc">.</span>data<span class="sc">.</span>shape<span class="sc">}</span><span class="ss">"</span>)  <span class="co"># (N, 17, 3) -&gt; N persons, 17 keypoints, (x, y, conf)</span></span>
+<span id="cb9-10"><a href=""></a><span class="bu">print</span>(keypoints.xy)                                <span class="co"># Keypoint coordinates</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p><em>Docs Reference: <a href="https://docs.ultralytics.com/tasks/pose/">Pose</a></em></p>
 </section>
 <section id="pose-estimation-output-example" class="slide level2">
 <h2>Pose Estimation Output Example</h2>
 
-<img data-src="outputs/pose_output.png" class="r-stretch quarto-figure-center"><p class="caption">Pose Real Output</p></section>
+<img data-src="outputs/pose_output.png" class="r-stretch"></section>
 <section id="obb-oriented-bounding-box-output-concept" class="slide level2">
 <h2>OBB (Oriented Bounding Box) Output Concept</h2>
 <div class="columns">
 <div class="column" style="width:55%;">
-<div id="c9198353" class="cell" data-execution_count="8">
+<div id="65bee3cf" class="cell" data-execution_count="8">
 <div class="cell-output cell-output-display">
 <div class="quarto-figure quarto-figure-center">
 <figure>
@@ -591,75 +807,75 @@ y_{max} &amp;= cy + \frac{h}{2} = 7.5 + 3.5 = 11.0
 <section id="obb-in-action" class="slide level2">
 <h2>OBB in Action</h2>
 <p>Detect objects with oriented bounding boxes (useful for aerial/satellite imagery or rotated objects).</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb9"><pre class="sourceCode numberSource bash number-lines code-with-copy"><code class="sourceCode bash"><span id="cb9-1"><a href=""></a><span class="ex">yolo</span> task=obb mode=predict model=yolo11n-obb.pt source=<span class="st">"https://ultralytics.com/images/bus.jpg"</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb10"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href=""></a><span class="im">from</span> ultralytics <span class="im">import</span> YOLO</span>
-<span id="cb10-2"><a href=""></a></span>
-<span id="cb10-3"><a href=""></a>model <span class="op">=</span> YOLO(<span class="st">"yolo11n-obb.pt"</span>)</span>
-<span id="cb10-4"><a href=""></a>results <span class="op">=</span> model.predict(source<span class="op">=</span><span class="st">"https://ultralytics.com/images/bus.jpg"</span>)</span>
-<span id="cb10-5"><a href=""></a></span>
-<span id="cb10-6"><a href=""></a><span class="co"># Access Output Shape and Data</span></span>
-<span id="cb10-7"><a href=""></a>obb <span class="op">=</span> results[<span class="dv">0</span>].obb</span>
-<span id="cb10-8"><a href=""></a><span class="bu">print</span>(<span class="ss">f"OBB shape: </span><span class="sc">{</span>obb<span class="sc">.</span>data<span class="sc">.</span>shape<span class="sc">}</span><span class="ss">"</span>)  <span class="co"># (N, 7) -&gt; N boxes: cx, cy, w, h, angle, conf, cls</span></span>
-<span id="cb10-9"><a href=""></a><span class="bu">print</span>(obb.xywhr)                       <span class="co"># Center x, y, width, height, rotation angle</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb10"><pre class="sourceCode numberSource bash number-lines code-with-copy"><code class="sourceCode bash"><span id="cb10-1"><a href=""></a><span class="ex">yolo</span> task=obb mode=predict model=yolo26n-obb.pt source=<span class="st">"https://ultralytics.com/images/boats.jpg"</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb11"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href=""></a><span class="im">from</span> ultralytics <span class="im">import</span> YOLO</span>
+<span id="cb11-2"><a href=""></a></span>
+<span id="cb11-3"><a href=""></a>model <span class="op">=</span> YOLO(<span class="st">"yolo26n-obb.pt"</span>)</span>
+<span id="cb11-4"><a href=""></a>results <span class="op">=</span> model.predict(source<span class="op">=</span><span class="st">"https://ultralytics.com/images/boats.jpg"</span>)</span>
+<span id="cb11-5"><a href=""></a></span>
+<span id="cb11-6"><a href=""></a><span class="co"># Access Output Shape and Data</span></span>
+<span id="cb11-7"><a href=""></a>obb <span class="op">=</span> results[<span class="dv">0</span>].obb</span>
+<span id="cb11-8"><a href=""></a><span class="bu">print</span>(<span class="ss">f"OBB shape: </span><span class="sc">{</span>obb<span class="sc">.</span>data<span class="sc">.</span>shape<span class="sc">}</span><span class="ss">"</span>)  <span class="co"># (N, 7) -&gt; N boxes: cx, cy, w, h, angle, conf, cls</span></span>
+<span id="cb11-9"><a href=""></a><span class="bu">print</span>(obb.xywhr)                       <span class="co"># Center x, y, width, height, rotation angle</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p><em>Docs Reference: <a href="https://docs.ultralytics.com/tasks/obb/">OBB</a></em></p>
 </section>
 <section id="obb-output-example" class="slide level2">
 <h2>OBB Output Example</h2>
 
-<img data-src="outputs/obb_output.png" class="r-stretch quarto-figure-center"><p class="caption">OBB Real Output</p></section>
+<img data-src="outputs/obb_output.png" class="r-stretch"></section>
 <section id="object-tracking-in-action" class="slide level2 smaller">
 <h2>Object Tracking in Action</h2>
 <p>Assign distinct IDs to objects and track them continuously across video frames!</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb11"><pre class="sourceCode numberSource bash number-lines code-with-copy"><code class="sourceCode bash"><span id="cb11-1"><a href=""></a><span class="ex">yolo</span> task=detect mode=track model=yolo26n.pt source=<span class="st">"path/to/video.mp4"</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb12"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href=""></a><span class="im">from</span> ultralytics <span class="im">import</span> YOLO</span>
-<span id="cb12-2"><a href=""></a></span>
-<span id="cb12-3"><a href=""></a>model <span class="op">=</span> YOLO(<span class="st">"yolo26n.pt"</span>)</span>
-<span id="cb12-4"><a href=""></a><span class="co"># Use track() with stream=True for memory-efficient video processing</span></span>
-<span id="cb12-5"><a href=""></a>results <span class="op">=</span> model.track(source<span class="op">=</span><span class="st">"path/to/video.mp4"</span>, stream<span class="op">=</span><span class="va">True</span>)</span>
-<span id="cb12-6"><a href=""></a></span>
-<span id="cb12-7"><a href=""></a><span class="co"># Iterate through the video frames</span></span>
-<span id="cb12-8"><a href=""></a><span class="cf">for</span> result <span class="kw">in</span> results:</span>
-<span id="cb12-9"><a href=""></a>    boxes <span class="op">=</span> result.boxes</span>
-<span id="cb12-10"><a href=""></a>    <span class="cf">if</span> boxes.<span class="bu">id</span> <span class="kw">is</span> <span class="kw">not</span> <span class="va">None</span>:</span>
-<span id="cb12-11"><a href=""></a>        <span class="co"># Extract IDs as a list of integers</span></span>
-<span id="cb12-12"><a href=""></a>        ids <span class="op">=</span> boxes.<span class="bu">id</span>.<span class="bu">int</span>().tolist()</span>
-<span id="cb12-13"><a href=""></a>        <span class="bu">print</span>(<span class="ss">f"Tracking IDs: </span><span class="sc">{</span>ids<span class="sc">}</span><span class="ss">"</span>)  <span class="co"># e.g., [1, 2]</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb12"><pre class="sourceCode numberSource bash number-lines code-with-copy"><code class="sourceCode bash"><span id="cb12-1"><a href=""></a><span class="ex">yolo</span> task=detect mode=track model=yolo26n.pt source=<span class="st">"path/to/video.mp4"</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb13"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href=""></a><span class="im">from</span> ultralytics <span class="im">import</span> YOLO</span>
+<span id="cb13-2"><a href=""></a></span>
+<span id="cb13-3"><a href=""></a>model <span class="op">=</span> YOLO(<span class="st">"yolo26n.pt"</span>)</span>
+<span id="cb13-4"><a href=""></a><span class="co"># Use track() with stream=True for memory-efficient video processing</span></span>
+<span id="cb13-5"><a href=""></a>results <span class="op">=</span> model.track(source<span class="op">=</span><span class="st">"path/to/video.mp4"</span>, stream<span class="op">=</span><span class="va">True</span>)</span>
+<span id="cb13-6"><a href=""></a></span>
+<span id="cb13-7"><a href=""></a><span class="co"># Iterate through the video frames</span></span>
+<span id="cb13-8"><a href=""></a><span class="cf">for</span> result <span class="kw">in</span> results:</span>
+<span id="cb13-9"><a href=""></a>    boxes <span class="op">=</span> result.boxes</span>
+<span id="cb13-10"><a href=""></a>    <span class="cf">if</span> boxes.<span class="bu">id</span> <span class="kw">is</span> <span class="kw">not</span> <span class="va">None</span>:</span>
+<span id="cb13-11"><a href=""></a>        <span class="co"># Extract IDs as a list of integers</span></span>
+<span id="cb13-12"><a href=""></a>        ids <span class="op">=</span> boxes.<span class="bu">id</span>.<span class="bu">int</span>().tolist()</span>
+<span id="cb13-13"><a href=""></a>        <span class="bu">print</span>(<span class="ss">f"Tracking IDs: </span><span class="sc">{</span>ids<span class="sc">}</span><span class="ss">"</span>)  <span class="co"># e.g., [1, 2]</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p><em>Docs Reference: <a href="https://docs.ultralytics.com/modes/track/">Tracking</a></em></p>
 </section>
 <section id="tracking-output-example" class="slide level2">
 <h2>Tracking Output Example</h2>
 
-<img data-src="outputs/tracking_output.avif" class="r-stretch quarto-figure-center"><p class="caption">Tracking Real Output</p></section>
+<img data-src="outputs/tracking_output.avif" class="r-stretch"></section>
 <section id="predict-usage-python-batch-input" class="slide level2">
 <h2>Predict Usage (Python): Batch Input</h2>
 <p>Process multiple sources or directories efficiently!</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb13"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href=""></a><span class="im">from</span> ultralytics <span class="im">import</span> YOLO</span>
-<span id="cb13-2"><a href=""></a></span>
-<span id="cb13-3"><a href=""></a><span class="co"># Load your model</span></span>
-<span id="cb13-4"><a href=""></a>model <span class="op">=</span> YOLO(<span class="st">"yolo26n.pt"</span>)</span>
-<span id="cb13-5"><a href=""></a></span>
-<span id="cb13-6"><a href=""></a><span class="co"># Option 1: A list of specific sources</span></span>
-<span id="cb13-7"><a href=""></a>sources <span class="op">=</span> [</span>
-<span id="cb13-8"><a href=""></a>    <span class="st">"https://ultralytics.com/images/bus.jpg"</span>,</span>
-<span id="cb13-9"><a href=""></a>    <span class="st">"path/to/local/image.jpg"</span>,</span>
-<span id="cb13-10"><a href=""></a>    <span class="st">"another_image.png"</span></span>
-<span id="cb13-11"><a href=""></a>]</span>
-<span id="cb13-12"><a href=""></a>results <span class="op">=</span> model.predict(source<span class="op">=</span>sources)</span>
-<span id="cb13-13"><a href=""></a></span>
-<span id="cb13-14"><a href=""></a><span class="co"># Option 2: An entire directory</span></span>
-<span id="cb13-15"><a href=""></a><span class="co"># results = model.predict(source="path/to/my_images_folder/")</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb14"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb14-1"><a href=""></a><span class="im">from</span> ultralytics <span class="im">import</span> YOLO</span>
+<span id="cb14-2"><a href=""></a></span>
+<span id="cb14-3"><a href=""></a><span class="co"># Load your model</span></span>
+<span id="cb14-4"><a href=""></a>model <span class="op">=</span> YOLO(<span class="st">"yolo26n.pt"</span>)</span>
+<span id="cb14-5"><a href=""></a></span>
+<span id="cb14-6"><a href=""></a><span class="co"># Option 1: A list of specific sources</span></span>
+<span id="cb14-7"><a href=""></a>sources <span class="op">=</span> [</span>
+<span id="cb14-8"><a href=""></a>    <span class="st">"https://ultralytics.com/images/bus.jpg"</span>,</span>
+<span id="cb14-9"><a href=""></a>    <span class="st">"path/to/local/image.jpg"</span>,</span>
+<span id="cb14-10"><a href=""></a>    <span class="st">"another_image.png"</span></span>
+<span id="cb14-11"><a href=""></a>]</span>
+<span id="cb14-12"><a href=""></a>results <span class="op">=</span> model.predict(source<span class="op">=</span>sources)</span>
+<span id="cb14-13"><a href=""></a></span>
+<span id="cb14-14"><a href=""></a><span class="co"># Option 2: An entire directory</span></span>
+<span id="cb14-15"><a href=""></a><span class="co"># results = model.predict(source="path/to/my_images_folder/")</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </section>
 <section id="predict-usage-python-processing-results" class="slide level2">
 <h2>Predict Usage (Python): Processing Results</h2>
 <p>Process the batch results or use a memory-efficient stream.</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb14"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb14-1"><a href=""></a><span class="co"># Process the batch results</span></span>
-<span id="cb14-2"><a href=""></a><span class="cf">for</span> result <span class="kw">in</span> results:</span>
-<span id="cb14-3"><a href=""></a>    boxes <span class="op">=</span> result.boxes  <span class="co"># Bounding boxes</span></span>
-<span id="cb14-4"><a href=""></a>    probs <span class="op">=</span> result.probs  <span class="co"># Classification probabilities</span></span>
-<span id="cb14-5"><a href=""></a>    result.show()         <span class="co"># Display each result</span></span>
-<span id="cb14-6"><a href=""></a>    result.save(filename<span class="op">=</span><span class="ss">f"result_</span><span class="sc">{</span>result<span class="sc">.</span>path<span class="sc">.</span>name<span class="sc">}</span><span class="ss">"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb15"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb15-1"><a href=""></a><span class="co"># Process the batch results</span></span>
+<span id="cb15-2"><a href=""></a><span class="cf">for</span> result <span class="kw">in</span> results:</span>
+<span id="cb15-3"><a href=""></a>    boxes <span class="op">=</span> result.boxes  <span class="co"># Bounding boxes</span></span>
+<span id="cb15-4"><a href=""></a>    probs <span class="op">=</span> result.probs  <span class="co"># Classification probabilities</span></span>
+<span id="cb15-5"><a href=""></a>    result.show()         <span class="co"># Display each result</span></span>
+<span id="cb15-6"><a href=""></a>    result.save(filename<span class="op">=</span><span class="ss">f"result_</span><span class="sc">{</span>result<span class="sc">.</span>path<span class="sc">.</span>name<span class="sc">}</span><span class="ss">"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p><strong>Stream/Generator:</strong> For very large datasets, you can use <code>stream=True</code> in the predict call:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb15"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb15-1"><a href=""></a>model.predict(source<span class="op">=</span><span class="st">"dir/"</span>, stream<span class="op">=</span><span class="va">True</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb16"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb16-1"><a href=""></a>model.predict(source<span class="op">=</span><span class="st">"dir/"</span>, stream<span class="op">=</span><span class="va">True</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </section></section>
 <section>
 <section id="conclusion" class="title-slide slide level1 sdaia-dark center" data-background-gradient="linear-gradient(135deg, #1C355E, #00C9A7)">

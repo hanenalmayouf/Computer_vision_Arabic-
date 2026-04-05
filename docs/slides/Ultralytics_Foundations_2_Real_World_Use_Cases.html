@@ -9,7 +9,7 @@
 <link href="Ultralytics_Foundations_2_Real_World_Use_Cases_files/libs/quarto-html/quarto-syntax-highlighting-587c61ba64f3a5504c4d52d930310e48.css" rel="stylesheet" id="quarto-text-highlighting-styles"><meta charset="utf-8">
   <meta name="generator" content="quarto-1.8.26">
 
-  <meta name="dcterms.date" content="2026-03-13">
+  <meta name="dcterms.date" content="2026-04-05">
   <title>Ultralytics YOLO Foundations: Part 2</title>
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
@@ -95,7 +95,7 @@
     code span.vs { color: #20794d; } /* VerbatimString */
     code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
   </style>
-  <link rel="stylesheet" href="Ultralytics_Foundations_2_Real_World_Use_Cases_files/libs/revealjs/dist/theme/quarto-fec02f753a3bac5d9c24dfa8257e7610.css">
+  <link rel="stylesheet" href="Ultralytics_Foundations_2_Real_World_Use_Cases_files/libs/revealjs/dist/theme/quarto-090e625264d31d7a518ad9f601b8a232.css">
   <link href="Ultralytics_Foundations_2_Real_World_Use_Cases_files/libs/revealjs/plugin/quarto-line-highlight/line-highlight.css" rel="stylesheet">
   <link href="Ultralytics_Foundations_2_Real_World_Use_Cases_files/libs/revealjs/plugin/reveal-menu/menu.css" rel="stylesheet">
   <link href="Ultralytics_Foundations_2_Real_World_Use_Cases_files/libs/revealjs/plugin/reveal-menu/quarto-menu.css" rel="stylesheet">
@@ -203,7 +203,7 @@
 <div class="quarto-title-authors">
 </div>
 
-  <p class="date">2026-03-13</p>
+  <p class="date">2026-04-05</p>
 </section>
 <section>
 <section id="real-world-use-cases-solutions" class="title-slide slide level1 sdaia-dark center" data-background-gradient="linear-gradient(135deg, #1C355E, #00C9A7)">
@@ -236,6 +236,31 @@
 <li><strong>External Integrations:</strong> Live Inference (Streamlit), Security Alarms</li>
 <li><strong>Multimodal Embeddings:</strong> Similarity Search</li>
 </ol>
+</section>
+<section id="where-are-my-results-saved" class="slide level2">
+<h2>Where are my results saved?</h2>
+<p>By default, Ultralytics creates a <code>runs/</code> directory in your current working directory.</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode numberSource text number-lines code-with-copy"><code class="sourceCode"><span id="cb1-1"><a href=""></a>project_root/</span>
+<span id="cb1-2"><a href=""></a>└── runs/</span>
+<span id="cb1-3"><a href=""></a>    ├── detect/</span>
+<span id="cb1-4"><a href=""></a>    │   ├── predict/          # CLI predictions</span>
+<span id="cb1-5"><a href=""></a>    │   └── train/            # Training results (weights, plots)</span>
+<span id="cb1-6"><a href=""></a>    ├── segment/</span>
+<span id="cb1-7"><a href=""></a>    │   └── predict/</span>
+<span id="cb1-8"><a href=""></a>    └── solutions/            # Logged frames &amp; data</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="callout callout-note callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>Note</strong></p>
+</div>
+<div class="callout-content">
+<p>You can change the output directory using the <code>project</code> and <code>name</code> arguments in both CLI and Python.</p>
+</div>
+</div>
+</div>
 </section></section>
 <section>
 <section id="region-boundary-analytics" class="title-slide slide level1 sdaia-dark center" data-background-gradient="linear-gradient(135deg, #1C355E, #00C9A7)">
@@ -256,41 +281,46 @@
 <section id="example-object-counting" class="slide level2">
 <h2>Example: Object Counting</h2>
 <p>Count objects passing through an area or crossing a line. <em><a href="https://docs.ultralytics.com/guides/object-counting/">View Official Documentation</a></em></p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href=""></a><span class="im">import</span> cv2</span>
-<span id="cb1-2"><a href=""></a><span class="im">from</span> ultralytics <span class="im">import</span> solutions</span>
-<span id="cb1-3"><a href=""></a></span>
-<span id="cb1-4"><a href=""></a>cap <span class="op">=</span> cv2.VideoCapture(<span class="st">"videos/traffic.mp4"</span>)</span>
-<span id="cb1-5"><a href=""></a>line_points <span class="op">=</span> [(<span class="dv">100</span>, <span class="dv">500</span>), (<span class="dv">900</span>, <span class="dv">500</span>)]</span>
-<span id="cb1-6"><a href=""></a></span>
-<span id="cb1-7"><a href=""></a>counter <span class="op">=</span> solutions.ObjectCounter(</span>
-<span id="cb1-8"><a href=""></a>    show<span class="op">=</span><span class="va">True</span>, region<span class="op">=</span>line_points, model<span class="op">=</span><span class="st">"yolov8n.pt"</span></span>
-<span id="cb1-9"><a href=""></a>)</span>
-<span id="cb1-10"><a href=""></a></span>
-<span id="cb1-11"><a href=""></a><span class="cf">while</span> cap.isOpened():</span>
-<span id="cb1-12"><a href=""></a>    success, im0 <span class="op">=</span> cap.read()</span>
-<span id="cb1-13"><a href=""></a>    <span class="cf">if</span> <span class="kw">not</span> success: <span class="cf">break</span></span>
-<span id="cb1-14"><a href=""></a>    results <span class="op">=</span> counter(im0)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-</section>
-<section id="example-parking-management" class="slide level2">
-<h2>Example: Parking Management</h2>
-<p>Organize and direct vehicle flow in parking areas. <em><a href="https://docs.ultralytics.com/guides/parking-management/">View Official Documentation</a></em></p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href=""></a><span class="im">import</span> cv2</span>
 <span id="cb2-2"><a href=""></a><span class="im">from</span> ultralytics <span class="im">import</span> solutions</span>
 <span id="cb2-3"><a href=""></a></span>
 <span id="cb2-4"><a href=""></a>cap <span class="op">=</span> cv2.VideoCapture(<span class="st">"videos/traffic.mp4"</span>)</span>
-<span id="cb2-5"><a href=""></a>parking_spots <span class="op">=</span> [</span>
-<span id="cb2-6"><a href=""></a>    [(<span class="dv">10</span>, <span class="dv">10</span>), (<span class="dv">10</span>, <span class="dv">50</span>), (<span class="dv">100</span>, <span class="dv">50</span>), (<span class="dv">100</span>, <span class="dv">10</span>)],</span>
-<span id="cb2-7"><a href=""></a>    [(<span class="dv">110</span>, <span class="dv">10</span>), (<span class="dv">110</span>, <span class="dv">50</span>), (<span class="dv">200</span>, <span class="dv">50</span>), (<span class="dv">200</span>, <span class="dv">10</span>)]</span>
-<span id="cb2-8"><a href=""></a>]</span>
-<span id="cb2-9"><a href=""></a></span>
-<span id="cb2-10"><a href=""></a>manager <span class="op">=</span> solutions.ParkingManagement(</span>
-<span id="cb2-11"><a href=""></a>    model<span class="op">=</span><span class="st">"yolov8n.pt"</span>, region<span class="op">=</span>parking_spots, show<span class="op">=</span><span class="va">True</span></span>
-<span id="cb2-12"><a href=""></a>)</span>
-<span id="cb2-13"><a href=""></a></span>
-<span id="cb2-14"><a href=""></a><span class="cf">while</span> cap.isOpened():</span>
-<span id="cb2-15"><a href=""></a>    success, im0 <span class="op">=</span> cap.read()</span>
-<span id="cb2-16"><a href=""></a>    <span class="cf">if</span> <span class="kw">not</span> success: <span class="cf">break</span></span>
-<span id="cb2-17"><a href=""></a>    results <span class="op">=</span> manager(im0)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb2-5"><a href=""></a>line_points <span class="op">=</span> [(<span class="dv">100</span>, <span class="dv">500</span>), (<span class="dv">900</span>, <span class="dv">500</span>)]</span>
+<span id="cb2-6"><a href=""></a></span>
+<span id="cb2-7"><a href=""></a>counter <span class="op">=</span> solutions.ObjectCounter(</span>
+<span id="cb2-8"><a href=""></a>    show<span class="op">=</span><span class="va">True</span>, region<span class="op">=</span>line_points, model<span class="op">=</span><span class="st">"yolo26n.pt"</span></span>
+<span id="cb2-9"><a href=""></a>)</span>
+<span id="cb2-10"><a href=""></a></span>
+<span id="cb2-11"><a href=""></a><span class="cf">while</span> cap.isOpened():</span>
+<span id="cb2-12"><a href=""></a>    success, im0 <span class="op">=</span> cap.read()</span>
+<span id="cb2-13"><a href=""></a>    <span class="cf">if</span> <span class="kw">not</span> success: <span class="cf">break</span></span>
+<span id="cb2-14"><a href=""></a>    results <span class="op">=</span> counter(im0)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+
+<img data-src="slides/outputs/object_counting_output.avif" class="r-stretch quarto-figure-center"><p class="caption">Object Counting Output</p></section>
+<section id="object-counting-output-example" class="slide level2">
+<h2>Object Counting Output Example</h2>
+
+<img data-src="slides/outputs/object_counting_output.avif" class="r-stretch quarto-figure-center"><p class="caption">Object Counting Real Output</p></section>
+<section id="example-parking-management" class="slide level2">
+<h2>Example: Parking Management</h2>
+<p>Organize and direct vehicle flow in parking areas. <em><a href="https://docs.ultralytics.com/guides/parking-management/">View Official Documentation</a></em></p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href=""></a><span class="im">import</span> cv2</span>
+<span id="cb3-2"><a href=""></a><span class="im">from</span> ultralytics <span class="im">import</span> solutions</span>
+<span id="cb3-3"><a href=""></a></span>
+<span id="cb3-4"><a href=""></a>cap <span class="op">=</span> cv2.VideoCapture(<span class="st">"videos/traffic.mp4"</span>)</span>
+<span id="cb3-5"><a href=""></a>parking_spots <span class="op">=</span> [</span>
+<span id="cb3-6"><a href=""></a>    [(<span class="dv">10</span>, <span class="dv">10</span>), (<span class="dv">10</span>, <span class="dv">50</span>), (<span class="dv">100</span>, <span class="dv">50</span>), (<span class="dv">100</span>, <span class="dv">10</span>)],</span>
+<span id="cb3-7"><a href=""></a>    [(<span class="dv">110</span>, <span class="dv">10</span>), (<span class="dv">110</span>, <span class="dv">50</span>), (<span class="dv">200</span>, <span class="dv">50</span>), (<span class="dv">200</span>, <span class="dv">10</span>)]</span>
+<span id="cb3-8"><a href=""></a>]</span>
+<span id="cb3-9"><a href=""></a></span>
+<span id="cb3-10"><a href=""></a>manager <span class="op">=</span> solutions.ParkingManagement(</span>
+<span id="cb3-11"><a href=""></a>    model<span class="op">=</span><span class="st">"yolo26n.pt"</span>, region<span class="op">=</span>parking_spots, show<span class="op">=</span><span class="va">True</span></span>
+<span id="cb3-12"><a href=""></a>)</span>
+<span id="cb3-13"><a href=""></a></span>
+<span id="cb3-14"><a href=""></a><span class="cf">while</span> cap.isOpened():</span>
+<span id="cb3-15"><a href=""></a>    success, im0 <span class="op">=</span> cap.read()</span>
+<span id="cb3-16"><a href=""></a>    <span class="cf">if</span> <span class="kw">not</span> success: <span class="cf">break</span></span>
+<span id="cb3-17"><a href=""></a>    results <span class="op">=</span> manager(im0)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </section></section>
 <section>
 <section id="kinematic-and-spatial-measurement" class="title-slide slide level1 sdaia-dark center" data-background-gradient="linear-gradient(135deg, #1C355E, #00C9A7)">
@@ -309,20 +339,20 @@
 <section id="example-speed-estimation" class="slide level2">
 <h2>Example: Speed Estimation</h2>
 <p>Estimate object speed using tracking techniques and perspective transformations. <em><a href="https://docs.ultralytics.com/guides/speed-estimation/">View Official Documentation</a></em></p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href=""></a><span class="im">import</span> cv2</span>
-<span id="cb3-2"><a href=""></a><span class="im">from</span> ultralytics <span class="im">import</span> solutions</span>
-<span id="cb3-3"><a href=""></a></span>
-<span id="cb3-4"><a href=""></a>cap <span class="op">=</span> cv2.VideoCapture(<span class="st">"videos/traffic.mp4"</span>)</span>
-<span id="cb3-5"><a href=""></a><span class="co"># ... extract fps</span></span>
-<span id="cb3-6"><a href=""></a>speedestimator <span class="op">=</span> solutions.SpeedEstimator(</span>
-<span id="cb3-7"><a href=""></a>    show<span class="op">=</span><span class="va">True</span>, model<span class="op">=</span><span class="st">"yolov8n.pt"</span>,</span>
-<span id="cb3-8"><a href=""></a>    fps<span class="op">=</span><span class="dv">30</span>, meter_per_pixel<span class="op">=</span><span class="fl">0.05</span>, </span>
-<span id="cb3-9"><a href=""></a>)</span>
-<span id="cb3-10"><a href=""></a></span>
-<span id="cb3-11"><a href=""></a><span class="cf">while</span> cap.isOpened():</span>
-<span id="cb3-12"><a href=""></a>    success, im0 <span class="op">=</span> cap.read()</span>
-<span id="cb3-13"><a href=""></a>    <span class="cf">if</span> <span class="kw">not</span> success: <span class="cf">break</span></span>
-<span id="cb3-14"><a href=""></a>    results <span class="op">=</span> speedestimator(im0)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb4"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href=""></a><span class="im">import</span> cv2</span>
+<span id="cb4-2"><a href=""></a><span class="im">from</span> ultralytics <span class="im">import</span> solutions</span>
+<span id="cb4-3"><a href=""></a></span>
+<span id="cb4-4"><a href=""></a>cap <span class="op">=</span> cv2.VideoCapture(<span class="st">"videos/traffic.mp4"</span>)</span>
+<span id="cb4-5"><a href=""></a><span class="co"># ... extract fps</span></span>
+<span id="cb4-6"><a href=""></a>speedestimator <span class="op">=</span> solutions.SpeedEstimator(</span>
+<span id="cb4-7"><a href=""></a>    show<span class="op">=</span><span class="va">True</span>, model<span class="op">=</span><span class="st">"yolo26n.pt"</span>,</span>
+<span id="cb4-8"><a href=""></a>    fps<span class="op">=</span><span class="dv">30</span>, meter_per_pixel<span class="op">=</span><span class="fl">0.05</span>, </span>
+<span id="cb4-9"><a href=""></a>)</span>
+<span id="cb4-10"><a href=""></a></span>
+<span id="cb4-11"><a href=""></a><span class="cf">while</span> cap.isOpened():</span>
+<span id="cb4-12"><a href=""></a>    success, im0 <span class="op">=</span> cap.read()</span>
+<span id="cb4-13"><a href=""></a>    <span class="cf">if</span> <span class="kw">not</span> success: <span class="cf">break</span></span>
+<span id="cb4-14"><a href=""></a>    results <span class="op">=</span> speedestimator(im0)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </section></section>
 <section>
 <section id="data-aggregation-visualization" class="title-slide slide level1 sdaia-dark center" data-background-gradient="linear-gradient(135deg, #1C355E, #00C9A7)">
@@ -340,23 +370,46 @@
 <section id="example-analytics" class="slide level2">
 <h2>Example: Analytics</h2>
 <p>Discover patterns and make informed decisions (Line, Bar, Area, Pie). <em><a href="https://docs.ultralytics.com/guides/analytics/">View Official Documentation</a></em></p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb4"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href=""></a><span class="im">import</span> cv2</span>
-<span id="cb4-2"><a href=""></a><span class="im">from</span> ultralytics <span class="im">import</span> solutions</span>
-<span id="cb4-3"><a href=""></a></span>
-<span id="cb4-4"><a href=""></a>cap <span class="op">=</span> cv2.VideoCapture(<span class="st">"videos/people.mp4"</span>)</span>
-<span id="cb4-5"><a href=""></a>analytics <span class="op">=</span> solutions.Analytics(</span>
-<span id="cb4-6"><a href=""></a>    show<span class="op">=</span><span class="va">True</span>,</span>
-<span id="cb4-7"><a href=""></a>    analytics_type<span class="op">=</span><span class="st">"line"</span>, <span class="co"># "pie", "bar", "area"</span></span>
-<span id="cb4-8"><a href=""></a>    model<span class="op">=</span><span class="st">"yolov8n.pt"</span>, </span>
-<span id="cb4-9"><a href=""></a>)</span>
-<span id="cb4-10"><a href=""></a></span>
-<span id="cb4-11"><a href=""></a>frame_count <span class="op">=</span> <span class="dv">0</span></span>
-<span id="cb4-12"><a href=""></a><span class="cf">while</span> cap.isOpened():</span>
-<span id="cb4-13"><a href=""></a>    success, im0 <span class="op">=</span> cap.read()</span>
-<span id="cb4-14"><a href=""></a>    <span class="cf">if</span> <span class="kw">not</span> success: <span class="cf">break</span></span>
-<span id="cb4-15"><a href=""></a>    frame_count <span class="op">+=</span> <span class="dv">1</span></span>
-<span id="cb4-16"><a href=""></a>    results <span class="op">=</span> analytics(im0, frame_count) </span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-</section></section>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb5"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href=""></a><span class="im">import</span> cv2</span>
+<span id="cb5-2"><a href=""></a><span class="im">from</span> ultralytics <span class="im">import</span> solutions</span>
+<span id="cb5-3"><a href=""></a></span>
+<span id="cb5-4"><a href=""></a>cap <span class="op">=</span> cv2.VideoCapture(<span class="st">"videos/people.mp4"</span>)</span>
+<span id="cb5-5"><a href=""></a>analytics <span class="op">=</span> solutions.Analytics(</span>
+<span id="cb5-6"><a href=""></a>    show<span class="op">=</span><span class="va">True</span>,</span>
+<span id="cb5-7"><a href=""></a>    analytics_type<span class="op">=</span><span class="st">"line"</span>, <span class="co"># "pie", "bar", "area"</span></span>
+<span id="cb5-8"><a href=""></a>    model<span class="op">=</span><span class="st">"yolo26n.pt"</span>, </span>
+<span id="cb5-9"><a href=""></a>)</span>
+<span id="cb5-10"><a href=""></a></span>
+<span id="cb5-11"><a href=""></a>frame_count <span class="op">=</span> <span class="dv">0</span></span>
+<span id="cb5-12"><a href=""></a><span class="cf">while</span> cap.isOpened():</span>
+<span id="cb5-13"><a href=""></a>    success, im0 <span class="op">=</span> cap.read()</span>
+<span id="cb5-14"><a href=""></a>    <span class="cf">if</span> <span class="kw">not</span> success: <span class="cf">break</span></span>
+<span id="cb5-15"><a href=""></a>    frame_count <span class="op">+=</span> <span class="dv">1</span></span>
+<span id="cb5-16"><a href=""></a>    results <span class="op">=</span> analytics(im0, frame_count) </span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</section>
+<section id="example-heatmap" class="slide level2">
+<h2>Example: Heatmap</h2>
+<p>Visualize spatial density and movement patterns. <em><a href="https://docs.ultralytics.com/guides/heatmap/">View Official Documentation</a></em></p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb6"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href=""></a><span class="im">import</span> cv2</span>
+<span id="cb6-2"><a href=""></a><span class="im">from</span> ultralytics <span class="im">import</span> solutions</span>
+<span id="cb6-3"><a href=""></a></span>
+<span id="cb6-4"><a href=""></a>cap <span class="op">=</span> cv2.VideoCapture(<span class="st">"videos/traffic.mp4"</span>)</span>
+<span id="cb6-5"><a href=""></a>heatmap <span class="op">=</span> solutions.Heatmap(</span>
+<span id="cb6-6"><a href=""></a>    show<span class="op">=</span><span class="va">True</span>,</span>
+<span id="cb6-7"><a href=""></a>    model<span class="op">=</span><span class="st">"yolo26n.pt"</span>,</span>
+<span id="cb6-8"><a href=""></a>    colormap<span class="op">=</span>cv2.COLORMAP_JET</span>
+<span id="cb6-9"><a href=""></a>)</span>
+<span id="cb6-10"><a href=""></a></span>
+<span id="cb6-11"><a href=""></a><span class="cf">while</span> cap.isOpened():</span>
+<span id="cb6-12"><a href=""></a>    success, im0 <span class="op">=</span> cap.read()</span>
+<span id="cb6-13"><a href=""></a>    <span class="cf">if</span> <span class="kw">not</span> success: <span class="cf">break</span></span>
+<span id="cb6-14"><a href=""></a>    results <span class="op">=</span> heatmap(im0)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+
+<img data-src="slides/outputs/heatmap_output.avif" class="r-stretch quarto-figure-center"><p class="caption">Heatmap Output</p></section>
+<section id="heatmap-output-example" class="slide level2">
+<h2>Heatmap Output Example</h2>
+
+<img data-src="slides/outputs/heatmap_output.avif" class="r-stretch quarto-figure-center"><p class="caption">Heatmap Real Output</p></section></section>
 <section>
 <section id="image-output-manipulation" class="title-slide slide level1 sdaia-dark center" data-background-gradient="linear-gradient(135deg, #1C355E, #00C9A7)">
 <h1>Image Output Manipulation</h1>
@@ -373,20 +426,20 @@
 <section id="example-object-blurring" class="slide level2">
 <h2>Example: Object Blurring</h2>
 <p>Automatically blur bounding boxes or segmentation masks to protect privacy. <em><a href="https://docs.ultralytics.com/guides/object-blurring/">View Official Documentation</a></em></p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb5"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href=""></a><span class="im">import</span> cv2</span>
-<span id="cb5-2"><a href=""></a><span class="im">from</span> ultralytics <span class="im">import</span> solutions</span>
-<span id="cb5-3"><a href=""></a></span>
-<span id="cb5-4"><a href=""></a>cap <span class="op">=</span> cv2.VideoCapture(<span class="st">"videos/people.mp4"</span>)</span>
-<span id="cb5-5"><a href=""></a>blurrer <span class="op">=</span> solutions.ObjectBlurrer(</span>
-<span id="cb5-6"><a href=""></a>    show<span class="op">=</span><span class="va">True</span>,</span>
-<span id="cb5-7"><a href=""></a>    model<span class="op">=</span><span class="st">"yolov8n.pt"</span>, </span>
-<span id="cb5-8"><a href=""></a>    blur_ratio<span class="op">=</span><span class="fl">0.5</span>, <span class="co"># percentage of blur intensity</span></span>
-<span id="cb5-9"><a href=""></a>)</span>
-<span id="cb5-10"><a href=""></a></span>
-<span id="cb5-11"><a href=""></a><span class="cf">while</span> cap.isOpened():</span>
-<span id="cb5-12"><a href=""></a>    success, im0 <span class="op">=</span> cap.read()</span>
-<span id="cb5-13"><a href=""></a>    <span class="cf">if</span> <span class="kw">not</span> success: <span class="cf">break</span></span>
-<span id="cb5-14"><a href=""></a>    results <span class="op">=</span> blurrer(im0)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb7"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href=""></a><span class="im">import</span> cv2</span>
+<span id="cb7-2"><a href=""></a><span class="im">from</span> ultralytics <span class="im">import</span> solutions</span>
+<span id="cb7-3"><a href=""></a></span>
+<span id="cb7-4"><a href=""></a>cap <span class="op">=</span> cv2.VideoCapture(<span class="st">"videos/people.mp4"</span>)</span>
+<span id="cb7-5"><a href=""></a>blurrer <span class="op">=</span> solutions.ObjectBlurrer(</span>
+<span id="cb7-6"><a href=""></a>    show<span class="op">=</span><span class="va">True</span>,</span>
+<span id="cb7-7"><a href=""></a>    model<span class="op">=</span><span class="st">"yolo26n.pt"</span>, </span>
+<span id="cb7-8"><a href=""></a>    blur_ratio<span class="op">=</span><span class="fl">0.5</span>, <span class="co"># percentage of blur intensity</span></span>
+<span id="cb7-9"><a href=""></a>)</span>
+<span id="cb7-10"><a href=""></a></span>
+<span id="cb7-11"><a href=""></a><span class="cf">while</span> cap.isOpened():</span>
+<span id="cb7-12"><a href=""></a>    success, im0 <span class="op">=</span> cap.read()</span>
+<span id="cb7-13"><a href=""></a>    <span class="cf">if</span> <span class="kw">not</span> success: <span class="cf">break</span></span>
+<span id="cb7-14"><a href=""></a>    results <span class="op">=</span> blurrer(im0)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </section></section>
 <section>
 <section id="specialized-model-heads" class="title-slide slide level1 sdaia-dark center" data-background-gradient="linear-gradient(135deg, #1C355E, #00C9A7)">
@@ -404,20 +457,20 @@
 <section id="example-workouts-monitoring" class="slide level2">
 <h2>Example: Workouts Monitoring</h2>
 <p>Track and evaluate exercise form (like pushups) using YOLO Pose keypoints. <em><a href="https://docs.ultralytics.com/guides/workouts-monitoring/">View Official Documentation</a></em></p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb6"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href=""></a><span class="im">import</span> cv2</span>
-<span id="cb6-2"><a href=""></a><span class="im">from</span> ultralytics <span class="im">import</span> solutions</span>
-<span id="cb6-3"><a href=""></a></span>
-<span id="cb6-4"><a href=""></a>cap <span class="op">=</span> cv2.VideoCapture(<span class="st">"videos/people.mp4"</span>)</span>
-<span id="cb6-5"><a href=""></a>gym <span class="op">=</span> solutions.AIGym(</span>
-<span id="cb6-6"><a href=""></a>    show<span class="op">=</span><span class="va">True</span>,</span>
-<span id="cb6-7"><a href=""></a>    kpts<span class="op">=</span>[<span class="dv">6</span>, <span class="dv">8</span>, <span class="dv">10</span>], <span class="co"># default keypoints for pushups</span></span>
-<span id="cb6-8"><a href=""></a>    model<span class="op">=</span><span class="st">"yolov8n-pose.pt"</span>, </span>
-<span id="cb6-9"><a href=""></a>)</span>
-<span id="cb6-10"><a href=""></a></span>
-<span id="cb6-11"><a href=""></a><span class="cf">while</span> cap.isOpened():</span>
-<span id="cb6-12"><a href=""></a>    success, im0 <span class="op">=</span> cap.read()</span>
-<span id="cb6-13"><a href=""></a>    <span class="cf">if</span> <span class="kw">not</span> success: <span class="cf">break</span></span>
-<span id="cb6-14"><a href=""></a>    results <span class="op">=</span> gym(im0)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb8"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href=""></a><span class="im">import</span> cv2</span>
+<span id="cb8-2"><a href=""></a><span class="im">from</span> ultralytics <span class="im">import</span> solutions</span>
+<span id="cb8-3"><a href=""></a></span>
+<span id="cb8-4"><a href=""></a>cap <span class="op">=</span> cv2.VideoCapture(<span class="st">"videos/people.mp4"</span>)</span>
+<span id="cb8-5"><a href=""></a>gym <span class="op">=</span> solutions.AIGym(</span>
+<span id="cb8-6"><a href=""></a>    show<span class="op">=</span><span class="va">True</span>,</span>
+<span id="cb8-7"><a href=""></a>    kpts<span class="op">=</span>[<span class="dv">6</span>, <span class="dv">8</span>, <span class="dv">10</span>], <span class="co"># default keypoints for pushups</span></span>
+<span id="cb8-8"><a href=""></a>    model<span class="op">=</span><span class="st">"yolov8n-pose.pt"</span>, </span>
+<span id="cb8-9"><a href=""></a>)</span>
+<span id="cb8-10"><a href=""></a></span>
+<span id="cb8-11"><a href=""></a><span class="cf">while</span> cap.isOpened():</span>
+<span id="cb8-12"><a href=""></a>    success, im0 <span class="op">=</span> cap.read()</span>
+<span id="cb8-13"><a href=""></a>    <span class="cf">if</span> <span class="kw">not</span> success: <span class="cf">break</span></span>
+<span id="cb8-14"><a href=""></a>    results <span class="op">=</span> gym(im0)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </section></section>
 <section>
 <section id="external-system-integrations" class="title-slide slide level1 sdaia-dark center" data-background-gradient="linear-gradient(135deg, #1C355E, #00C9A7)">
@@ -435,22 +488,22 @@
 <section id="example-security-alarm-system" class="slide level2">
 <h2>Example: Security Alarm System</h2>
 <p>Trigger email alerts upon detecting specific objects. <em><a href="https://docs.ultralytics.com/guides/security-alarm-system/">View Official Documentation</a></em></p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb7"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href=""></a><span class="im">import</span> cv2</span>
-<span id="cb7-2"><a href=""></a><span class="im">from</span> ultralytics <span class="im">import</span> solutions</span>
-<span id="cb7-3"><a href=""></a></span>
-<span id="cb7-4"><a href=""></a>cap <span class="op">=</span> cv2.VideoCapture(<span class="st">"videos/people.mp4"</span>)</span>
-<span id="cb7-5"><a href=""></a>securityalarm <span class="op">=</span> solutions.SecurityAlarm(</span>
-<span id="cb7-6"><a href=""></a>    show<span class="op">=</span><span class="va">True</span>, model<span class="op">=</span><span class="st">"yolov8n.pt"</span>,</span>
-<span id="cb7-7"><a href=""></a>    records<span class="op">=</span><span class="dv">1</span>, <span class="co"># send email after 1 detection</span></span>
-<span id="cb7-8"><a href=""></a>)</span>
-<span id="cb7-9"><a href=""></a></span>
-<span id="cb7-10"><a href=""></a><span class="co"># Remember to use an App Password here if using Gmail!</span></span>
-<span id="cb7-11"><a href=""></a>securityalarm.authenticate(<span class="st">"sen@email"</span>, <span class="st">"PASS"</span>, <span class="st">"rec@email"</span>) </span>
-<span id="cb7-12"><a href=""></a></span>
-<span id="cb7-13"><a href=""></a><span class="cf">while</span> cap.isOpened():</span>
-<span id="cb7-14"><a href=""></a>    success, im0 <span class="op">=</span> cap.read()</span>
-<span id="cb7-15"><a href=""></a>    <span class="cf">if</span> <span class="kw">not</span> success: <span class="cf">break</span></span>
-<span id="cb7-16"><a href=""></a>    results <span class="op">=</span> securityalarm(im0)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb9"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href=""></a><span class="im">import</span> cv2</span>
+<span id="cb9-2"><a href=""></a><span class="im">from</span> ultralytics <span class="im">import</span> solutions</span>
+<span id="cb9-3"><a href=""></a></span>
+<span id="cb9-4"><a href=""></a>cap <span class="op">=</span> cv2.VideoCapture(<span class="st">"videos/people.mp4"</span>)</span>
+<span id="cb9-5"><a href=""></a>securityalarm <span class="op">=</span> solutions.SecurityAlarm(</span>
+<span id="cb9-6"><a href=""></a>    show<span class="op">=</span><span class="va">True</span>, model<span class="op">=</span><span class="st">"yolo26n.pt"</span>,</span>
+<span id="cb9-7"><a href=""></a>    records<span class="op">=</span><span class="dv">1</span>, <span class="co"># send email after 1 detection</span></span>
+<span id="cb9-8"><a href=""></a>)</span>
+<span id="cb9-9"><a href=""></a></span>
+<span id="cb9-10"><a href=""></a><span class="co"># Remember to use an App Password here if using Gmail!</span></span>
+<span id="cb9-11"><a href=""></a>securityalarm.authenticate(<span class="st">"sen@email"</span>, <span class="st">"PASS"</span>, <span class="st">"rec@email"</span>) </span>
+<span id="cb9-12"><a href=""></a></span>
+<span id="cb9-13"><a href=""></a><span class="cf">while</span> cap.isOpened():</span>
+<span id="cb9-14"><a href=""></a>    success, im0 <span class="op">=</span> cap.read()</span>
+<span id="cb9-15"><a href=""></a>    <span class="cf">if</span> <span class="kw">not</span> success: <span class="cf">break</span></span>
+<span id="cb9-16"><a href=""></a>    results <span class="op">=</span> securityalarm(im0)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </section></section>
 <section>
 <section id="conclusion" class="title-slide slide level1 sdaia-dark center" data-background-gradient="linear-gradient(135deg, #1C355E, #00C9A7)">

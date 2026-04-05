@@ -9,7 +9,7 @@
 <link href="Image_Foundations_files/libs/quarto-html/quarto-syntax-highlighting-587c61ba64f3a5504c4d52d930310e48.css" rel="stylesheet" id="quarto-text-highlighting-styles"><meta charset="utf-8">
   <meta name="generator" content="quarto-1.8.26">
 
-  <meta name="dcterms.date" content="2026-03-30">
+  <meta name="dcterms.date" content="2026-04-05">
   <title>Digital Image Foundations</title>
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
@@ -95,7 +95,7 @@
     code span.vs { color: #20794d; } /* VerbatimString */
     code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
   </style>
-  <link rel="stylesheet" href="Image_Foundations_files/libs/revealjs/dist/theme/quarto-fec02f753a3bac5d9c24dfa8257e7610.css">
+  <link rel="stylesheet" href="Image_Foundations_files/libs/revealjs/dist/theme/quarto-090e625264d31d7a518ad9f601b8a232.css">
   <link href="Image_Foundations_files/libs/revealjs/plugin/quarto-line-highlight/line-highlight.css" rel="stylesheet">
   <link href="Image_Foundations_files/libs/revealjs/plugin/reveal-menu/menu.css" rel="stylesheet">
   <link href="Image_Foundations_files/libs/revealjs/plugin/reveal-menu/quarto-menu.css" rel="stylesheet">
@@ -203,7 +203,7 @@
 <div class="quarto-title-authors">
 </div>
 
-  <p class="date">2026-03-30</p>
+  <p class="date">2026-04-05</p>
 </section>
 <section>
 <section id="digital-image-foundations" class="title-slide slide level1 sdaia-dark center" data-background-gradient="linear-gradient(135deg, #1C355E, #00C9A7)">
@@ -238,15 +238,6 @@
 <p><img data-src="assets/camera_vision_sdaia.png" class="quarto-figure quarto-figure-center"> </p>
 </div></div>
 </section>
-<section id="the-digital-sensor-capturing-light" class="slide level2">
-<h2>The Digital Sensor: Capturing Light</h2>
-<ul>
-<li><strong>Photodiodes</strong>: Each pixel on a sensor forms a tiny bucket collecting photons (light).</li>
-<li><strong>Charge</strong>: More light <span class="math inline">\(\rightarrow\)</span> more photons <span class="math inline">\(\rightarrow\)</span> higher electrical charge.</li>
-<li><strong>Bayer Filter</strong>: Sensors capture only light intensity (grayscale). To get color, a microscopic mosaic filter is placed over them so each pixel records only Red, Green, or Blue.</li>
-<li><strong>Digitization</strong>: An Analog-to-Digital Converter (ADC) turns the electrical charge into a discrete number, typically from <code>0</code> to <code>255</code>.</li>
-</ul>
-</section>
 <section id="grayscale-images-pixels-coordinates" class="slide level2">
 <h2>Grayscale Images: Pixels &amp; Coordinates</h2>
 <ul>
@@ -267,7 +258,7 @@
 <span id="cb1-10"><a href=""></a>    [<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">0</span>]</span>
 <span id="cb1-11"><a href=""></a>])</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div><div class="column" style="width:50%;">
-<div id="aedcb752" class="cell" data-execution_count="1">
+<div id="33b0fa73" class="cell" data-execution_count="1">
 <div class="cell-output cell-output-display">
 <div class="quarto-figure quarto-figure-center">
 <figure>
@@ -284,7 +275,7 @@
 <li>Images are 3D matrices (height × width × <strong>3 channels</strong>).</li>
 <li><strong>RGB</strong>: Red, Green, Blue. Values range from <code>0</code> (dark) to <code>255</code> (bright).</li>
 </ul>
-<div id="86942650" class="cell" data-execution_count="2">
+<div id="945294eb" class="cell" data-execution_count="2">
 <div class="cell-output cell-output-display">
 <div class="quarto-figure quarto-figure-center">
 <figure>
@@ -296,22 +287,68 @@
 </section>
 <section id="essential-image-libraries" class="slide level2">
 <h2>Essential Image Libraries</h2>
+<p><br></p>
+<div class="columns">
+<div class="column" style="width:33%;">
+<div class="callout callout-note no-icon callout-style-simple">
+<div class="callout-body">
+<div class="callout-content">
+<div style="text-align: center; font-size: 3rem; margin-bottom: 0.5rem;">
+📷
+</div>
+<div style="text-align: center; font-size: 1.2rem; font-weight: bold; margin-bottom: 1rem; color: #1C355E;">
+OpenCV
+</div>
+<p>Very fast C++ library mapped to Python.</p>
 <ul>
-<li><strong>OpenCV</strong>: Very fast C++ library mapped to Python. Uses <strong>BGR</strong> channel order by default. Great for video streams and low-level transforms.</li>
-<li><strong>Pillow (PIL)</strong>: Standard Python image library. Uses <strong>RGB</strong>. Easy to use for simple drawing and resizing.</li>
-<li><strong>NumPy</strong>: The core math library. Images in Python are fundamentally <code>numpy</code> multi-dimensional arrays (tensors).</li>
+<li>Uses <strong>BGR</strong> channel order</li>
+<li>Great for video streams</li>
+<li>Low-level transforms</li>
 </ul>
-</section>
-<section id="image-data-types-uint8-vs-floats" class="slide level2">
-<h2>Image Data Types: <code>uint8</code> vs Floats</h2>
+</div>
+</div>
+</div>
+</div><div class="column" style="width:33%;">
+<div class="callout callout-tip no-icon callout-style-simple">
+<div class="callout-body">
+<div class="callout-content">
+<div style="text-align: center; font-size: 3rem; margin-bottom: 0.5rem;">
+🖼️
+</div>
+<div style="text-align: center; font-size: 1.2rem; font-weight: bold; margin-bottom: 1rem; color: #1C355E;">
+Pillow (PIL)
+</div>
+<p>Standard Python image library.</p>
 <ul>
-<li>Pixels are usually 8-bit unsigned integers (<strong><code>uint8</code></strong>), meaning values range from <code>0</code> to <code>255</code>.</li>
-<li><code>0</code> is Black. <code>255</code> is White (in grayscale) or full intensity (in RGB).</li>
-<li><strong>Deep Learning</strong>: Models like YOLO often prefer normalized inputs. We convert <code>0-255</code> to <strong>floats</strong> between <code>0.0</code> and <code>1.0</code> by dividing by <code>255.0</code>.</li>
+<li>Uses <strong>RGB</strong> channel order</li>
+<li>Simple drawing &amp; resizing</li>
+<li>(Our primary tool)</li>
 </ul>
+</div>
+</div>
+</div>
+</div><div class="column" style="width:33%;">
+<div class="callout callout-warning no-icon callout-style-simple">
+<div class="callout-body">
+<div class="callout-content">
+<div style="text-align: center; font-size: 3rem; margin-bottom: 0.5rem;">
+🔢
+</div>
+<div style="text-align: center; font-size: 1.2rem; font-weight: bold; margin-bottom: 1rem; color: #1C355E;">
+NumPy
+</div>
+<p>The core math library.</p>
+<ul>
+<li>Images are fundamentally <code>numpy</code> tensors</li>
+<li>Multi-dimensional array operations</li>
+</ul>
+</div>
+</div>
+</div>
+</div></div>
 </section>
-<section id="coordinates-vs.-array-indexing-the-gotcha" class="slide level2">
-<h2>Coordinates vs.&nbsp;Array Indexing <br> (The “Gotcha”)</h2>
+<section id="coordinates-vs.-array-indexing" class="slide level2">
+<h2>Coordinates vs.&nbsp;Array Indexing</h2>
 <div class="columns">
 <div class="column" style="width:50%;">
 <ul>
@@ -355,16 +392,6 @@
 <span id="cb3-12"><a href=""></a>plt.axis(<span class="st">'off'</span>)</span>
 <span id="cb3-13"><a href=""></a>plt.show()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div></div>
-</section>
-<section id="image-resolution-and-resizing" class="slide level2">
-<h2>Image Resolution and Resizing</h2>
-<ul>
-<li><strong>Resolution</strong>: Dimensions of the image <code>(Width × Height)</code>.</li>
-<li>Deep Learning models typically require <strong>fixed input sizes</strong> (e.g., <code>640x640</code>).</li>
-<li><strong>Aspect Ratio</strong>: The ratio of width to height.</li>
-<li><em>Direct Resizing</em>: Squashes or stretches the image, changing the aspect ratio (causes distortion).</li>
-<li><em>Letterboxing</em>: Resizes while maintaining aspect ratio, then pads the remaining area with a solid color.</li>
-</ul>
 </section></section>
 <section>
 <section id="conclusion" class="title-slide slide level1 sdaia-dark center" data-background-gradient="linear-gradient(135deg, #1C355E, #00C9A7)">
@@ -376,7 +403,7 @@
 <ul>
 <li><strong>Light &amp; Cameras</strong>: How digital sensors capture light and turn it into data.</li>
 <li><strong>Pixels &amp; Channels</strong>: Grayscale (2D) vs.&nbsp;Color RGB (3D) representations.</li>
-<li><strong>Libraries</strong>: OpenCV, Pillow, and NumPy basics.</li>
+<li><strong>Libraries</strong>: Pillow and NumPy basics.</li>
 <li><strong>Gotchas</strong>: BGR vs RGB (The Smurf Effect) and Array Indexing vs Coordinates.</li>
 </ul>
 </section>

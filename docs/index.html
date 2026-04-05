@@ -34,9 +34,79 @@ ul.task-list li input[type="checkbox"] {
 <link href="index_files/libs/quarto-html/quarto-syntax-highlighting-dddce13700a54fa0b5bd297ea72fc310.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="index_files/libs/bootstrap/bootstrap.min.js"></script>
 <link href="index_files/libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="index_files/libs/bootstrap/bootstrap-7eb463d9d01bab7b900ae3aeecfb2b03.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<link href="index_files/libs/bootstrap/bootstrap-fa5da7098061238e62ebde1d29cd9543.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 
 
+<link rel="stylesheet" href=".course-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 2rem 1rem;
+}
+.course-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1.5rem;
+  justify-content: flex-start;
+}
+.card {
+  border: 1px solid #dbe2ea;
+  border-radius: 12px;
+  padding: 1.5rem;
+  background: #fff;
+  box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+  transition: transform 0.2s, box-shadow 0.2s;
+  display: flex;
+  flex-direction: column;
+  flex: 1 1 320px;
+  max-width: calc(50% - 0.75rem);
+  min-width: 300px;
+  box-sizing: border-box;
+}
+@media (max-width: 768px) {
+  .card {
+    max-width: 100%;
+  }
+}
+.card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 15px rgba(0,0,0,0.1);
+}
+.card h3 {
+  color: #1C355E;
+  font-weight: 800;
+  margin-bottom: 0.75rem;
+  font-size: 1.25rem;
+  border-bottom: 2px solid rgba(0, 174, 141, 0.2);
+  padding-bottom: 0.5rem;
+  margin-top: 0;
+}
+.card-desc {
+  color: #5b6678;
+  font-size: 0.95rem;
+  margin-bottom: 1.25rem;
+  flex-grow: 1;
+}
+.card-links {
+  display: flex;
+  flex-direction: column;
+  gap: 0.8rem;
+}
+.card-links a {
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  color: #00AE8D;
+  font-weight: 600;
+  line-height: 1.2;
+}
+.card-links a:hover {
+  color: #E96852;
+}
+.card-links img {
+  height: 20px;
+  width: auto;
+}">
 </head>
 
 <body class="fullcontent quarto-light">
@@ -65,41 +135,66 @@ ul.task-list li input[type="checkbox"] {
 </header>
 
 
-<p>Welcome to the course slides. Select a module below to start learning.</p>
-<section id="preparatory-module" class="level3">
+<p>Welcome to the <strong>Ultralytics &amp; Computer Vision For Developers</strong> course. Follow the modules below in order to build your foundation in modern computer vision.</p>
+<div class="course-container">
+<div class="course-grid">
+<section id="preparatory-module" class="level3 card">
 <h3 class="anchored" data-anchor-id="preparatory-module">🖼️ Preparatory Module</h3>
-<ul>
-<li><p><strong><a href="slides/Image_Foundations.html">Digital Image Foundations</a></strong><br>
-<em>How computers perceive images.</em><br>
-Learn about pixels, color channels, coordinate systems, and the basics behind digital cameras and computer vision libraries.</p>
-<p><strong>Labs:</strong></p>
-<ul>
-<li><a href="https://colab.research.google.com/github/NaifMersal/cv-for-developers-ultralytics/blob/main/labs/00_images.ipynb">Images as N-Dimensional Arrays (NumPy)</a> <a href="https://colab.research.google.com/github/NaifMersal/cv-for-developers-ultralytics/blob/main/labs/00_images.ipynb"><img src="https://colab.research.google.com/assets/colab-badge.svg" class="img-fluid" alt="Open In Colab"></a></li>
-<li><a href="https://colab.research.google.com/github/NaifMersal/cv-for-developers-ultralytics/blob/main/labs/00_pillow.ipynb">Image Processing with Pillow</a> <a href="https://colab.research.google.com/github/NaifMersal/cv-for-developers-ultralytics/blob/main/labs/00_pillow.ipynb"><img src="https://colab.research.google.com/assets/colab-badge.svg" class="img-fluid" alt="Open In Colab"></a></li>
-</ul></li>
-</ul>
+<p><em>How computers perceive images.</em></p>
+<div class="card-desc">
+<p>Learn about pixels, color channels, coordinate systems, and the basics behind digital cameras and computer vision libraries.</p>
+</div>
+<div class="card-links">
+<p><a href="slides/Image_Foundations.html"><strong>Presentation Slides</strong></a></p>
+<p><a href="https://colab.research.google.com/github/NaifMersal/cv-for-developers-ultralytics/blob/main/labs/exercises/00_images_exercises.ipynb"><strong>Exercise:</strong> Interactive Image Challenges</a> <a href="https://colab.research.google.com/github/NaifMersal/cv-for-developers-ultralytics/blob/main/labs/exercises/00_images_exercises.ipynb"><img src="https://colab.research.google.com/assets/colab-badge.svg" class="img-fluid" alt="Open In Colab"></a></p>
+</div>
 </section>
-<section id="ultralytics-yolo-foundations" class="level3">
-<h3 class="anchored" data-anchor-id="ultralytics-yolo-foundations">🚀 Ultralytics YOLO Foundations</h3>
-<ul>
-<li><p><strong><a href="slides/Ultralytics_Foundations_1_Tasks_Inference.html">Part 1: Tasks &amp; Inference</a></strong><br>
-<em>Discover what YOLO can do out of the box.</em><br>
-Covers running inference for Object Detection, Instance Segmentation, Classification, and Pose Estimation using CLI and Python.</p>
-<p><strong>Labs:</strong></p>
-<ul>
-<li><a href="https://colab.research.google.com/github/NaifMersal/cv-for-developers-ultralytics/blob/main/labs/01_tasks_inference.ipynb">YOLO Tasks &amp; Inference</a> <a href="https://colab.research.google.com/github/NaifMersal/cv-for-developers-ultralytics/blob/main/labs/01_tasks_inference.ipynb"><img src="https://colab.research.google.com/assets/colab-badge.svg" class="img-fluid" alt="Open In Colab"></a></li>
-</ul></li>
-<li><p><strong><a href="slides/Ultralytics_Foundations_2_Real_World_Use_Cases.html">Part 2: Real World Use Cases &amp; Solutions</a></strong><br>
-<em>Beyond bounding boxes: actionable insights.</em><br>
-Solutions for region analytics, kinematic tracking, video heatmaps, and setting up external integrations.</p></li>
-<li><p><strong><a href="slides/Ultralytics_Foundations_3_Custom_Data_Training.html">Part 3: Custom Data &amp; Training</a></strong><br>
-<em>Teaching the model your custom data.</em><br>
-Proper data formatting, utilizing labeling tools natively, setting hyperparameters, and initiating training runs.</p></li>
-<li><p><strong><a href="slides/Ultralytics_Foundations_4_Evaluation_Deployment.html">Part 4: Evaluation &amp; Deployment</a></strong><br>
-<em>How good is your model and how to use it?</em><br>
-Understanding confusion matrices, IoU, Precision, Recall, mAP metrics, and exporting to optimized formats like ONNX.</p></li>
-</ul>
+<section id="part-1-tasks-inference" class="level3 card">
+<h3 class="anchored" data-anchor-id="part-1-tasks-inference">🚀 Part 1: Tasks &amp; Inference</h3>
+<p><em>Discover what YOLO can do out of the box.</em></p>
+<div class="card-desc">
+<p>Covers running inference for Object Detection, Instance Segmentation, Classification, and Pose Estimation using CLI and Python.</p>
+</div>
+<div class="card-links">
+<p><a href="slides/Ultralytics_Foundations_1_Tasks_Inference.html"><strong>Presentation Slides</strong></a></p>
+<p><a href="https://colab.research.google.com/github/NaifMersal/cv-for-developers-ultralytics/blob/main/labs/01_tasks_inference.ipynb"><strong>Lab:</strong> YOLO Tasks &amp; Inference</a> <a href="https://colab.research.google.com/github/NaifMersal/cv-for-developers-ultralytics/blob/main/labs/01_tasks_inference.ipynb"><img src="https://colab.research.google.com/assets/colab-badge.svg" class="img-fluid" alt="Open In Colab"></a></p>
+</div>
 </section>
+<section id="part-2-use-cases-solutions" class="level3 card">
+<h3 class="anchored" data-anchor-id="part-2-use-cases-solutions">🔍 Part 2: Use Cases &amp; Solutions</h3>
+<p><em>Beyond bounding boxes: actionable insights.</em></p>
+<div class="card-desc">
+<p>Solutions for region analytics, kinematic tracking, video heatmaps, and setting up external integrations.</p>
+</div>
+<div class="card-links">
+<p><a href="slides/Ultralytics_Foundations_2_Real_World_Use_Cases.html"><strong>Presentation Slides</strong></a></p>
+<p><a href="https://colab.research.google.com/github/NaifMersal/cv-for-developers-ultralytics/blob/main/labs/02_solutions.ipynb"><strong>Lab:</strong> Solutions: Object Counting &amp; Heatmaps</a> <a href="https://colab.research.google.com/github/NaifMersal/cv-for-developers-ultralytics/blob/main/labs/02_solutions.ipynb"><img src="https://colab.research.google.com/assets/colab-badge.svg" class="img-fluid" alt="Open In Colab"></a></p>
+</div>
+</section>
+<section id="part-3-custom-data-training" class="level3 card">
+<h3 class="anchored" data-anchor-id="part-3-custom-data-training">🛠️ Part 3: Custom Data &amp; Training</h3>
+<p><em>Teaching the model your custom data.</em></p>
+<div class="card-desc">
+<p>Proper data formatting, utilizing labeling tools natively, setting hyperparameters, and initiating training runs.</p>
+</div>
+<div class="card-links">
+<p><a href="slides/Ultralytics_Foundations_3_Custom_Data_Training.html"><strong>Presentation Slides</strong></a></p>
+<p><a href="https://colab.research.google.com/github/NaifMersal/cv-for-developers-ultralytics/blob/main/labs/03_custom_training.ipynb"><strong>Lab:</strong> Custom Training: Fine-tune on COCO8</a> <a href="https://colab.research.google.com/github/NaifMersal/cv-for-developers-ultralytics/blob/main/labs/03_custom_training.ipynb"><img src="https://colab.research.google.com/assets/colab-badge.svg" class="img-fluid" alt="Open In Colab"></a></p>
+</div>
+</section>
+<section id="part-4-evaluation-deployment" class="level3 card">
+<h3 class="anchored" data-anchor-id="part-4-evaluation-deployment">📊 Part 4: Evaluation &amp; Deployment</h3>
+<p><em>How good is your model and how to use it?</em></p>
+<div class="card-desc">
+<p>Understanding confusion matrices, IoU, Precision, Recall, mAP metrics, and exporting to optimized formats like ONNX.</p>
+</div>
+<div class="card-links">
+<p><a href="slides/Ultralytics_Foundations_4_Evaluation_Deployment.html"><strong>Presentation Slides</strong></a></p>
+<p><a href="https://colab.research.google.com/github/NaifMersal/cv-for-developers-ultralytics/blob/main/labs/04_evaluation.ipynb"><strong>Lab:</strong> Model Evaluation &amp; Comparison</a> <a href="https://colab.research.google.com/github/NaifMersal/cv-for-developers-ultralytics/blob/main/labs/04_evaluation.ipynb"><img src="https://colab.research.google.com/assets/colab-badge.svg" class="img-fluid" alt="Open In Colab"></a></p>
+</div>
+</section>
+</div>
+</div>
 
 </main>
 <!-- /main column -->

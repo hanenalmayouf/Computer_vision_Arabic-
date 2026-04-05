@@ -9,7 +9,7 @@
 <link href="Ultralytics_Foundations_3_Custom_Data_Training_files/libs/quarto-html/quarto-syntax-highlighting-587c61ba64f3a5504c4d52d930310e48.css" rel="stylesheet" id="quarto-text-highlighting-styles"><meta charset="utf-8">
   <meta name="generator" content="quarto-1.8.26">
 
-  <meta name="dcterms.date" content="2026-03-13">
+  <meta name="dcterms.date" content="2026-04-05">
   <title>Ultralytics YOLO Foundations: Part 3</title>
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
@@ -95,7 +95,7 @@
     code span.vs { color: #20794d; } /* VerbatimString */
     code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
   </style>
-  <link rel="stylesheet" href="Ultralytics_Foundations_3_Custom_Data_Training_files/libs/revealjs/dist/theme/quarto-fec02f753a3bac5d9c24dfa8257e7610.css">
+  <link rel="stylesheet" href="Ultralytics_Foundations_3_Custom_Data_Training_files/libs/revealjs/dist/theme/quarto-090e625264d31d7a518ad9f601b8a232.css">
   <link href="Ultralytics_Foundations_3_Custom_Data_Training_files/libs/revealjs/plugin/quarto-line-highlight/line-highlight.css" rel="stylesheet">
   <link href="Ultralytics_Foundations_3_Custom_Data_Training_files/libs/revealjs/plugin/reveal-menu/menu.css" rel="stylesheet">
   <link href="Ultralytics_Foundations_3_Custom_Data_Training_files/libs/revealjs/plugin/reveal-menu/quarto-menu.css" rel="stylesheet">
@@ -203,7 +203,7 @@
 <div class="quarto-title-authors">
 </div>
 
-  <p class="date">2026-03-13</p>
+  <p class="date">2026-04-05</p>
 </section>
 <section>
 <section id="training-ml-fundamentals" class="title-slide slide level1 sdaia-dark center" data-background-gradient="linear-gradient(135deg, #1C355E, #00C9A7)">
@@ -226,8 +226,22 @@
 <li><strong>Train Set (~80%)</strong>: Data the model actively learns from.</li>
 <li><strong>Validation Set (~20%)</strong>: Unseen data evaluated <em>during</em> training to measure performance (<code>mAP</code>).</li>
 </ul>
-<p><strong>Crucial</strong>: Never train on validation data! This causes a <strong>Data Leak</strong> (model memorizes answers but fails in the real world).</p>
+<p><strong>Crucial</strong>: Never train on validation data! This causes <strong>Data Leakage</strong> where the model memorizes answers but fails in the real world.</p>
 <p>Split your data into train and validation sets <a href="https://docs.ultralytics.com/reference/data/split/#ultralytics.data.split.autosplit">using Ultralytics Data Split</a> or <a href="https://docs.ultralytics.com/platform/data/datasets/">using thier Platform</a></p>
+</section>
+<section id="data-leakage-the-silent-killer" class="slide level2">
+<h2>Data Leakage: The Silent Killer</h2>
+<p><strong>The Problem:</strong> Validation/test data accidentally ends up in the training set.</p>
+<p><strong>Common Causes:</strong> Duplicate images, wrong temporal splits, or preprocessing before splitting.</p>
+<p><strong>The Danger:</strong> Val metrics look “perfect,” but the model fails in production.</p>
+<p><strong>How to Avoid:</strong> - Use <code>autosplit()</code> for automatic, safe partitioning. - Avoid manually copying images between split folders. - Check for duplicates/hashes before training.</p>
+<div class="callout callout-warning no-icon callout-style-simple">
+<div class="callout-body">
+<div class="callout-content">
+<p><strong>Suspiciously perfect metrics? Check for leakage!</strong></p>
+</div>
+</div>
+</div>
 </section>
 <section id="transfer-learning" class="slide level2">
 <h2>Transfer Learning</h2>
@@ -328,11 +342,10 @@
 <span id="cb6-7"><a href=""></a><span class="co"># Resume training</span></span>
 <span id="cb6-8"><a href=""></a>results <span class="op">=</span> model.train(resume<span class="op">=</span><span class="va">True</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </section>
-<section id="deep-dive-into-hyperparameters" class="slide level2">
-<h2>Deep Dive into Hyperparameters</h2>
+<section id="important-hyperparameters" class="slide level2">
+<h2>Important Hyperparameters</h2>
 <ul>
-<li><code>epochs</code> (Default: 100): Pass through the ENTIRE dataset. More = learns more, but risks <strong>overfitting</strong> (memorizing data).</li>
-<li><code>patience</code> (Default: 50): If metrics don’t improve for this many epochs, training stops early to save time!</li>
+<li><code>epochs</code> (Default: 100): Pass through the ENTIRE dataset. More = learns more, but risks overfitting.</li>
 <li><code>batch</code> (Default: 16): Images processed at once.
 <ul>
 <li>Higher = faster, stable, takes more GPU memory.</li>
@@ -341,26 +354,32 @@
 </ul></li>
 </ul>
 </section>
-<section id="hyperparameters-optimizer" class="slide level2">
-<h2>Hyperparameters: Optimizer</h2>
-<ul>
-<li><code>optimizer</code> (Default: ‘auto’): Algorithm guiding learning (<code>SGD</code>, <code>AdamW</code>, etc.). <code>auto</code> works 99% of the time.</li>
-<li><code>lr0</code> (Default: 0.01): Initial Learning Rate (step size).
-<ul>
-<li>Too high: Loss explodes, model diverges.</li>
-<li>Too small: Converges slowly, might get stuck.</li>
-</ul></li>
-</ul>
-</section>
 <section id="hyperparameters-image-size-and-hardware" class="slide level2">
 <h2>Hyperparameters: Image Size and Hardware</h2>
 <ul>
-<li><code>imgsz</code> (Default: 640): Target image size. Larger sizes (e.g., 1024) capture more detail (great for tiny objects!) but use more RAM and are slower.
-<ul>
-<li>💡 <strong>Tip for Tiny Objects</strong>: Need to detect tiny objects in huge 4K images? Check out <strong><a href="https://docs.ultralytics.com/guides/sahi-tiled-inference/">SAHI (Slicing Aided Hyper Inference)</a></strong>! It slices large images into overlapping tiles, runs YOLO on each, and merges the results automatically.</li>
-</ul></li>
+<li><code>imgsz</code> (Default: 640): Target image size. Larger sizes (e.g., 1024) capture more detail (great for tiny objects!) but use more RAM and are slower.</li>
 <li><code>device</code> (Default: ’’): Specify GPUs (e.g., <code>device=0,1</code>) to trigger multi-GPU training!</li>
 </ul>
+</section>
+<section id="tip-for-tiny-objects-sahi" class="slide level2">
+<h2>💡 Tip for Tiny Objects: SAHI</h2>
+<div class="columns">
+<div class="column" style="width:40%;">
+<p><strong>Problem:</strong> A 4K image resized to 640px makes tiny objects <em>invisible</em> to YOLO.</p>
+<p><strong>Solution — <a href="https://docs.ultralytics.com/guides/sahi-tiled-inference/">SAHI</a> (Slicing Aided Hyper Inference):</strong></p>
+<ol type="1">
+<li class="fragment"><strong>Slice</strong> the large image into small, overlapping tiles</li>
+<li class="fragment"><strong>Run YOLO</strong> on each tile at full resolution</li>
+<li class="fragment"><strong>Merge</strong> all detections back together automatically</li>
+</ol>
+</div><div class="column fragment" style="width:60%;">
+<div class="quarto-figure quarto-figure-center">
+<figure>
+<p><img data-src="outputs/sahi-sliced-inference-overview.avif"></p>
+<figcaption>SAHI Sliced Inference Overview</figcaption>
+</figure>
+</div>
+</div></div>
 </section>
 <section id="using-config-files-best-practice" class="slide level2">
 <h2>Using Config Files (Best Practice)</h2>
@@ -408,24 +427,10 @@
 </div></div>
 <p><em>Docs Reference: <a href="https://docs.ultralytics.com/integrations/">Integrations</a></em></p>
 </section>
-<section id="data-augmentation-python" class="slide level2 smaller">
-<h2>Data Augmentation (Python)</h2>
+<section id="data-augmentation" class="slide level2 smaller">
+<h2>Data Augmentation</h2>
 <p>YOLO natively supports <strong>Albumentations</strong> to improve model robustness, applying default augmentations automatically if installed.</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb11"><pre class="sourceCode numberSource bash number-lines code-with-copy"><code class="sourceCode bash"><span id="cb11-1"><a href=""></a><span class="ex">pip</span> install albumentations ultralytics</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb12"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href=""></a><span class="im">import</span> albumentations <span class="im">as</span> A</span>
-<span id="cb12-2"><a href=""></a><span class="im">from</span> ultralytics <span class="im">import</span> YOLO</span>
-<span id="cb12-3"><a href=""></a></span>
-<span id="cb12-4"><a href=""></a>model <span class="op">=</span> YOLO(<span class="st">"yolo26n.pt"</span>)</span>
-<span id="cb12-5"><a href=""></a></span>
-<span id="cb12-6"><a href=""></a><span class="co"># Define custom Albumentations transforms</span></span>
-<span id="cb12-7"><a href=""></a>custom_transforms <span class="op">=</span> [</span>
-<span id="cb12-8"><a href=""></a>    A.Blur(blur_limit<span class="op">=</span><span class="dv">7</span>, p<span class="op">=</span><span class="fl">0.5</span>),</span>
-<span id="cb12-9"><a href=""></a>    A.CLAHE(clip_limit<span class="op">=</span><span class="fl">4.0</span>, p<span class="op">=</span><span class="fl">0.5</span>),</span>
-<span id="cb12-10"><a href=""></a>    A.RandomBrightnessContrast(brightness_limit<span class="op">=</span><span class="fl">0.2</span>, contrast_limit<span class="op">=</span><span class="fl">0.2</span>, p<span class="op">=</span><span class="fl">0.5</span>),</span>
-<span id="cb12-11"><a href=""></a>]</span>
-<span id="cb12-12"><a href=""></a></span>
-<span id="cb12-13"><a href=""></a><span class="co"># Train the model with custom transforms</span></span>
-<span id="cb12-14"><a href=""></a>model.train(data<span class="op">=</span><span class="st">"data.yaml"</span>, epochs<span class="op">=</span><span class="dv">100</span>, augmentations<span class="op">=</span>custom_transforms)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p><strong>Teaser:</strong> You’ll learn why and when to use data augmentation in Part 4 — it’s your key weapon against overfitting!</p>
 <p><em>Docs Reference: <a href="https://docs.ultralytics.com/integrations/albumentations/">Albumentations Integration</a></em></p>
 </section></section>
 <section>
