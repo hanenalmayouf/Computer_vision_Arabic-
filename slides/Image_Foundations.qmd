@@ -53,13 +53,6 @@ How computers store images
 :::
 ::::
 
-## The Digital Sensor: Capturing Light
-
-- **Photodiodes**: Each pixel on a sensor forms a tiny bucket collecting photons (light).
-- **Charge**: More light $\rightarrow$ more photons $\rightarrow$ higher electrical charge.
-- **Bayer Filter**: Sensors capture only light intensity (grayscale). To get color, a microscopic mosaic filter is placed over them so each pixel records only Red, Green, or Blue.
-- **Digitization**: An Analog-to-Digital Converter (ADC) turns the electrical charge into a discrete number, typically from `0` to `255`.
-
 ## Grayscale Images: Pixels & Coordinates
 
 - Images are 2D matrices of numbers. The origin `(0,0)` is top-left.
@@ -186,17 +179,52 @@ plt.show()
 
 ## Essential Image Libraries
 
-- **OpenCV**: Very fast C++ library mapped to Python. Uses **BGR** channel order by default. Great for video streams and low-level transforms.
-- **Pillow (PIL)**: Standard Python image library. Uses **RGB**. Easy to use for simple drawing and resizing.
-- **NumPy**: The core math library. Images in Python are fundamentally `numpy` multi-dimensional arrays (tensors).
+<br>
 
-## Image Data Types: `uint8` vs Floats
+:::: {.columns}
 
-- Pixels are usually 8-bit unsigned integers (**`uint8`**), meaning values range from `0` to `255`.
-- `0` is Black. `255` is White (in grayscale) or full intensity (in RGB).
-- **Deep Learning**: Models like YOLO often prefer normalized inputs. We convert `0-255` to **floats** between `0.0` and `1.0` by dividing by `255.0`.
+::: {.column width="33%"}
+::: {.callout-note appearance="minimal" icon="false"}
+<div style="text-align: center; font-size: 3rem; margin-bottom: 0.5rem;">📷</div>
+<div style="text-align: center; font-size: 1.2rem; font-weight: bold; margin-bottom: 1rem; color: #1C355E;">OpenCV</div>
 
-## Coordinates vs. Array Indexing <br> (The "Gotcha")
+Very fast C++ library mapped to Python. 
+
+- Uses **BGR** channel order
+- Great for video streams 
+- Low-level transforms
+:::
+:::
+
+::: {.column width="33%"}
+::: {.callout-tip appearance="minimal" icon="false"}
+<div style="text-align: center; font-size: 3rem; margin-bottom: 0.5rem;">🖼️</div>
+<div style="text-align: center; font-size: 1.2rem; font-weight: bold; margin-bottom: 1rem; color: #1C355E;">Pillow (PIL)</div>
+
+Standard Python image library. 
+
+- Uses **RGB** channel order
+- Simple drawing & resizing 
+- (Our primary tool)
+:::
+:::
+
+::: {.column width="33%"}
+::: {.callout-warning appearance="minimal" icon="false"}
+<div style="text-align: center; font-size: 3rem; margin-bottom: 0.5rem;">🔢</div>
+<div style="text-align: center; font-size: 1.2rem; font-weight: bold; margin-bottom: 1rem; color: #1C355E;">NumPy</div>
+
+The core math library. 
+
+- Images are fundamentally `numpy` tensors
+- Multi-dimensional array operations
+:::
+:::
+
+::::
+
+
+## Coordinates vs. Array Indexing
 
 :::: {.columns}
 ::: {.column width="50%"}
@@ -246,15 +274,6 @@ plt.show()
 :::
 ::::
 
-## Image Resolution and Resizing
-
-- **Resolution**: Dimensions of the image `(Width × Height)`.
-- Deep Learning models typically require **fixed input sizes** (e.g., `640x640`). 
-- **Aspect Ratio**: The ratio of width to height. 
-- *Direct Resizing*: Squashes or stretches the image, changing the aspect ratio (causes distortion).
-- *Letterboxing*: Resizes while maintaining aspect ratio, then pads the remaining area with a solid color.
-
-
 # Conclusion {.sdaia-dark background-gradient="linear-gradient(135deg, #1C355E, #00C9A7)"}
 
 Wrapping up Image Foundations
@@ -263,7 +282,7 @@ Wrapping up Image Foundations
 
 - **Light & Cameras**: How digital sensors capture light and turn it into data.
 - **Pixels & Channels**: Grayscale (2D) vs. Color RGB (3D) representations.
-- **Libraries**: OpenCV, Pillow, and NumPy basics.
+- **Libraries**: Pillow and NumPy basics.
 - **Gotchas**: BGR vs RGB (The Smurf Effect) and Array Indexing vs Coordinates.
 
 ## Next Steps

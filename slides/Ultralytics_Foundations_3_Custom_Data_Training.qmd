@@ -35,9 +35,26 @@ To train a robust AI, split your data:
 - **Train Set (~80%)**: Data the model actively learns from.
 - **Validation Set (~20%)**: Unseen data evaluated *during* training to measure performance (`mAP`).
 
-**Crucial**: Never train on validation data! This causes a **Data Leak** (model memorizes answers but fails in the real world). *See Part 4: "Data Leakage" for full details on how to avoid it.*
+**Crucial**: Never train on validation data! This causes **Data Leakage** where the model memorizes answers but fails in the real world.
 
 Split your data into train and validation sets [using Ultralytics Data Split](https://docs.ultralytics.com/reference/data/split/#ultralytics.data.split.autosplit) or [using thier Platform](https://docs.ultralytics.com/platform/data/datasets/)
+
+## Data Leakage: The Silent Killer
+
+**The Problem:** Validation/test data accidentally ends up in the training set.
+
+**Common Causes:** Duplicate images, wrong temporal splits, or preprocessing before splitting.
+
+**The Danger:** Val metrics look "perfect," but the model fails in production.
+
+**How to Avoid:**
+- Use `autosplit()` for automatic, safe partitioning.
+- Avoid manually copying images between split folders.
+- Check for duplicates/hashes before training.
+
+::: {.callout-warning appearance="simple" icon="false"}
+**Suspiciously perfect metrics? Check for leakage!**
+:::
 
 ## Transfer Learning
 

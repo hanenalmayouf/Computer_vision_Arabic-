@@ -95,8 +95,8 @@ digraph cv {
 
 Interacting with Ultralytics is simple:
 
-::: {.r-fit-text}
-`yolo TASK MODE ARGS`
+::: {.r-fit-text style="text-align: center; background: rgba(0, 193, 222, 0.1); border: 1px solid rgba(0, 193, 222, 0.2); border-radius: 12px; padding: 0.25em 0.5em; font-family: 'JetBrains Mono', monospace; white-space: nowrap; margin-bottom: 0.5em;"}
+yolo TASK MODE ARGS
 :::
 
 - **TASK**: What to solve? (`detect`, `segment`, `classify`, `pose`, `obb`)
@@ -424,10 +424,6 @@ cls = result.boxes.cls      # [N] tensor
 # Extracting first detection
 x1, y1, x2, y2 = boxes[0].tolist() 
 ```
-
-::: {.callout-tip}
-Always use `.xyxy` when you want to crop images using Pillow!
-:::
 
 
 

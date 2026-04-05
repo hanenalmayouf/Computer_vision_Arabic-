@@ -24,12 +24,27 @@ How good is your model?
 
 ## Binary Classification Basics
 
-When evaluating models, every prediction falls into one of four categories. Let's use detecting a "Car" as an example:
+Every prediction falls into one of four categories. Example: detecting a **"Car"**
 
-- **True Positive (TP):** Model correctly predicted "Car" and there is a car there.
-- **False Positive (FP):** Model predicted "Car", but there was no car there (False Alarm).
-- **True Negative (TN):** Model correctly predicted "Not Car" for background.
-- **False Negative (FN):** There is a car in the image, but the model missed it.
+```{=html}
+<table style="width:90%; margin: 1.5rem auto; border-collapse: separate; border-spacing: 8px; font-size: 1em; text-align: center;">
+  <tr>
+    <td style="width:20%"></td>
+    <th style="padding:0.6rem; color:#1C355E;">Predicted: Car</th>
+    <th style="padding:0.6rem; color:#1C355E;">Predicted: Not Car</th>
+  </tr>
+  <tr>
+    <th style="color:#1C355E; text-align:right; padding-right:0.8rem;">Actual: Car</th>
+    <td style="background:#d4edda; padding:1rem; border-radius:8px;">✅ <strong>True Positive</strong><br><small>Correct detection</small></td>
+    <td style="background:#f8d7da; padding:1rem; border-radius:8px;">❌ <strong>False Negative</strong><br><small>Missed car</small></td>
+  </tr>
+  <tr>
+    <th style="color:#1C355E; text-align:right; padding-right:0.8rem;">Actual: Not Car</th>
+    <td style="background:#fff3cd; padding:1rem; border-radius:8px;">⚠️ <strong>False Positive</strong><br><small>False alarm</small></td>
+    <td style="background:#d4edda; padding:1rem; border-radius:8px;">✅ <strong>True Negative</strong><br><small>Correct rejection</small></td>
+  </tr>
+</table>
+```
 
 
 ## The Confusion Matrix
@@ -101,39 +116,267 @@ print(f"Recall   : {recall:.2f}")
 
 ::::
 
+## Scenario: Smart Parking Camera
+
+::: {style="font-size: 0.9em;"}
+A camera at a parking entrance classifies each frame as **Car Present** or **Not**: 
+:::
+
+![](assets/parking_camera_scenario_cropped.png){fig-align="center"}
+
+**Dataset:** 24 hours, 10,000 frames (~9s interval)
+
+| | Count | % |
+|---|---|---|
+| Car Present | 500 | 5% |
+| Empty Spot | 9,500 | 95% |
+
+Most of the time, the spot is empty.
+
+
 ## The Problem with Accuracy
 
-The most intuitive metric is **Accuracy** (Total Correct / Total Predictions). But is it enough?
-
-Imagine a dataset with **1 "Car"** and **99 "Not Car"** (background) images. If a model simply predicts **"Not Car"** for everything:
-
-- **TP = 0**, **FN = 1** *(Missed the only car)*
-- **TN = 99**, **FP = 0**
+A "lazy" model that **always predicts "Empty"**:
 
 ::: {.fragment .fade-up}
-$$Accuracy = \frac{0 + 99}{100} = 99\%$$
+- Finds **0 cars**
+- Gets all 9,500 empty spots correct
 :::
 
 ::: {.fragment .fade-up}
-It achieved **99% Accuracy** despite being completely useless at finding cars!
+$$Accuracy = \frac{9{,}500}{10{,}000} = 95\%$$
 :::
 
 ::: {.fragment .fade-up}
-This is the **Class Imbalance Problem**, common in object detection where most of an image is empty background.
+**95% Accuracy** — yet it never detects a single car. This is the **Class Imbalance Problem**.
 :::
 
 
+## Balanced Accuracy: A Quick Fix
 
-## Precision, Recall, and F1
+Instead of overall accuracy, we average the per-class accuracies so each class counts equally.
 
-To solve the Class Imbalance Problem, we focus on metrics that ignore True Negatives:
+::: {.fragment .fade-up}
+**Applied to our "Lazy" Model:**
 
-- **Precision:** When it guesses an object, is it correct? (Quality)
+- **Car Accuracy:** 0 / 500 = **0%**
+- **Empty Accuracy:** 9,500 / 9,500 = **100%**
+- **Balanced Accuracy:** $(0\% + 100\%) / 2 = \mathbf{50\%}$
+:::
+
+::: {.fragment .fade-up}
+Balanced Accuracy correctly flags the lazy model as a failure, even though its "standard" accuracy was 95%!
+:::
+
+
+## Balanced Accuracy: The Hidden Problem
+
+**What if our model catches every car, but is "trigger-happy"?**
+
+:::: {.columns}
+
+::: {.column width="55%"}
+```{python}
+#| echo: false
+#| fig-align: center
+import matplotlib.pyplot as plt
+import numpy as np
+
+fig, ax = plt.subplots(figsize=(5, 3.5))
+fig.patch.set_alpha(0.0)
+ax.patch.set_alpha(0.0)
+
+categories = ['True Positives\n(Cars caught)', 'False Positives\n(Empty → "Car")', 'False Negatives\n(Cars missed)']
+values = [500, 1900, 0]
+colors = ['#28a745', '#dc3545', '#ffc107']
+
+bars = ax.barh(categories, values, color=colors, height=0.5, edgecolor='white', linewidth=1.5)
+for bar, val in zip(bars, values):
+    ax.text(bar.get_width() + 30, bar.get_y() + bar.get_height()/2,
+            str(val), va='center', ha='left', fontsize=12, fontweight='bold', color='#1C355E')
+
+ax.set_xlim(0, 2600)
+ax.spines['top'].set_visible(False)
+ax.spines['right'].set_visible(False)
+ax.spines['bottom'].set_color('#1C355E')
+ax.spines['left'].set_visible(False)
+ax.tick_params(left=False, colors='#1C355E', labelsize=10)
+ax.set_title('Trigger-Happy Model Results', fontsize=13, fontweight='bold', color='#1C355E')
+plt.tight_layout()
+plt.show()
+```
+:::
+
+::: {.column width="45%"}
+::: {.fragment .fade-up}
+- **Car Accuracy:** 100%
+- **Empty Accuracy:** 80%
+
+$$\frac{100\% + 80\%}{2} = \mathbf{90\%}$$
+:::
+
+::: {.fragment .fade-up}
+::: {.callout-warning appearance="minimal"}
+**90% looks great** — but that's **1,900 false alarms** hidden inside the score.
+:::
+:::
+:::
+
+::::
+
+
+## Precision and Recall
+
+Two metrics that ignore True Negatives entirely (correctly classified Empty spot):
+
+::: {.incremental}
+- **Precision:** When the model flags a "Car", is it actually a Car? *(Quality)*
   $$Precision = \frac{TP}{TP + FP}$$
-- **Recall:** Out of all actual objects, how many did it find? (Quantity)
+- **Recall:** Out of all actual Cars, how many did the model find? *(Quantity)*
   $$Recall = \frac{TP}{TP + FN}$$
-- **F1-Score:** The harmonic mean of Precision and Recall.
-  $$F_1 = 2 \times \frac{Precision \times Recall}{Precision + Recall}$$
+:::
+
+
+## Case Study: Two Models
+
+We have **500 actual cars**. How would these two models handle them?
+
+::: {.incremental}
+- **Model A:** "Over-Sensitive" (Flags everything)
+- **Model B:** "Cautious" (Flags only sure bets)
+:::
+
+
+## Model A: "Over-Sensitive"
+
+*Flags everything — never misses a car*
+
+```{python}
+#| echo: false
+#| fig-align: center
+import matplotlib.pyplot as plt
+import numpy as np
+
+fig, ax = plt.subplots(figsize=(7, 4))
+fig.patch.set_alpha(0.0)
+ax.patch.set_alpha(0.0)
+
+# Data for Model A
+categories = ['True Positives\n(Caught)', 'False Positives\n(False Alarms)', 'False Negatives\n(Missed)']
+values = [500, 1900, 0]
+colors = ['#28a745', '#dc3545', '#ffc107']
+
+bars = ax.barh(categories, values, color=colors, height=0.5, edgecolor='white', linewidth=1.5)
+
+# Add value labels
+for bar, val in zip(bars, values):
+    ax.text(bar.get_width() + 30, bar.get_y() + bar.get_height()/2, 
+            str(val), va='center', ha='left', fontsize=13, fontweight='bold', color='#1C355E')
+
+ax.set_xlim(0, 2400)
+ax.spines['top'].set_visible(False)
+ax.spines['right'].set_visible(False)
+ax.spines['bottom'].set_color('#1C355E')
+ax.spines['left'].set_visible(False)
+ax.tick_params(left=False, colors='#1C355E', labelsize=11)
+ax.set_title('Model A: Predicted 2,400 "Cars"', fontsize=14, fontweight='bold', color='#1C355E')
+ax.set_xlabel('Count', fontsize=12, color='#1C355E')
+
+plt.tight_layout()
+plt.show()
+```
+
+::: {.fragment .fade-up}
+- **Recall:** 500 / 500 = **100%**
+- **Precision:** 500 / 2,400 ≈ **20.8%**
+:::
+
+
+## Model B: "Cautious"
+
+*Only flags when very confident*
+
+```{python}
+#| echo: false
+#| fig-align: center
+import matplotlib.pyplot as plt
+import numpy as np
+
+fig, ax = plt.subplots(figsize=(7, 4))
+fig.patch.set_alpha(0.0)
+ax.patch.set_alpha(0.0)
+
+# Data for Model B
+categories = ['True Positives\n(Caught)', 'False Positives\n(False Alarms)', 'False Negatives\n(Missed)']
+values = [350, 0, 150]
+colors = ['#28a745', '#dc3545', '#ffc107']
+
+bars = ax.barh(categories, values, color=colors, height=0.5, edgecolor='white', linewidth=1.5)
+
+# Add value labels
+for bar, val in zip(bars, values):
+    ax.text(bar.get_width() + 20, bar.get_y() + bar.get_height()/2, 
+            str(val), va='center', ha='left', fontsize=13, fontweight='bold', color='#1C355E')
+
+ax.set_xlim(0, 550)
+ax.spines['top'].set_visible(False)
+ax.spines['right'].set_visible(False)
+ax.spines['bottom'].set_color('#1C355E')
+ax.spines['left'].set_visible(False)
+ax.tick_params(left=False, colors='#1C355E', labelsize=11)
+ax.set_title('Model B: Predicted 350 "Cars"', fontsize=14, fontweight='bold', color='#1C355E')
+ax.set_xlabel('Count', fontsize=12, color='#1C355E')
+
+plt.tight_layout()
+plt.show()
+```
+
+::: {.fragment .fade-up}
+- **Recall:** 350 / 500 = **70%**
+- **Precision:** 350 / 350 = **100%**
+:::
+
+
+## (Reminder) Model Output: Confidence $\neq$ Label
+
+:::: {.columns}
+
+::: {.column width="55%"}
+```{=html}
+<div style="display:flex; flex-direction:column; align-items:center; gap:0.6rem; margin-top:1.2rem; font-size:0.9em;">
+  <div style="background:rgba(28,53,94,0.10); border-radius:10px; padding:0.8rem 1.4rem; text-align:center; width:80%;">
+    🧠 <strong>Model</strong><br>
+    <span style="color:#1C355E;">Raw confidence scores</span>
+  </div>
+  <div style="font-size:1.4rem; color:#1C355E;">↓</div>
+  <div style="background:rgba(255,140,0,0.12); border:2px dashed #FF8C00; border-radius:10px; padding:0.8rem 1.4rem; text-align:center; width:80%;">
+    ⚙️ <strong>Threshold Gate</strong><br>
+    <span style="color:#FF8C00;">Is score ≥ threshold?</span>
+  </div>
+  <div style="font-size:1.4rem; color:#1C355E;">↓</div>
+  <div style="background:rgba(0,201,167,0.12); border-radius:10px; padding:0.8rem 1.4rem; text-align:center; width:80%;">
+    🏷️ <strong>Label</strong><br>
+    <span style="color:#00C9A7;">"Car" / "Not Car"</span>
+  </div>
+</div>
+```
+:::
+
+::: {.column width="45%"}
+<br>
+**The Model** outputs scores, not decisions:
+
+> "I am **72%** sure this is a car."
+
+::: {.fragment .fade-up}
+**We** decide the label:
+
+- **Classification:** top score wins (`top1`)
+- **Detection:** only boxes above the confidence threshold are shown
+:::
+:::
+
+::::
 
 
 ## Interactive Demo: Threshold Trade-off
@@ -143,17 +386,163 @@ To solve the Class Imbalance Problem, we focus on metrics that ignore True Negat
 ```
 
 
-## The Confidence Threshold Trade-off
+## The Trade-off: Precision vs. Recall
 
-The **Confidence Threshold** dictates how "sure" the model must be to output a prediction. Adjusting it directly affects your balance of errors:
+Raising or lowering your confidence threshold shifts the balance:
 
-- **High Threshold (e.g., `0.80`)**: The model is strict.
-  - Decreases **False Positives (FP)** (fewer false alarms $\rightarrow$ **Higher Precision**)
-  - Increases **False Negatives (FN)** (misses more objects $\rightarrow$ **Lower Recall**)
+:::: {.columns}
 
-- **Low Threshold (e.g., `0.20`)**: The model is loose.
-  - Increases **False Positives (FP)** (more false alarms $\rightarrow$ **Lower Precision**)
-  - Decreases **False Negatives (FN)** (catches almost everything $\rightarrow$ **Higher Recall**)
+::: {.column style="background: rgba(220,53,69,0.08)"}
+### 🎯 High Threshold (`0.80`)
+**Strict** — only "sure bets" pass
+
+↑ **Precision** (fewer false alarms)
+
+↓ **Recall** (more misses)
+:::
+
+::: {.column style="background: rgba(0,201,167,0.08)"}
+### 🔍 Low Threshold (`0.20`)
+**Loose** — catch everything
+
+↑ **Recall** (fewer misses)
+
+↓ **Precision** (more false alarms)
+:::
+
+::::
+
+
+## F1 Score: Balancing Precision & Recall
+
+**Which single number combines both?**
+
+$$F_1 = 2 \times \frac{Precision \times Recall}{Precision + Recall}$$
+
+::: {.callout-note appearance="minimal"}
+A **0** in either metric drags the whole score down — you can't hide behind one strong number.
+:::
+
+
+## F1 Score: Model Comparison
+
+```{python}
+#| echo: false
+#| fig-align: center
+import matplotlib.pyplot as plt
+import numpy as np
+
+models = ['Model A\n(Over-Sensitive)', 'Model B\n(Cautious)']
+precision_vals = [20.8, 100]
+recall_vals = [100, 70]
+f1_vals = [2 * p * r / (p + r) for p, r in zip(precision_vals, recall_vals)]
+balanced_accuracy_vals = [90.0, 85.0]
+
+x = np.arange(len(models))
+width = 0.18
+
+fig, ax = plt.subplots(figsize=(10, 5))
+fig.patch.set_alpha(0.0)
+ax.patch.set_alpha(0.0)
+
+bars1 = ax.bar(x - 1.5*width, precision_vals, width, label='Precision', color='#1C355E', alpha=0.85)
+bars2 = ax.bar(x - 0.5*width, recall_vals, width, label='Recall', color='#00C9A7', alpha=0.85)
+bars3 = ax.bar(x + 0.5*width, f1_vals, width, label='F1 Score', color='#FF8C00', alpha=0.9)
+bars4 = ax.bar(x + 1.5*width, balanced_accuracy_vals, width, label='Balanced Acc', color='#6f42c1', alpha=0.85)
+
+# Add value labels for F1 and Balanced Accuracy
+for bar in bars3:
+    ax.text(bar.get_x() + bar.get_width()/2., bar.get_height() + 1.5,
+            f'{bar.get_height():.1f}%', ha='center', va='bottom',
+            fontsize=10, fontweight='bold', color='#FF8C00')
+
+for bar in bars4:
+    ax.text(bar.get_x() + bar.get_width()/2., bar.get_height() + 1.5,
+            f'{bar.get_height():.1f}%', ha='center', va='bottom',
+            fontsize=10, fontweight='bold', color='#6f42c1')
+
+ax.set_ylabel('Score (%)', fontsize=12, color='#1C355E')
+ax.set_xticks(x)
+ax.set_xticklabels(models, fontsize=11, color='#1C355E')
+ax.set_ylim(0, 115)
+ax.legend(frameon=False, fontsize=10, loc='upper center', bbox_to_anchor=(0.5, 1.15), ncol=4)
+ax.spines['top'].set_visible(False)
+ax.spines['right'].set_visible(False)
+ax.spines['bottom'].set_color('#1C355E')
+ax.spines['left'].set_color('#1C355E')
+ax.tick_params(colors='#1C355E')
+
+plt.tight_layout()
+plt.show()
+```
+
+::: {.callout-tip appearance="minimal"}
+F1 exposes Model A's flaw: 1,900 false alarms inflate Recall but tank Precision — F1 = **34.4%**.
+:::
+
+
+## Choosing the Right Threshold
+
+```{python}
+#| echo: false
+#| fig-align: center
+import numpy as np
+import matplotlib.pyplot as plt
+
+conf = np.linspace(0.01, 0.99, 200)
+
+# Simulate recall: drops off as threshold increases
+recall = 1 / (1 + np.exp(8 * (conf - 0.6)))
+
+# Simulate precision: rises as threshold increases
+precision = 1 / (1 + np.exp(-8 * (conf - 0.35)))
+
+# F1 score
+f1 = 2 * precision * recall / (precision + recall + 1e-9)
+
+best_idx = np.argmax(f1)
+best_conf = conf[best_idx]
+best_f1 = f1[best_idx]
+
+fig, ax = plt.subplots(figsize=(7, 4.5))
+fig.patch.set_alpha(0.0)
+ax.patch.set_alpha(0.0)
+
+ax.plot(conf, f1,        color='#FF8C00', linewidth=3,   label='F1')
+ax.plot(conf, precision, color='#1C355E', linewidth=2.5, linestyle='--', label='Precision')
+ax.plot(conf, recall,    color='#00C9A7', linewidth=2.5, linestyle='--', label='Recall')
+
+ax.axvline(best_conf, color='#dc3545', linewidth=2, linestyle=':')
+ax.scatter([best_conf], [best_f1], color='#dc3545', zorder=5, s=80)
+ax.annotate(f'Best F1 @ conf={best_conf:.2f}',
+            xy=(best_conf, best_f1),
+            xytext=(best_conf + 0.08, best_f1 - 0.12),
+            fontsize=10, color='#dc3545',
+            arrowprops=dict(arrowstyle='->', color='#dc3545'))
+
+ax.set_xlabel('Confidence Threshold', fontsize=12, color='#1C355E')
+ax.set_ylabel('Score', fontsize=12, color='#1C355E')
+ax.set_xlim(0, 1)
+ax.set_ylim(0, 1.05)
+ax.legend(frameon=False, fontsize=11, labelcolor='#1C355E')
+ax.spines['top'].set_visible(False)
+ax.spines['right'].set_visible(False)
+ax.spines['bottom'].set_color('#1C355E')
+ax.spines['left'].set_color('#1C355E')
+ax.tick_params(colors='#1C355E')
+ax.grid(True, linestyle='--', alpha=0.25, color='#1C355E')
+plt.tight_layout()
+plt.show()
+```
+
+
+
+
+::: {.callout-tip appearance="minimal" .fragment .fade-up}
+Ultralytics saves `F1_curve.png` and `R_curve.png` in your training results automatically.
+:::
+
+
 
 
 ## The PR Curve & Average Precision (AP)
@@ -237,6 +626,20 @@ plt.show()
 
 ::::
 
+
+## But Does Location Matter?
+
+Precision and Recall measure **whether** a classification is correct.
+
+For object detection, the model must also get the **location** right.
+
+::: {.fragment .fade-up}
+> A confident prediction placed in the wrong spot is still a wrong prediction.
+:::
+
+::: {.fragment .fade-up}
+That's where **Intersection over Union (IoU)** comes in.
+:::
 
 ## Intersection over Union (IoU)
 
@@ -329,20 +732,63 @@ plt.show()
 
 A prediction must be **accurate in location** ($IoU \ge 0.5$) to count as a **True Positive (TP)**.
 
-**What happens if a prediction misses ($IoU < 0.5$)?**
+:::: {.columns}
 
-::: {.callout-important}
-**It hurts your evaluation twice!**
+::: {.column width="55%"}
+```{python}
+#| echo: false
+#| fig-align: center
+import matplotlib.pyplot as plt
+import matplotlib.patches as patches
+import sys; import os; sys.path.insert(0, os.path.abspath('.')); sys.path.insert(0, os.path.abspath('slides')); from plot_utils import draw_base_car
 
-- **False Positive (FP):** The poorly placed prediction is a **"False Alarm"**.
-- **False Negative (FN):** The real object is considered **"Missed"**.
+fig, ax = plt.subplots(figsize=(5, 4))
+fig.patch.set_alpha(0.0)
+ax.patch.set_alpha(1.0)
+ax.set_facecolor('white')
+draw_base_car(ax)
+
+# Ground Truth (green)
+gt = patches.Rectangle((2.5, 3.0), 10, 9,
+                        linewidth=3, edgecolor='#00ff00',
+                        facecolor='none', label='Ground Truth (GT)', zorder=3)
+ax.add_patch(gt)
+
+# Bad prediction — low IoU, shifted far away
+pred = patches.Rectangle((8.0, 8.5), 6, 5,
+                          linewidth=3, edgecolor='#ff3333',
+                          facecolor='none', linestyle='--',
+                          label='Bad Prediction (IoU < 0.5)', zorder=4)
+ax.add_patch(pred)
+
+ax.text(7.5, 2.0, 'GT', color='#00aa00', fontsize=9, ha='center', fontweight='bold')
+ax.text(11.0, 14.2, 'Prediction', color='#cc0000', fontsize=9, ha='center', fontweight='bold')
+
+ax.set_xticks([]); ax.set_yticks([])
+for sp in ax.spines.values(): sp.set_visible(False)
+ax.set_title('Low IoU → Double Penalty', fontsize=11, fontweight='bold', color='#1C355E')
+ax.legend(loc='lower center', bbox_to_anchor=(0.5, -0.15),
+          ncol=1, fontsize=8, frameon=False)
+plt.tight_layout()
+plt.show()
+```
 :::
 
-**The Car Example:**
-You draw a bad box for a car (IoU < 0.5). 
+::: {.column width="45%" .fragment}
 
-- **FP:** You generated a useless box (false alarm penalty).
-- **FN:** The actual car was never successfully claimed (missed target penalty).
+**What happens when $IoU < 0.5$?**
+
+::: {.callout-important appearance="minimal"}
+**It hurts your score twice:**
+
+- **FP:** The bad box is a false alarm
+- **FN:** The real object is counted as missed
+:::
+
+One poor prediction = penalised as both an extra detection *and* a missed object.
+:::
+
+::::
 
 ## Handling Multiple Detections
 
@@ -458,115 +904,420 @@ print(f"Precision: {metrics.box.mp}")       # Overall precision
 print(f"Recall:    {metrics.box.mr}")       # Overall recall
 ```
 
-**Where to find per-class AP:**
-- Check `metrics.box.ap_class_index` for class names
-- `metrics.box.ap` contains AP for each class individually
-
 *Docs Reference: [Validation Results](https://docs.ultralytics.com/modes/val/)*
 
 
-## Reading the Confusion Matrix
 
-The confusion matrix shows **what your model predicted vs. what was actually there**.
+## What If Your Metrics Reveal a Problem?
+
+You can now read your validation results — but what do you do when the numbers look bad?
+
+::: {.fragment .fade-up}
+The most common culprits are:
+
+- **Class imbalance** — rare classes get ignored during training
+- **Overfitting or underfitting** — the model hasn't generalized
+- **Poor hyperparameters** — learning rate, weight decay, stopping too early or too late
+:::
+
+::: {.fragment .fade-up}
+Let's go through each one.
+:::
+
+## Class Imbalance: Fixing the Bias
+
+How do we stop the model from ignoring rare classes during training?
+
+```{python}
+#| echo: false
+#| fig-align: center
+import matplotlib.pyplot as plt
+import numpy as np
+
+fig, axes = plt.subplots(1, 2, figsize=(9, 3.5))
+fig.patch.set_alpha(0.0)
+
+brand_dark = '#1C355E'
+brand_teal = '#00C9A7'
+brand_red  = '#dc3545'
+
+classes = ['Empty Spot', 'Car']
+
+for ax in axes:
+    ax.patch.set_alpha(0.0)
+    ax.spines['top'].set_visible(False)
+    ax.spines['right'].set_visible(False)
+    ax.spines['bottom'].set_color(brand_dark)
+    ax.spines['left'].set_color(brand_dark)
+    ax.tick_params(colors=brand_dark, labelsize=11)
+
+# Before: imbalanced
+counts_before = [9500, 500]
+colors_before = [brand_dark, brand_red]
+axes[0].bar(classes, counts_before, color=colors_before, alpha=0.85, width=0.5)
+axes[0].set_title('Before: Imbalanced', fontsize=13, fontweight='bold', color=brand_dark)
+axes[0].set_ylabel('Training samples', fontsize=11, color=brand_dark)
+for i, v in enumerate(counts_before):
+    axes[0].text(i, v + 100, str(v), ha='center', fontsize=12, fontweight='bold', color=brand_dark)
+axes[0].set_ylim(0, 11000)
+
+# After: balanced via weighted sampling
+counts_after = [9500, 9500]
+colors_after = [brand_teal, brand_teal]
+axes[1].bar(classes, counts_after, color=colors_after, alpha=0.85, width=0.5)
+axes[1].set_title('After: Weighted Sampling', fontsize=13, fontweight='bold', color=brand_dark)
+for i, v in enumerate(counts_after):
+    axes[1].text(i, v + 100, str(v), ha='center', fontsize=12, fontweight='bold', color=brand_dark)
+axes[1].set_ylim(0, 11000)
+
+plt.tight_layout()
+plt.show()
+```
+
+Here we oversample (duplicating images) the minority class (car) to make it learnable.
+
+::: {.fragment}
+*Technical Guide: [Class Balancing with YOLO](https://y-t-g.github.io/tutorials/yolo-class-balancing/)*
+:::
+
+
+## The Training Spectrum
+
+*Every training run lands somewhere on this spectrum — knowing where is the first step to fixing it.*
+
+:::: {.columns}
+
+::: {.column width="33%"}
+
+::: {.callout-warning}
+### 🔴 Overfitting
+Model **memorizes** training data.
+
+- Train mAP >> Val mAP
+- Val loss starts rising
+
+**Too much capacity for your data**
+:::
+
+:::
+
+::: {.column width="34%"}
+
+::: {.callout-tip}
+### 🟢 Just Right
+Model **generalizes** to new data.
+
+- Train ≈ Val, both high
+- Both losses converge low
+
+**The goal — stay here**
+:::
+
+:::
+
+::: {.column width="33%"}
+
+::: {.callout-note}
+### 🟠 Underfitting
+Model **never learned** the patterns.
+
+- Both Train and Val mAP low
+- Losses barely decrease
+
+**Too little capacity or training**
+:::
+
+:::
+
+::::
+
+
+## 🔴 Overfitting: The Symptom
+
+> The model memorizes training data instead of learning general patterns.
+
+:::: {.columns}
+
+::: {.column width="42%"}
+
+**What you see:**
+
+- Train loss ↓, Val loss ↑
+- Train mAP climbs, Val mAP stalls
+- Growing gap between the two curves
+
+:::
+
+::: {.column width="58%"}
+
+```{python}
+#| echo: false
+#| fig-align: center
+import matplotlib.pyplot as plt
+import numpy as np
+
+np.random.seed(7)
+epochs = np.arange(1, 31)
+train_loss = 0.5 * np.exp(-epochs/10) + 0.02 * np.random.rand(30)
+val_loss = 0.6 * np.exp(-epochs/8) + 0.02 * np.random.rand(30)
+val_loss[12:] = val_loss[12:] + 0.022 * np.arange(1, 19)
+
+fig, ax = plt.subplots(figsize=(6, 4))
+fig.patch.set_alpha(0.0)
+ax.patch.set_alpha(0.0)
+
+ax.plot(epochs, train_loss, color='#1C355E', linewidth=3, label='Train Loss')
+ax.plot(epochs, val_loss, color='#00C9A7', linewidth=3, label='Val Loss')
+ax.axvline(x=13, color='#dc3545', linewidth=1.5, linestyle='--', alpha=0.7)
+ax.annotate('Val loss starts rising', xy=(13, val_loss[12]), xytext=(16, 0.65),
+            fontsize=9, color='#dc3545',
+            arrowprops=dict(arrowstyle='->', color='#dc3545', lw=1.2))
+
+ax.set_xlabel('Epochs', fontsize=12, color='#1C355E')
+ax.set_ylabel('Loss', fontsize=12, color='#1C355E')
+ax.set_title('Overfitting: Diverging Losses', fontsize=14, fontweight='bold', color='#1C355E')
+ax.legend(frameon=False)
+ax.set_ylim(0, 1.0)
+ax.set_yticks(np.arange(0, 1.1, 0.1))
+ax.spines['top'].set_visible(False)
+ax.spines['right'].set_visible(False)
+ax.spines['bottom'].set_color('#1C355E')
+ax.spines['left'].set_color('#1C355E')
+ax.tick_params(colors='#1C355E')
+
+plt.tight_layout()
+plt.show()
+```
+
+:::
+
+::::
+
+
+## 🔴 Overfitting: The Fixes
 
 :::: {.columns}
 
 ::: {.column width="50%"}
-**Good Matrix:**
 
-- Strong diagonal (high values on the diagonal)
-- Low off-diagonal values
-- Model rarely confuses classes
+**More Data Variety** *(best cure)*
 
-```
-           pred
-           car  trck
-actual car  95    3
-       trck  2    88
-```
+Varied scenes the model can't memorize.
+
+**Augmentation**
+
+Flip, mosaic, color jitter — on by default in YOLO.
+
+**Smaller Model**
+
+Small dataset? Start with `yolo11n` or `yolo11s`.
+
 :::
 
 ::: {.column width="50%"}
-**Bad Matrix:**
 
-- High values in wrong rows (e.g., truck predicted as car)
-- Indicates: model can't distinguish between these classes
+**Increase `weight_decay`**
 
+```python
+model.train(data="data.yaml", weight_decay=0.001)
 ```
-           pred  
-           car  trck
-actual car  60   40   ← Model confuse
-       trck  45   35
+
+**Early Stopping**
+
+```python
+model.train(data="data.yaml", patience=20)
+```
+
+:::
+
+::::
+
+::: {.callout-tip}
+Start with **augmentation + patience**. If overfitting persists, raise `weight_decay`.
+:::
+
+## 🟠 Underfitting: The Symptom
+
+> The model hasn't learned the patterns — too simple, over-constrained, or undertrained.
+
+:::: {.columns}
+
+::: {.column width="45%"}
+
+**What you see:**
+
+- Both Train *and* Val mAP **low and flat**
+- Loss barely moves after the first epochs
+- Curves close together — but both stuck high
+
+:::
+
+::: {.column width="55%"}
+
+```{python}
+#| echo: false
+#| fig-align: center
+import matplotlib.pyplot as plt
+import numpy as np
+
+np.random.seed(3)
+epochs = np.arange(1, 31)
+train_loss = 0.4 + 0.2 * np.exp(-epochs/5) + 0.02 * np.random.rand(30)
+val_loss = 0.45 + 0.2 * np.exp(-epochs/5) + 0.02 * np.random.rand(30)
+
+fig, ax = plt.subplots(figsize=(6, 4))
+fig.patch.set_alpha(0.0)
+ax.patch.set_alpha(0.0)
+
+ax.plot(epochs, train_loss, color='#1C355E', linewidth=3, label='Train Loss')
+ax.plot(epochs, val_loss, color='#00C9A7', linewidth=3, label='Val Loss')
+ax.annotate('Both stuck — barely dropping', xy=(20, train_loss[19]),
+            xytext=(12, 0.75), fontsize=9, color='#E07B39',
+            arrowprops=dict(arrowstyle='->', color='#E07B39', lw=1.2))
+
+ax.set_xlabel('Epochs', fontsize=12, color='#1C355E')
+ax.set_ylabel('Loss', fontsize=12, color='#1C355E')
+ax.set_title('Underfitting: High Plateau', fontsize=14, fontweight='bold', color='#1C355E')
+ax.legend(frameon=False)
+ax.set_ylim(0, 1.0)
+ax.set_yticks(np.arange(0, 1.1, 0.1))
+ax.spines['top'].set_visible(False)
+ax.spines['right'].set_visible(False)
+ax.spines['bottom'].set_color('#1C355E')
+ax.spines['left'].set_color('#1C355E')
+ax.tick_params(colors='#1C355E')
+
+plt.tight_layout()
+plt.show()
+```
+
+:::
+
+::::
+
+
+## 🟠 Underfitting: The Fixes
+
+:::: {.columns}
+
+::: {.column width="50%"}
+
+**Bigger Model**
+
+Try `yolo11m` or `yolo11l`.
+
+**Train Longer**
+
+Increase `epochs`.
+
+**Higher Learning Rate**
+
+Try `lr0=0.02` (default `0.01`).
+
+:::
+
+::: {.column width="50%"}
+
+**Less Regularization**
+
+```python
+model.train(data="data.yaml", weight_decay=0.0001)
+```
+
+**Check Your Labels**
+
+Mislabeled data is impossible to learn from — audit before tuning.
+
+:::
+
+::::
+
+
+## 🟢 Healthy Training: "Generalizing"
+
+:::: {.columns}
+
+::: {.column width="45%"}
+<br>
+
+**The Ideal State:**
+
+- Train and val metrics **rise together**
+- Both losses **decrease steadily** and plateau low
+- Model generalizes — performs well on unseen data
+
+:::
+
+::: {.column width="55%"}
+
+```{python}
+#| echo: false
+#| fig-align: center
+import matplotlib.pyplot as plt
+import numpy as np
+
+epochs = np.arange(1, 31)
+# Simulate healthy training: losses converge low
+train_loss = 0.6 * np.exp(-epochs/8) + 0.05 * np.random.rand(30)
+val_loss = 0.65 * np.exp(-epochs/8) + 0.05 * np.random.rand(30)
+
+fig, ax = plt.subplots(figsize=(6, 4))
+fig.patch.set_alpha(0.0)
+ax.patch.set_alpha(0.0)
+
+ax.plot(epochs, train_loss, color='#1C355E', linewidth=3, label='Train Loss')
+ax.plot(epochs, val_loss, color='#00C9A7', linewidth=3, label='Val Loss')
+
+ax.set_xlabel('Epochs', fontsize=12, color='#1C355E')
+ax.set_ylabel('Loss', fontsize=12, color='#1C355E')
+ax.set_title('Healthy: Convergence', fontsize=14, fontweight='bold', color='#1C355E')
+ax.legend(frameon=False)
+ax.set_ylim(0, 1.0)
+ax.set_yticks(np.arange(0, 1.1, 0.1))
+ax.spines['top'].set_visible(False)
+ax.spines['right'].set_visible(False)
+ax.spines['bottom'].set_color('#1C355E')
+ax.spines['left'].set_color('#1C355E')
+ax.tick_params(colors='#1C355E')
+
+plt.tight_layout()
+plt.show()
 ```
 :::
 
 ::::
 
-**If your 'truck' column has high values in the 'car' row, your model can't tell them apart — consider more diverse training data!**
 
+## Diagnosing Your Training Run
 
-## mAP50 vs mAP50-95: When to Use Each
+*Use this as a reference when reading your own loss curves.*
 
-| Metric | When to Use | Why |
-|--------|-------------|-----|
-| **mAP50** | Iterating fast, quick sanity check | Only requires IoU > 0.50, which is generous |
-| **mAP50-95** | Production readiness | Strict — averages across 10 IoU thresholds (0.50, 0.55, ..., 0.95) |
+| What you see | Problem | Actions |
+|:---|:---:|:---|
+| Train mAP >> Val mAP, Val loss rising | 🔴 **Overfitting** | Add augmentation · increase `weight_decay` · set `patience` |
+| Both mAP low and flat, loss barely moves | 🟠 **Underfitting** | Bigger model · more `epochs` · raise `lr0` · lower `weight_decay` |
+| Both losses converging, mAP climbing | 🟢 **Healthy** | Continue training or deploy |
 
-::: {.callout-tip appearance="simple" icon="false"}
-**Rule of Thumb:**
-- Use **mAP50** during rapid experimentation
-- Use **mAP50-95** when you're ready to ship to production
+::: {.callout-tip}
+**Always watch both curves.** 99% train accuracy means nothing if val is failing.
 :::
 
 
-## Overfitting vs. Underfitting
 
-:::: {.columns}
 
-::: {.column width="50%"}
-**Overfitting** (Memorizing)
-- Train loss drops, val loss stops improving or gets worse
-- Model memorized training data instead of learning general patterns
-- **Key sign:** If train mAP >> val mAP, you're overfitting
+
+## Your Toolkit for Better Training
+
+You can diagnose the problem — now here are the levers to fix it.
+
+::: {.fragment .fade-up}
+| Tool | Fixes |
+|:---|:---|
+| **Data Augmentation** | Overfitting, small datasets, domain shift |
+| **Learning Rate** | Unstable or stalled training |
+| **Weight Decay** | Overfitting (model memorizing) |
+| **Early Stopping** | Wasted compute, overfitting |
 :::
-
-::: {.column width="50%"}
-**Underfitting** (Too Simple)
-- Both train and val loss stay high
-- Model is too simple to capture the patterns
-- Needs a bigger model or more data
-:::
-
-::::
-
-**Visual (loss curves):**
-- 🟢 **Healthy:** Train and val loss converge together
-- 🔴 **Overfitting:** Gap between train and val loss widens
-- 🟠 **Underfitting:** Both losses are flat and high
-
-
-## Data Leakage: The Silent Killer
-
-**What it is:** Validation/test data accidentally ends up in the training set.
-
-**How it happens:**
-- Same image appears in both train and val folders
-- Temporal data split wrong (e.g., future data in training)
-- Preprocessing fit on full dataset before splitting
-
-**Why it's catastrophic:**
-- Val metrics look great, but model fails in production
-- You can't trust ANY evaluation number
-
-**How to avoid:**
-- Use `autosplit()` from Ultralytics to split your data
-- Never manually copy images between train/val folders
-- Check for duplicate images before training
-
-::: {.callout-warning appearance="simple" icon="false"}
-**If val metrics are suspiciously perfect, check for data leakage!**
-:::
-
 
 ## What Data Augmentation Does
 
@@ -577,129 +1328,60 @@ actual car  60   40   ← Model confuse
 #| fig-align: center
 import matplotlib.pyplot as plt
 import numpy as np
-import matplotlib.patches as patches
 from PIL import Image
-import sys; import os; sys.path.insert(0, os.path.abspath('.')); sys.path.insert(0, os.path.abspath('slides')); from plot_utils import draw_base_car
+from scipy.ndimage import gaussian_filter, rotate
+import os
 
-fig, axes = plt.subplots(1, 5, figsize=(15, 3))
+# Load a real image for more meaningful augmentation display
+img_path = 'assets/rainy_car.jpg'
+if not os.path.exists(img_path):
+    img_path = 'slides/assets/rainy_car.jpg'
+    
+img = np.array(Image.open(img_path).convert('RGB')) / 255.0
+
+fig, axes = plt.subplots(1, 5, figsize=(15, 3.5))
 fig.patch.set_alpha(0.0)
 
-# Original
-ax = axes[0]
-ax.patch.set_alpha(1.0)
-ax.set_facecolor('white')
-draw_base_car(ax)
-ax.set_title('Original', fontsize=10, fontweight='bold')
-ax.set_xticks([]); ax.set_yticks([])
-for sp in ax.spines.values(): sp.set_visible(False)
+def setup_ax(ax, title):
+    ax.set_title(title, fontsize=12, fontweight='bold', color='#1C355E')
+    ax.set_xticks([]); ax.set_yticks([])
+    for sp in ax.spines.values(): sp.set_visible(False)
 
-# Flipped
-ax = axes[1]
-ax.patch.set_alpha(1.0)
-ax.set_facecolor('white')
-draw_base_car(ax)
-ax.set_xlim(16, 0)  # Flip horizontally
-ax.set_title('Flip', fontsize=10, fontweight='bold')
-ax.set_xticks([]); ax.set_yticks([])
-for sp in ax.spines.values(): sp.set_visible(False)
+# 1. Original
+axes[0].imshow(img)
+setup_ax(axes[0], 'Original')
 
-# Brightness
-ax = axes[2]
-ax.patch.set_alpha(1.0)
-ax.set_facecolor('lightyellow')
-ax.text(0.5, 0.5, 'Car', transform=ax.transAxes, fontsize=20, ha='center', va='center', color='#888', fontweight='bold')
-ax.set_title('Brightness', fontsize=10, fontweight='bold')
-ax.set_xticks([]); ax.set_yticks([])
-for sp in ax.spines.values(): sp.set_visible(False)
+# 2. Horizontal Flip
+axes[1].imshow(np.fliplr(img))
+setup_ax(axes[1], 'Flip')
 
-# Blur
-ax = axes[3]
-ax.patch.set_alpha(1.0)
-ax.set_facecolor('white')
-draw_base_car(ax)
-ax.set_title('Blur', fontsize=10, fontweight='bold')
-ax.set_xticks([]); ax.set_yticks([])
-for sp in ax.spines.values(): sp.set_visible(False)
+# 3. Brightness
+# Scale pixels and clip to keep within [0, 1]
+bright_img = np.clip(img * 1.6, 0, 1)
+axes[2].imshow(bright_img)
+setup_ax(axes[2], 'Brightness')
 
-# Rotation
-ax = axes[4]
-ax.patch.set_alpha(1.0)
-ax.set_facecolor('white')
-draw_base_car(ax)
-ax.set_title('Rotation', fontsize=10, fontweight='bold')
-ax.set_xticks([]); ax.set_yticks([])
-for sp in ax.spines.values(): sp.set_visible(False)
+# 4. Blur
+# Apply sigma only to spatial dimensions
+blur_img = gaussian_filter(img, sigma=(4, 4, 0))
+axes[3].imshow(blur_img)
+setup_ax(axes[3], 'Blur')
+
+# 5. Rotation
+# rotate image without changing shape
+rot_img = rotate(img, angle=15, reshape=False, mode='nearest')
+axes[4].imshow(rot_img)
+setup_ax(axes[4], 'Rotation')
 
 plt.tight_layout()
 plt.show()
 ```
 
-**You're teaching the model: a car is still a car upside down, in shadow, or slightly blurry.**
-
 **When it helps:**
+
 - Overfitting (model needs more variety)
 - Small datasets
 - Domain shift (different lighting/angles in production)
-
-
-## Spotting Problems in Your Training
-
-| Symptom | Root Cause | Fix |
-|---------|------------|-----|
-| Train mAP high, val mAP low | **Overfitting** | Use augmentation + increase data |
-| Train mAP and val mAP both low | **Underfitting** | Use bigger model or more data |
-| Val mAP suspiciously perfect | **Data Leakage** | Re-check your train/val split |
-
-**Where to check:**
-- `results.csv` (in your training run folder)
-- TensorBoard curves
-
-::: {.callout-note appearance="simple" icon="false"}
-**Example:** If your train mAP is 0.85 but val mAP is 0.45, you have an overfitting problem. The model memorized the training data!
-:::
-
-
-## Now You Know the Problems. Here's How to Fix Them
-
-Now that you understand overfitting and data augmentation, let's look at the hyperparameters that help:
-
-**Coming from Part 3:**
-- `epochs`, `batch`, `imgsz`, `device`, `optimizer`, config files
-
-**New tuning knobs for fixing your model:**
-- `lr0`: Adjust learning rate — lower if loss explodes
-- `weight_decay`: Regularization to fight overfitting
-- `patience`: Early stopping to prevent overfitting
-- Data Augmentation: The Albumentations code from Part 3
-
-
-## Hyperparameters: Learning Rate
-
-- `lr0` (Default: 0.01): Initial Learning Rate (step size).
-  - **Too high:** Loss explodes, model diverges.
-  - **Too small:** Converges slowly, might get stuck.
-  - *Rule:* If loss looks like random noise, lower `lr0`.
-
-- `weight_decay` (Default: 0.0005): L2 regularization to fight overfitting.
-  - Penalizes large weights to improve generalization.
-  - Increase if overfitting is detected.
-
-
-## Hyperparameters: Early Stopping
-
-- `patience` (Default: 50): If validation metrics don't improve for this many epochs, training stops automatically.
-
-**Why this helps:**
-- Prevents overfitting by stopping before the model memorizes training data
-- Saves time — no need to manually monitor training
-
-```python
-from ultralytics import YOLO
-
-model = YOLO("yolo26n.pt")
-# Train with early stopping: stop if no improvement for 10 epochs
-model.train(data="data.yaml", epochs=100, patience=10)
-```
 
 
 ## Data Augmentation (Python) {.smaller}
@@ -719,7 +1401,8 @@ model = YOLO("yolo26n.pt")
 # Define custom Albumentations transforms
 custom_transforms = [
     A.Blur(blur_limit=7, p=0.5),
-    A.CLAHE(clip_limit=4.0, p=0.5),
+    A.RandomCrop(width=256, height=256),
+    A.HorizontalFlip(p=0.5),
     A.RandomBrightnessContrast(brightness_limit=0.2, contrast_limit=0.2, p=0.5),
 ]
 
@@ -729,6 +1412,256 @@ model.train(data="data.yaml", epochs=100, augmentations=custom_transforms)
 
 *Docs Reference: [Albumentations Integration](https://docs.ultralytics.com/integrations/albumentations/)*
 
+
+## Hyperparameters: Learning Rate (lr0)
+
+:::: {.columns .fragment .fade-up style="margin-bottom: -15px;"}
+::: {.column width="45%"}
+🔴 **Too High**: Spikes/noise. Model "jumps" over the optimal solution.
+:::
+::: {.column width="55%"}
+```{python}
+#| echo: false
+#| fig-align: center
+#| fig-height: 1.6
+import matplotlib.pyplot as plt
+import numpy as np
+epochs = np.arange(1, 51)
+brand_dark = '#1C355E'
+
+high_lr_loss = 0.5 * np.exp(-epochs/20) + 0.2 * np.random.randn(50)
+high_lr_loss[30:] = high_lr_loss[30:] + 0.1 * np.power(np.arange(20), 1.5)
+
+fig, ax = plt.subplots(figsize=(6, 1.8))
+fig.patch.set_alpha(0.0)
+ax.patch.set_alpha(0.0)
+ax.plot(epochs, high_lr_loss, color='#FF5252', linewidth=3)
+ax.set_title('TOO HIGH: Diverging / Spiking', fontsize=10, fontweight='bold', color=brand_dark)
+ax.set_ylim(0, 5)
+ax.spines['top'].set_visible(False); ax.spines['right'].set_visible(False)
+ax.spines['bottom'].set_color(brand_dark); ax.spines['left'].set_color(brand_dark)
+ax.tick_params(colors=brand_dark, labelsize=8)
+ax.grid(True, linestyle='--', alpha=0.2, color=brand_dark)
+plt.tight_layout()
+plt.show()
+```
+:::
+::::
+
+:::: {.columns .fragment .fade-up style="margin-bottom: -15px;"}
+::: {.column width="45%"}
+🔵 **Too Small**: Flat line. Model is too "timid" to learn.
+:::
+::: {.column width="55%"}
+```{python}
+#| echo: false
+#| fig-align: center
+#| fig-height: 1.6
+import matplotlib.pyplot as plt
+import numpy as np
+epochs = np.arange(1, 51)
+brand_dark = '#1C355E'
+
+low_lr_loss = 0.8 - 0.005 * epochs + 0.02 * np.random.rand(50)
+
+fig, ax = plt.subplots(figsize=(6, 1.8))
+fig.patch.set_alpha(0.0)
+ax.patch.set_alpha(0.0)
+ax.plot(epochs, low_lr_loss, color='#78909C', linewidth=3)
+ax.set_title('TOO LOW: Glacial Progress', fontsize=10, fontweight='bold', color=brand_dark)
+ax.set_ylim(0, 1)
+ax.spines['top'].set_visible(False); ax.spines['right'].set_visible(False)
+ax.spines['bottom'].set_color(brand_dark); ax.spines['left'].set_color(brand_dark)
+ax.tick_params(colors=brand_dark, labelsize=8)
+ax.grid(True, linestyle='--', alpha=0.2, color=brand_dark)
+plt.tight_layout()
+plt.show()
+```
+:::
+::::
+
+:::: {.columns .fragment .fade-up style="margin-bottom: -15px;"}
+::: {.column width="45%"}
+🟢 **Just Right**: Smooth, rapid decay to a low plateau.
+:::
+::: {.column width="55%"}
+```{python}
+#| echo: false
+#| fig-align: center
+#| fig-height: 1.6
+import matplotlib.pyplot as plt
+import numpy as np
+epochs = np.arange(1, 51)
+brand_dark = '#1C355E'
+brand_teal = '#00C9A7'
+
+good_lr_loss = 0.7 * np.exp(-epochs/10) + 0.05 * np.random.rand(50)
+
+fig, ax = plt.subplots(figsize=(6, 1.8))
+fig.patch.set_alpha(0.0)
+ax.patch.set_alpha(0.0)
+ax.plot(epochs, good_lr_loss, color=brand_teal, linewidth=3)
+ax.set_title('JUST RIGHT: Fast & Healthy', fontsize=10, fontweight='bold', color=brand_dark)
+ax.set_ylim(0, 1)
+ax.spines['top'].set_visible(False); ax.spines['right'].set_visible(False)
+ax.spines['bottom'].set_color(brand_dark); ax.spines['left'].set_color(brand_dark)
+ax.tick_params(colors=brand_dark, labelsize=8)
+ax.grid(True, linestyle='--', alpha=0.2, color=brand_dark)
+plt.tight_layout()
+plt.show()
+```
+:::
+::::
+
+
+
+## Hyperparameters: Weight Decay
+
+:::: {.columns}
+
+::: {.column width="55%"}
+```{python}
+#| echo: false
+#| fig-align: center
+import matplotlib.pyplot as plt
+import numpy as np
+
+brand_dark = '#1C355E'
+brand_teal = '#00C9A7'
+
+epochs = np.arange(1, 41)
+np.random.seed(42)
+train_loss = 0.5 * np.exp(-epochs/10) + 0.02 * np.random.rand(40)
+val_no_wd = 0.6 * np.exp(-epochs/8) + 0.02 * np.random.rand(40)
+val_no_wd[15:] = val_no_wd[15:] + 0.012 * np.arange(1, 26)
+val_wd = 0.55 * np.exp(-epochs/10) + 0.02 * np.random.rand(40)
+
+fig, ax = plt.subplots(figsize=(5, 3.5))
+fig.patch.set_alpha(0.0)
+ax.patch.set_alpha(0.0)
+
+ax.plot(epochs, train_loss, color=brand_dark, linewidth=2.5, alpha=0.6, label='Train Loss')
+ax.plot(epochs, val_no_wd, color='#dc3545', linewidth=2.5, linestyle='--', label='Val (no decay) — overfits')
+ax.plot(epochs, val_wd, color=brand_teal, linewidth=2.5, label='Val (with decay) — stable')
+
+ax.set_xlabel('Epochs', fontsize=11, color=brand_dark)
+ax.set_ylabel('Loss', fontsize=11, color=brand_dark)
+ax.set_title('Weight Decay Keeps Val Loss Stable', fontsize=12, fontweight='bold', color=brand_dark)
+ax.legend(frameon=False, fontsize=9)
+ax.spines['top'].set_visible(False)
+ax.spines['right'].set_visible(False)
+ax.spines['bottom'].set_color(brand_dark)
+ax.spines['left'].set_color(brand_dark)
+ax.tick_params(colors=brand_dark, labelsize=9)
+
+plt.tight_layout()
+plt.show()
+```
+:::
+
+::: {.column width="45%"}
+
+| Setting | Effect |
+|:---|:---|
+| Too low | Memorization → 🔴 Overfitting |
+| Too high | Over-constrained → 🟠 Underfitting |
+
+:::
+
+::::
+
+
+
+## Hyperparameters: Early Stopping
+
+:::: {.columns}
+
+::: {.column width="45%"}
+
+- **The Concept:** Stop training if validation metrics haven't improved for $N$ epochs.
+
+**`patience`** (Default: 50)
+
+```python
+from ultralytics import YOLO
+
+model = YOLO("yolo26n.pt")
+# Stop if no improvement for 10 epochs
+model.train(data="data.yaml", 
+            epochs=100, 
+            patience=10)
+```
+
+:::
+
+::: {.column width="55%"}
+
+```{python}
+#| echo: false
+#| fig-align: center
+import matplotlib.pyplot as plt
+import numpy as np
+
+fig, ax = plt.subplots(figsize=(6, 5))
+fig.patch.set_alpha(0.0)
+ax.patch.set_alpha(0.0)
+
+brand_dark = '#1C355E'
+brand_teal = '#00C9A7'
+brand_orange = '#FF8C00'
+
+epochs = np.arange(1, 101)
+train_loss = 0.5 * np.exp(-epochs/20) + 0.05 * np.random.rand(100)
+val_loss = 0.6 * np.exp(-epochs/15) + 0.05 * np.random.rand(100)
+best_epoch = 25
+patience = 20
+stop_epoch = best_epoch + patience
+
+val_loss[best_epoch:] = val_loss[best_epoch:] + 0.005 * np.arange(100 - best_epoch)
+
+ax.plot(epochs[:stop_epoch], train_loss[:stop_epoch], color=brand_dark, linewidth=3, label='Train Loss')
+ax.plot(epochs[:stop_epoch], val_loss[:stop_epoch], color=brand_teal, linewidth=3, label='Val Loss')
+
+# Highlights
+ax.axvline(x=best_epoch, linestyle='--', color=brand_orange, alpha=0.8, linewidth=2, label='Best Checkpoint')
+ax.axvspan(best_epoch, stop_epoch, alpha=0.15, color=brand_dark, label=f'Patience Window')
+ax.scatter(stop_epoch, val_loss[stop_epoch-1], color='red', marker='x', s=150, linewidth=3, zorder=5, label='Stop Training')
+
+# Styling
+ax.spines['top'].set_visible(False)
+ax.spines['right'].set_visible(False)
+ax.spines['bottom'].set_color(brand_dark)
+ax.spines['left'].set_color(brand_dark)
+ax.tick_params(colors=brand_dark, labelsize=10)
+ax.grid(True, linestyle='--', alpha=0.2, color=brand_dark)
+
+ax.set_xlabel('Epochs', fontsize=12, fontweight='bold', color=brand_dark)
+ax.set_ylabel('Loss', fontsize=12, fontweight='bold', color=brand_dark)
+ax.set_title('Early Stopping in Action', fontsize=14, fontweight='bold', color=brand_dark)
+ax.legend(frameon=False, fontsize=10, loc='upper right')
+
+plt.tight_layout()
+plt.show()
+```
+
+:::
+
+::::
+
+
+
+
+## Evaluation: Key Takeaways
+
+::: {.incremental}
+- **Metrics:** Use mAP50 for a quick sanity check, mAP50-95 for a strict production-ready evaluation
+- **Diagnose your curves:** overfitting, underfitting, and healthy training each have a clear, distinct signature
+- **Fix deliberately:** augmentation, weight decay, and early stopping cover the majority of training problems
+:::
+
+::: {.callout-tip appearance="minimal" .fragment}
+When your model's validation metrics are solid, it's ready for the next step — getting it into production.
+:::
 
 # 8. Deployment {.sdaia-dark background-gradient="linear-gradient(135deg, #1C355E, #00C9A7)"}
 
@@ -794,20 +1727,61 @@ Course Wrap-up
 
 ## The Ultralytics Ecosystem
 
-You have learned:
-
-- **Tasks**: Object Detection, Segmentation, Pose Estimation, and OBB.
-- **Solutions**: Effortlessly integrating advanced logic out-of-the-box.
-- **Datasets**: Structuring arrays and labels for different tasks.
-- **Tools**: Navigating the CLI, YAML configs, and hyperparameters.
-- **Evaluation**: Interpreting metrics, confidence thresholds, and PR curves.
-- **Deployment**: Exporting PyTorch models for production speed.
+```{=html}
+<div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; margin-top: 1.2rem;">
+  <div style="text-align:center; background:rgba(28,53,94,0.08); padding:1.2rem; border-radius:12px;">
+    <div style="font-size:2rem;">🎯</div>
+    <strong>Tasks</strong><br><small>Detect · Segment · Pose · OBB</small>
+  </div>
+  <div style="text-align:center; background:rgba(28,53,94,0.08); padding:1.2rem; border-radius:12px;">
+    <div style="font-size:2rem;">⚡</div>
+    <strong>Solutions</strong><br><small>Advanced logic, out-of-the-box</small>
+  </div>
+  <div style="text-align:center; background:rgba(28,53,94,0.08); padding:1.2rem; border-radius:12px;">
+    <div style="font-size:2rem;">🗂️</div>
+    <strong>Datasets</strong><br><small>Structure labels for every task</small>
+  </div>
+  <div style="text-align:center; background:rgba(0,201,167,0.12); padding:1.2rem; border-radius:12px;">
+    <div style="font-size:2rem;">🛠️</div>
+    <strong>Tools</strong><br><small>CLI · YAML · Hyperparameters</small>
+  </div>
+  <div style="text-align:center; background:rgba(0,201,167,0.12); padding:1.2rem; border-radius:12px;">
+    <div style="font-size:2rem;">📊</div>
+    <strong>Evaluation</strong><br><small>Metrics · Thresholds · PR curves</small>
+  </div>
+  <div style="text-align:center; background:rgba(0,201,167,0.12); padding:1.2rem; border-radius:12px;">
+    <div style="font-size:2rem;">🚀</div>
+    <strong>Deployment</strong><br><small>Export for production speed</small>
+  </div>
+</div>
+```
 
 ## What's Next?
 
-**Your Turn!**
-
-Apply these foundational skills to solve real-world problems. Whether building smart security cameras, medical imaging tools, or autonomous vehicles, the core principles remain the same.
+```{=html}
+<div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 1.2rem; margin-top: 1.4rem;">
+  <div style="background:rgba(28,53,94,0.08); padding:1.2rem; border-radius:12px;">
+    <div style="font-size:2rem; text-align:center;">📷</div>
+    <strong>Smart Security</strong><br>
+    <small>Detect intruders, vehicles, and anomalies in real time.</small>
+  </div>
+  <div style="background:rgba(28,53,94,0.08); padding:1.2rem; border-radius:12px;">
+    <div style="font-size:2rem; text-align:center;">🏥</div>
+    <strong>Medical Imaging</strong><br>
+    <small>Identify tumors, lesions, or instrument counts in scans.</small>
+  </div>
+  <div style="background:rgba(0,201,167,0.10); padding:1.2rem; border-radius:12px;">
+    <div style="font-size:2rem; text-align:center;">🚗</div>
+    <strong>Autonomous Vehicles</strong><br>
+    <small>Detect pedestrians, signs, and road hazards at speed.</small>
+  </div>
+  <div style="background:rgba(0,201,167,0.10); padding:1.2rem; border-radius:12px;">
+    <div style="font-size:2rem; text-align:center;">🛒</div>
+    <strong>Retail Analytics</strong><br>
+    <small>Track foot traffic, shelf stock, and customer behaviour.</small>
+  </div>
+</div>
+```
 
 ## Q&A {.sdaia-dark background-color="#1C355E"}
 

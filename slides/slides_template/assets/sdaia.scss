@@ -4,105 +4,133 @@
 */
 
 /*-- scss:defaults --*/
-// Core palette (kept as Sass variables for compile-time styling)
-$sdaia-navy: #1C355E;
-$sdaia-orange: #FF7A5C;
-$sdaia-teal: #00C9A7;
 
-$sdaia-purple: #9B8EC0;
-$sdaia-cyan: #00c1de;
-$sdaia-green: #6abf4b;
-$sdaia-yellow: #FFB548;
-$sdaia-black: #101820;
+// ─── Brand palette (exact values from SDAIA brand guide) ──────────────────────
+// Primary colors
+$sdaia-navy:      #1C355E;   // PANTONE 534C  — C98 M85 Y36 K27
+$sdaia-orange:    #E96852;   // PANTONE 7416C — C2  M71 Y66 K0
+$sdaia-teal:      #00AE8D;   // PANTONE Bright Green C — C97 M0 Y58 K0
 
-$bg: #ffffff;
-$text: #101820;
-$muted: #5b6678;
+// Secondary colors
+$sdaia-purple:    #625D9C;   // PANTONE 7669C — C72 M67 Y9  K1
+$sdaia-cyan:      #00C1DE;   // PANTONE 311C  — C70 M0  Y14 K0
+$sdaia-green:     #6ABF4B;   // PANTONE 360C  — C62 M0  Y86 K0
+$sdaia-yellow:    #FFB548;   // PANTONE 1365C — C0  M36 Y76 K0
+$sdaia-black:     #101820;   // PANTONE Black 6C — C93 M77 Y56 K78
 
-// Reveal / Quarto theme variables
-$body-bg: $bg;
-$body-color: $text;
+// UI neutrals
+$bg:              #ffffff;
+$text:            #101820;
+$muted:           #5b6678;
 
-$presentation-heading-color: $sdaia-navy;
-$presentation-heading-font: "Noto Sans", "Noto Sans Arabic", "Inter", system-ui, -apple-system, "Segoe UI", Arial, sans-serif;
+// ─── Typography ───────────────────────────────────────────────────────────────
+// SDAIA brand specifies:
+//   Headlines  → DiodrumArabic  (primary font, Arabic & English headings)
+//   Body copy  → Helvetica Neue Arabic (secondary font, body & captions)
 
-$font-family-sans-serif: "Noto Sans", "Noto Sans Arabic", "Inter", system-ui, -apple-system, "Segoe UI", Arial, sans-serif;
-$font-family-monospace: "JetBrains Mono", "Fira Code", "SFMono-Regular", Menlo, Monaco, Consolas, "Liberation Mono", monospace;
+// Heading stack: DiodrumArabic first, then system Arabic fallbacks
+$presentation-heading-font:
+  "DiodrumArabic",
+  "Diodrum Arabic",
+  "Noto Sans Arabic",
+  "Inter",
+  system-ui, -apple-system, "Segoe UI", Arial, sans-serif;
 
-// Size + rhythm (tuned for 6-hour bootcamp readability)
+// Body stack: Helvetica Neue Arabic first, then system fallbacks
+$font-family-sans-serif:
+  "Helvetica Neue Arabic",
+  "Neue Helvetica Arabic",
+  "Helvetica Neue",
+  "Noto Sans Arabic",
+  "Arial",
+  system-ui, -apple-system, "Segoe UI", sans-serif;
+
+$font-family-monospace:
+  "JetBrains Mono", "Fira Code", "SFMono-Regular",
+  Menlo, Monaco, Consolas, "Liberation Mono", monospace;
+
+// ─── Reveal theme variables ───────────────────────────────────────────────────
+$body-bg:                     $bg;
+$body-color:                  $text;
+$presentation-heading-color:  $sdaia-navy;
 $presentation-font-size-root: 32px;
-$presentation-line-height: 1.25;
+$presentation-line-height:    1.35;  // slightly looser for Arabic readability
 
 // Links
-$link-color: $sdaia-teal;
+$link-color:       $sdaia-teal;
 $link-color-hover: $sdaia-orange;
 
 // Text selection
 $selection-bg: $sdaia-yellow;
 
 // Code blocks (light)
-$code-block-bg: #f7f9fc;
+$code-block-bg:           #f7f9fc;
 $code-block-border-color: #dbe2ea;
-$code-color: $text;
-$code-block-font-size: 0.78em;
+$code-color:              $text;
+$code-block-font-size:    0.78em;
 
 // Blockquotes
 $blockquote-border-color: $sdaia-teal;
 
 // Callouts (Quarto callout blocks)
-$callout-border-width: 0.35rem;
-$callout-color-note: $sdaia-purple;
-$callout-color-tip: $sdaia-teal;
-$callout-color-info: $sdaia-cyan;
-$callout-color-warning: $sdaia-orange;
-$callout-color-caution: $sdaia-yellow;
-$callout-color-important: $sdaia-navy;
-$callout-color-success: $sdaia-green;
+$callout-border-width:      0.35rem;
+$callout-color-note:        $sdaia-purple;
+$callout-color-tip:         $sdaia-teal;
+$callout-color-info:        $sdaia-cyan;
+$callout-color-warning:     $sdaia-orange;
+$callout-color-caution:     $sdaia-yellow;
+$callout-color-important:   $sdaia-navy;
+$callout-color-success:     $sdaia-green;
 
 /*-- scss:rules --*/
-// Also expose the palette as CSS custom properties for slide authors.
+
+// ─── CSS custom properties (full brand palette + Arabic typography tokens) ────
 :root {
-  --sdaia-navy: #1C355E;
-  --sdaia-orange: #FF7A5C;
-  --sdaia-teal: #00C9A7;
+  // Primary brand colors
+  --sdaia-navy:   #1C355E;
+  --sdaia-orange: #E96852;
+  --sdaia-teal:   #00AE8D;
 
-  --sdaia-purple: #9B8EC0;
-  --sdaia-cyan: #00c1de;
-  --sdaia-green: #6abf4b;
+  // Secondary brand colors
+  --sdaia-purple: #625D9C;
+  --sdaia-cyan:   #00C1DE;
+  --sdaia-green:  #6ABF4B;
   --sdaia-yellow: #FFB548;
-  --sdaia-black: #101820;
+  --sdaia-black:  #101820;
 
-  --bg: #ffffff;
-  --text: #101820;
+  // Neutrals
+  --bg:    #ffffff;
+  --text:  #101820;
   --muted: #5b6678;
 
+  // Code / border
   --sdaia-code-bg: #f7f9fc;
-  --sdaia-border: #dbe2ea;
+  --sdaia-border:  #dbe2ea;
+
+  // Arabic typography tokens
+  --font-arabic-heading: "DiodrumArabic", "Diodrum Arabic", "Noto Sans Arabic", Arial, sans-serif;
+  --font-arabic-body:    "Helvetica Neue Arabic", "Neue Helvetica Arabic", "Helvetica Neue", "Noto Sans Arabic", Arial, sans-serif;
+
+  // Arabic-optimised spacing
+  --arabic-line-height:    1.7;   // Arabic glyphs need more vertical room
+  --arabic-letter-spacing: 0;     // Arabic does not use positive letter-spacing
+  --arabic-word-spacing:   0.05em;
 }
 
+// ─── Base reveal ─────────────────────────────────────────────────────────────
 .reveal {
   font-variant-ligatures: none;
-  /* keeps code-looking text crisp */
 }
 
-/* Prefer top-aligned content (better for dense technical slides) */
 .reveal .slides section {
   text-align: left;
 }
 
-.reveal .slides section h1 {
-  font-size: 1.5em !important;
-}
+.reveal .slides section h1 { font-size: 1.5em !important; }
+.reveal .slides section h2 { font-size: 1.3em !important; }
+.reveal .slides section h3 { font-size: 1.1em !important; }
 
-.reveal .slides section h2 {
-  font-size: 1.3em !important;
-}
-
-.reveal .slides section h3 {
-  font-size: 1.1em !important;
-}
-
-/* Title slide */
+// ─── Title slide ─────────────────────────────────────────────────────────────
 .reveal .slides section.title-slide {
   text-align: left;
 }
@@ -113,35 +141,6 @@ $callout-color-success: $sdaia-green;
   color: var(--sdaia-navy);
 }
 
-/* Subtle brand bar at the top of most slides */
-/* Subtle brand bar at the top of most slides */
-/*
-.reveal .slides section:not(.title-slide)::before {
-  content: "";
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 6px;
-  background: linear-gradient(90deg, var(--sdaia-navy), var(--sdaia-teal), var(--sdaia-orange));
-  opacity: 0.95;
-}
-*/
-
-/* SDAIA logo (small, top-right) */
-// .reveal .slides section::after {
-//   content: "";
-//   position: absolute;
-//   top: 14px;
-//   right: 18px;
-//   width: 120px;
-//   height: 34px;
-//   background-image: url("./icon.svg");
-//   background-repeat: no-repeat;
-//   background-size: contain;
-//   opacity: 0.95;
-//   pointer-events: none;
-// }
 .reveal .slides section.title-slide::after {
   width: 160px;
   height: 46px;
@@ -149,20 +148,21 @@ $callout-color-success: $sdaia-green;
   right: 22px;
 }
 
-/* Headings: add an accent underline for slide titles (h2) */
+// ─── Heading accent underline ─────────────────────────────────────────────────
 .reveal h2 {
   padding-bottom: 0.15em;
   border-bottom: 3px solid rgba(0, 174, 141, 0.35);
-  /* teal @ 35% */
   margin-bottom: 0.55em;
 }
 
-/* Muted text utility */
-.reveal .muted {
-  color: var(--muted);
+// ─── Utility classes ──────────────────────────────────────────────────────────
+.reveal .muted  { color: var(--muted); }
+
+.reveal .accent {
+  color: var(--sdaia-orange);
+  font-weight: 700;
 }
 
-/* "Pill" labels (e.g., Session tags) */
 .reveal .pill {
   display: inline-block;
   padding: 0.18em 0.55em;
@@ -175,13 +175,7 @@ $callout-color-success: $sdaia-green;
   color: var(--sdaia-navy);
 }
 
-/* Key term highlight */
-.reveal .accent {
-  color: var(--sdaia-orange);
-  font-weight: 700;
-}
-
-/* Blockquotes */
+// ─── Blockquotes ─────────────────────────────────────────────────────────────
 .reveal blockquote {
   border-left: 4px solid var(--sdaia-teal);
   padding-left: 0.8em;
@@ -190,7 +184,7 @@ $callout-color-success: $sdaia-green;
   border-radius: 10px;
 }
 
-/* Tables */
+// ─── Tables ───────────────────────────────────────────────────────────────────
 .reveal table {
   border-collapse: collapse;
   width: 100%;
@@ -208,11 +202,9 @@ $callout-color-success: $sdaia-green;
   padding: 0.32em 0.45em;
 }
 
-.reveal table tr:last-child td {
-  border-bottom: 0;
-}
+.reveal table tr:last-child td { border-bottom: 0; }
 
-/* Code blocks */
+// ─── Code ────────────────────────────────────────────────────────────────────
 .reveal pre code {
   background: var(--sdaia-code-bg);
   border: 1px solid var(--sdaia-border);
@@ -221,7 +213,6 @@ $callout-color-success: $sdaia-green;
   line-height: 1.35em;
 }
 
-/* Inline code */
 .reveal code:not(pre code) {
   background: rgba(0, 193, 222, 0.10);
   border: 1px solid rgba(0, 193, 222, 0.18);
@@ -229,14 +220,9 @@ $callout-color-success: $sdaia-green;
   padding: 0.08em 0.28em;
 }
 
-/* Reveal progress + slide number */
-.reveal .progress {
-  height: 6px;
-}
-
-.reveal .progress span {
-  background: var(--sdaia-teal);
-}
+// ─── Progress & slide number ──────────────────────────────────────────────────
+.reveal .progress       { height: 6px; }
+.reveal .progress span  { background: var(--sdaia-teal); }
 
 .reveal .slide-number {
   color: var(--muted);
@@ -244,16 +230,11 @@ $callout-color-success: $sdaia-green;
   letter-spacing: 0.02em;
 }
 
-/* Callouts: slightly tighter */
-.reveal .callout {
-  border-radius: 14px;
-}
+// ─── Callouts ────────────────────────────────────────────────────────────────
+.reveal .callout                  { border-radius: 14px; }
+.reveal .callout-title-container  { font-weight: 800; }
 
-.reveal .callout-title-container {
-  font-weight: 800;
-}
-
-/* Custom blocks for bootcamp pedagogy */
+// ─── Custom pedagogy blocks ───────────────────────────────────────────────────
 .reveal .qbox {
   border: 2px solid rgba(28, 53, 94, 0.18);
   background: rgba(28, 53, 94, 0.05);
@@ -267,16 +248,7 @@ $callout-color-success: $sdaia-green;
   margin-bottom: 0.35em;
 }
 
-
-
-/* Opt-out helpers (use on slide headings): 
-   - ## Slide Title {.no-logo}
-   - ## Slide Title {.no-brandbar}
-*/
-// .reveal .slides section.no-logo::after { display: none; }
-// .reveal .slides section.no-brandbar::before { display: none; }
-
-/* Dark background support (for occasional hero slides) */
+// ─── Dark / hero slides ───────────────────────────────────────────────────────
 .reveal .slides section.has-dark-background,
 .reveal .slides section.has-dark-background h1,
 .reveal .slides section.has-dark-background h2,
@@ -291,13 +263,8 @@ $callout-color-success: $sdaia-green;
   border-bottom-color: rgba(255, 255, 255, 0.25);
 }
 
-.reveal .slides section.has-dark-background a {
-  color: var(--sdaia-yellow);
-}
-
-.reveal .slides section.has-dark-background .muted {
-  color: rgba(255, 255, 255, 0.78);
-}
+.reveal .slides section.has-dark-background a     { color: var(--sdaia-yellow); }
+.reveal .slides section.has-dark-background .muted { color: rgba(255, 255, 255, 0.78); }
 
 .reveal .slides section.has-dark-background::after {
   filter: brightness(0) invert(1);
@@ -310,7 +277,6 @@ $callout-color-success: $sdaia-green;
   color: #ffffff;
 }
 
-/* Force dark mode styles for slides with brand backgrounds */
 .reveal .slides section.sdaia-dark,
 .reveal .slides section.sdaia-dark h1,
 .reveal .slides section.sdaia-dark h2,
@@ -325,16 +291,18 @@ $callout-color-success: $sdaia-green;
   border-bottom-color: rgba(255, 255, 255, 0.5);
 }
 
-.reveal .slides section.sdaia-dark .muted {
-  color: rgba(255, 255, 255, 0.8);
-}
+.reveal .slides section.sdaia-dark .muted { color: rgba(255, 255, 255, 0.8); }
 
+// ═══════════════════════════════════════════════════════════════════════════════
+// ARABIC / RTL STYLES
+// Based on SDAIA brand guide: DiodrumArabic headlines, Helvetica Neue Arabic body
+// ═══════════════════════════════════════════════════════════════════════════════
 
-
-/* RTL (Right-to-Left) support for Arabic content */
+// ── 1. Global RTL layout ──────────────────────────────────────────────────────
 html[dir="rtl"] .reveal .slides section,
 .reveal[dir="rtl"] .slides section {
   text-align: right;
+  direction: rtl;
 }
 
 html[dir="rtl"] .reveal .slides section.title-slide,
@@ -342,38 +310,83 @@ html[dir="rtl"] .reveal .slides section.title-slide,
   text-align: right;
 }
 
+// ── 2. Arabic typography — headings (DiodrumArabic) ──────────────────────────
+html[dir="rtl"] .reveal h1,
+html[dir="rtl"] .reveal h2,
+html[dir="rtl"] .reveal h3,
+html[dir="rtl"] .reveal h4,
+.reveal[dir="rtl"] h1,
+.reveal[dir="rtl"] h2,
+.reveal[dir="rtl"] h3,
+.reveal[dir="rtl"] h4 {
+  font-family: var(--font-arabic-heading);
+  letter-spacing: var(--arabic-letter-spacing);
+  word-spacing: var(--arabic-word-spacing);
+  // DiodrumArabic has a strong vertical presence; tighten slightly
+  line-height: 1.3;
+}
+
+// ── 3. Arabic typography — body copy (Helvetica Neue Arabic) ──────────────────
+html[dir="rtl"] .reveal p,
+html[dir="rtl"] .reveal li,
+html[dir="rtl"] .reveal td,
+html[dir="rtl"] .reveal th,
 html[dir="rtl"] .reveal blockquote,
-.reveal[dir="rtl"] blockquote {
-  border-left: none;
-  border-right: 4px solid var(--sdaia-teal);
-  padding-left: 0;
-  padding-right: 0.8em;
+html[dir="rtl"] .reveal .callout,
+.reveal[dir="rtl"] p,
+.reveal[dir="rtl"] li,
+.reveal[dir="rtl"] td,
+.reveal[dir="rtl"] th,
+.reveal[dir="rtl"] blockquote,
+.reveal[dir="rtl"] .callout {
+  font-family: var(--font-arabic-body);
+  line-height: var(--arabic-line-height);
+  letter-spacing: var(--arabic-letter-spacing);
+  word-spacing: var(--arabic-word-spacing);
 }
 
-html[dir="rtl"] .reveal .slides section:not(.title-slide)::before,
-.reveal[dir="rtl"] .slides section:not(.title-slide)::before {
-  background: linear-gradient(270deg, var(--sdaia-navy), var(--sdaia-teal), var(--sdaia-orange));
+// ── 4. Arabic pill / utility elements ────────────────────────────────────────
+html[dir="rtl"] .reveal .pill,
+.reveal[dir="rtl"] .pill {
+  font-family: var(--font-arabic-body);
+  letter-spacing: 0;
 }
 
+// ── 5. Lists ──────────────────────────────────────────────────────────────────
 html[dir="rtl"] .reveal ul,
 html[dir="rtl"] .reveal ol,
 .reveal[dir="rtl"] ul,
 .reveal[dir="rtl"] ol {
   text-align: right;
   direction: rtl;
+  padding-right: 1.4em;
+  padding-left: 0;
 }
 
+// ── 6. Blockquote — flip border to right side ────────────────────────────────
+html[dir="rtl"] .reveal blockquote,
+.reveal[dir="rtl"] blockquote {
+  border-left: none;
+  border-right: 4px solid var(--sdaia-teal);
+  padding-left: 0;
+  padding-right: 0.8em;
+  text-align: right;
+}
+
+// ── 7. Tables ─────────────────────────────────────────────────────────────────
 html[dir="rtl"] .reveal table,
 .reveal[dir="rtl"] table {
   direction: rtl;
 }
 
-html[dir="rtl"] .reveal .slides section p,
-.reveal[dir="rtl"] .slides section p {
+html[dir="rtl"] .reveal table th,
+html[dir="rtl"] .reveal table td,
+.reveal[dir="rtl"] table th,
+.reveal[dir="rtl"] table td {
   text-align: right;
 }
 
-/* Code blocks should always be LTR, even in RTL documents */
+// ── 8. Code blocks — always LTR regardless of document direction ───────────────
 html[dir="rtl"] .reveal pre,
 html[dir="rtl"] .reveal code,
 html[dir="rtl"] .reveal pre code,
@@ -382,9 +395,84 @@ html[dir="rtl"] .reveal pre code,
 .reveal[dir="rtl"] pre code {
   direction: ltr;
   text-align: left;
+  font-family: $font-family-monospace; // keep Latin monospace for code
 }
 
-/* Printable polish */
+// ── 9. Brand bar gradient — mirror for RTL ────────────────────────────────────
+html[dir="rtl"] .reveal .slides section:not(.title-slide)::before,
+.reveal[dir="rtl"] .slides section:not(.title-slide)::before {
+  background: linear-gradient(270deg, var(--sdaia-navy), var(--sdaia-teal), var(--sdaia-orange));
+}
+
+// ── 10. Slide number — move to left side for RTL ─────────────────────────────
+html[dir="rtl"] .reveal .slide-number,
+.reveal[dir="rtl"] .slide-number {
+  right: auto;
+  left: 8px;
+}
+
+// ── 11. Mixed-content (Arabic + Latin) helper class ──────────────────────────
+// Apply .ar to any inline or block element to force Arabic font stack
+.reveal .ar {
+  font-family: var(--font-arabic-body);
+  direction: rtl;
+  unicode-bidi: embed;
+  line-height: var(--arabic-line-height);
+  letter-spacing: 0;
+}
+
+.reveal h1.ar,
+.reveal h2.ar,
+.reveal h3.ar,
+.reveal h4.ar {
+  font-family: var(--font-arabic-heading);
+}
+
+// ── 12. Bilingual slide helper (.bilingual) ───────────────────────────────────
+// Use on a section for side-by-side Arabic / English columns
+.reveal .slides section.bilingual {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.5em;
+  direction: ltr; // outer container LTR so columns flow L→R
+}
+
+.reveal .slides section.bilingual .col-en {
+  direction: ltr;
+  text-align: left;
+  font-family: $font-family-sans-serif;
+}
+
+.reveal .slides section.bilingual .col-ar {
+  direction: rtl;
+  text-align: right;
+  font-family: var(--font-arabic-body);
+  line-height: var(--arabic-line-height);
+}
+
+.reveal .slides section.bilingual .col-ar h1,
+.reveal .slides section.bilingual .col-ar h2,
+.reveal .slides section.bilingual .col-ar h3 {
+  font-family: var(--font-arabic-heading);
+}
+
+// ── 13. Arabic qbox variant ───────────────────────────────────────────────────
+html[dir="rtl"] .reveal .qbox,
+.reveal[dir="rtl"] .qbox,
+.reveal .qbox.ar {
+  text-align: right;
+  direction: rtl;
+  font-family: var(--font-arabic-body);
+  line-height: var(--arabic-line-height);
+}
+
+html[dir="rtl"] .reveal .qbox .qtitle,
+.reveal[dir="rtl"] .qbox .qtitle,
+.reveal .qbox.ar .qtitle {
+  font-family: var(--font-arabic-heading);
+}
+
+// ─── Print ────────────────────────────────────────────────────────────────────
 @media print {
   .reveal .slides section::after {
     opacity: 1;
