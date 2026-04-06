@@ -6,10 +6,12 @@
 <script src="Ultralytics_Foundations_1_Tasks_Inference_files/libs/quarto-html/tippy.umd.min.js"></script>
 <link href="Ultralytics_Foundations_1_Tasks_Inference_files/libs/quarto-html/tippy.css" rel="stylesheet">
 <link href="Ultralytics_Foundations_1_Tasks_Inference_files/libs/quarto-html/light-border.css" rel="stylesheet">
-<link href="Ultralytics_Foundations_1_Tasks_Inference_files/libs/quarto-html/quarto-syntax-highlighting-587c61ba64f3a5504c4d52d930310e48.css" rel="stylesheet" id="quarto-text-highlighting-styles"><meta charset="utf-8">
+<link href="Ultralytics_Foundations_1_Tasks_Inference_files/libs/quarto-html/quarto-syntax-highlighting-587c61ba64f3a5504c4d52d930310e48.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="Ultralytics_Foundations_1_Tasks_Inference_files/libs/quarto-contrib/videojs/video.min.js"></script>
+<link href="Ultralytics_Foundations_1_Tasks_Inference_files/libs/quarto-contrib/videojs/video-js.css" rel="stylesheet"><meta charset="utf-8">
   <meta name="generator" content="quarto-1.8.26">
 
-  <meta name="dcterms.date" content="2026-04-05">
+  <meta name="dcterms.date" content="2026-04-06">
   <title>Ultralytics YOLO Foundations: Part 1</title>
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
@@ -203,7 +205,7 @@
 <div class="quarto-title-authors">
 </div>
 
-  <p class="date">2026-04-05</p>
+  <p class="date">2026-04-06</p>
 </section>
 <section>
 <section id="first-steps-what-can-yolo-do" class="title-slide slide level1 sdaia-dark center" data-background-gradient="linear-gradient(135deg, #1C355E, #00C9A7)">
@@ -440,7 +442,7 @@
 <h2>Image Classification Output Concept</h2>
 <div class="columns">
 <div class="column" style="width:55%;">
-<div id="ecd009a6" class="cell" data-execution_count="2">
+<div id="ae484c5a" class="cell" data-execution_count="2">
 <div class="cell-output cell-output-display">
 <div class="quarto-figure quarto-figure-center">
 <figure>
@@ -488,7 +490,7 @@
 <h2>From <code>probs</code> to <code>top1</code></h2>
 <div class="columns">
 <div class="column" style="width:55%;">
-<div id="81459f49" class="cell" data-execution_count="3">
+<div id="8db67f5a" class="cell" data-execution_count="3">
 <div class="cell-output cell-output-display">
 <div class="quarto-figure quarto-figure-center">
 <figure>
@@ -535,12 +537,12 @@
 <section id="classification-output-example" class="slide level2">
 <h2>Classification Output Example</h2>
 
-<img data-src="outputs/classification_output.png" class="r-stretch"></section>
+<img data-src="assets/outputs/classification_output.png" class="r-stretch"></section>
 <section id="object-detection-output-confidence" class="slide level2" data-auto-animate="true">
 <h2 data-id="quarto-animate-title">Object Detection Output &amp; Confidence</h2>
 <div class="columns" data-id="model-output">
 <div class="column" style="width:55%;">
-<div id="6523e3a5" class="cell" data-execution_count="4">
+<div id="87379d53" class="cell" data-execution_count="4">
 <div class="cell-output cell-output-display">
 <div class="quarto-figure quarto-figure-center">
 <figure>
@@ -588,7 +590,7 @@
 <h2 data-id="quarto-animate-title">Mapping to Bounding Boxes</h2>
 <div class="columns" data-id="model-output">
 <div class="column" style="width:55%;">
-<div id="2e8bd582" class="cell" data-execution_count="5">
+<div id="f78b46d0" class="cell" data-execution_count="5">
 <div class="cell-output cell-output-display">
 <div class="quarto-figure quarto-figure-center">
 <figure>
@@ -654,7 +656,7 @@ y_{max} &amp;= cy + \frac{h}{2} = 7.5 + 3.5 = 11.0
 <section id="detection-output-example" class="slide level2">
 <h2>Detection Output Example</h2>
 
-<img data-src="outputs/detection_output.png" class="r-stretch"></section>
+<img data-src="assets\outputs\images\task-detection.png" class="r-stretch"></section>
 <section id="the-problem-with-absolute-pixels" class="slide level2">
 <h2>The Problem with Absolute Pixels</h2>
 <p>Why not just train the model on absolute pixel values like <code>w = 8.0</code>?</p>
@@ -696,7 +698,7 @@ y_{max} &amp;= cy + \frac{h}{2} = 7.5 + 3.5 = 11.0
 <h2>Instance Segmentation Output Concept</h2>
 <div class="columns">
 <div class="column" style="width:55%;">
-<div id="03cab806" class="cell" data-execution_count="6">
+<div id="c82f7553" class="cell" data-execution_count="6">
 <div class="cell-output cell-output-display">
 <div class="quarto-figure quarto-figure-center">
 <figure>
@@ -735,12 +737,12 @@ y_{max} &amp;= cy + \frac{h}{2} = 7.5 + 3.5 = 11.0
 <section id="segmentation-output-example" class="slide level2">
 <h2>Segmentation Output Example</h2>
 
-<img data-src="outputs/segmentation_output.png" class="r-stretch"></section>
+<img data-src="assets/outputs/segmentation_output.png" class="r-stretch"></section>
 <section id="pose-estimation-output-concept" class="slide level2">
 <h2>Pose Estimation Output Concept</h2>
 <div class="columns">
 <div class="column" style="width:55%;">
-<div id="fa6142d3" class="cell" data-execution_count="7">
+<div id="e5878946" class="cell" data-execution_count="7">
 <div class="cell-output cell-output-display">
 <div class="quarto-figure quarto-figure-center">
 <figure>
@@ -779,12 +781,12 @@ y_{max} &amp;= cy + \frac{h}{2} = 7.5 + 3.5 = 11.0
 <section id="pose-estimation-output-example" class="slide level2">
 <h2>Pose Estimation Output Example</h2>
 
-<img data-src="outputs/pose_output.png" class="r-stretch"></section>
+<img data-src="assets/outputs/pose_output.png" class="r-stretch"></section>
 <section id="obb-oriented-bounding-box-output-concept" class="slide level2">
 <h2>OBB (Oriented Bounding Box) Output Concept</h2>
 <div class="columns">
 <div class="column" style="width:55%;">
-<div id="65bee3cf" class="cell" data-execution_count="8">
+<div id="1cba086f" class="cell" data-execution_count="8">
 <div class="cell-output cell-output-display">
 <div class="quarto-figure quarto-figure-center">
 <figure>
@@ -822,7 +824,7 @@ y_{max} &amp;= cy + \frac{h}{2} = 7.5 + 3.5 = 11.0
 <section id="obb-output-example" class="slide level2">
 <h2>OBB Output Example</h2>
 
-<img data-src="outputs/obb_output.png" class="r-stretch"></section>
+<img data-src="assets/outputs/images/task-obb.png" class="r-stretch"></section>
 <section id="object-tracking-in-action" class="slide level2 smaller">
 <h2>Object Tracking in Action</h2>
 <p>Assign distinct IDs to objects and track them continuously across video frames!</p>
@@ -842,10 +844,10 @@ y_{max} &amp;= cy + \frac{h}{2} = 7.5 + 3.5 = 11.0
 <span id="cb13-13"><a href=""></a>        <span class="bu">print</span>(<span class="ss">f"Tracking IDs: </span><span class="sc">{</span>ids<span class="sc">}</span><span class="ss">"</span>)  <span class="co"># e.g., [1, 2]</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p><em>Docs Reference: <a href="https://docs.ultralytics.com/modes/track/">Tracking</a></em></p>
 </section>
-<section id="tracking-output-example" class="slide level2">
-<h2>Tracking Output Example</h2>
-
-<img data-src="outputs/tracking_output.avif" class="r-stretch"></section>
+<section id="demonstration-object-tracking" class="slide level2 center">
+<h2>Demonstration: Object Tracking</h2>
+<video id="video_shortcode_videojs_video1" width="900" height="500" class="video-js vjs-default-skin " controls="" preload="auto" data-setup="{}" title=""><source src="assets/outputs/videos/task-tracking.mp4"></video>
+</section>
 <section id="predict-usage-python-batch-input" class="slide level2">
 <h2>Predict Usage (Python): Batch Input</h2>
 <p>Process multiple sources or directories efficiently!</p>
@@ -1294,6 +1296,7 @@ y_{max} &amp;= cy + \frac{h}{2} = 7.5 + 3.5 = 11.0
         }
       });
       </script>
+    <script>videojs(video_shortcode_videojs_video1);</script>
     
 
 </body></html>
