@@ -24,7 +24,7 @@ Teaching the model your custom data.
 
 Before we dive in, let's lock down the terminology:
 
-- **Model**: The mathematical structure with learned weights (e.g., `yolo26n.pt`).
+- **Model**: The mathematical structure with learned weights (e.g., `weights/yolo26n.pt`).
 - **Epoch**: One complete pass through your *entire* training dataset.
 - **mAP (Mean Average Precision)**: The ultimate grading score (0-100%). It grades how well the model finds the object AND correctly identifies it!
 
@@ -48,6 +48,7 @@ Split your data into train and validation sets [using Ultralytics Data Split](ht
 **The Danger:** Val metrics look "perfect," but the model fails in production.
 
 **How to Avoid:**
+
 - Use `autosplit()` for automatic, safe partitioning.
 - Avoid manually copying images between split folders.
 - Check for duplicates/hashes before training.
@@ -145,14 +146,14 @@ Hyperparameters and Configs
 We can start training directly from the command line or Python API:
 
 ```bash
-yolo train model=yolo26n.pt data=data.yaml epochs=100 imgsz=640 batch=-1
+yolo train model=weights/yolo26n.pt data=data.yaml epochs=100 imgsz=640 batch=-1
 ```
 
 ```python
 # Python Equivalent
 from ultralytics import YOLO
 
-model = YOLO("yolo26n.pt")
+model = YOLO("weights/yolo26n.pt")
 results = model.train(data="data.yaml", epochs=100, imgsz=640, batch=-1)
 ```
 
@@ -191,9 +192,6 @@ results = model.train(resume=True)
 
 ## 💡 Tip for Tiny Objects: SAHI
 
-::::{.columns}
-
-:::{.column width="40%" .incremental}
 **Problem:** A 4K image resized to 640px makes tiny objects *invisible* to YOLO.
 
 **Solution — [SAHI](https://docs.ultralytics.com/guides/sahi-tiled-inference/) (Slicing Aided Hyper Inference):**
@@ -202,13 +200,9 @@ results = model.train(resume=True)
 2. **Run YOLO** on each tile at full resolution
 3. **Merge** all detections back together automatically
 
-:::
+## Demonstration: SAHI Sliced Inference {.center}
 
-:::{.column width="60%" .fragment}
-![SAHI Sliced Inference Overview](outputs/sahi-sliced-inference-overview.avif)
-:::
-
-::::
+{{< video assets/slides/outputs/videos/task-sahi-inference.mp4 width="900" height="500" autoplay="true" loop="true" muted="true" >}}
 
 ## Using Config Files (Best Practice)
 

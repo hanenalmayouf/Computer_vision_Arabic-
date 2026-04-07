@@ -93,7 +93,7 @@ cap = cv2.VideoCapture("videos/traffic.mp4")
 line_points = [(100, 500), (900, 500)]
 
 counter = solutions.ObjectCounter(
-    show=True, region=line_points, model="yolo26n.pt"
+    show=True, region=line_points, model="weights/yolo26n.pt"
 )
 
 while cap.isOpened():
@@ -102,12 +102,12 @@ while cap.isOpened():
     results = counter(im0)
 ```
 
-![Object Counting Output](slides/outputs/object_counting_output.avif)
 
 
-## Object Counting Output Example
 
-![Object Counting Real Output](slides/outputs/object_counting_output.avif)
+## Demonstration: Object Counting {.center}
+
+{{< video assets/slides/outputs/videos/solution-counting.mp4 width="900" height="500" autoplay="true" loop="true" muted="true" >}}
 
 
 ## Example: Parking Management
@@ -126,7 +126,7 @@ parking_spots = [
 ]
 
 manager = solutions.ParkingManagement(
-    model="yolo26n.pt", region=parking_spots, show=True
+    model="weights/yolo26n.pt", region=parking_spots, show=True
 )
 
 while cap.isOpened():
@@ -134,6 +134,10 @@ while cap.isOpened():
     if not success: break
     results = manager(im0)
 ```
+
+## Demonstration: Parking Management {.center}
+
+{{< video assets/parking_slots.mp4 width="900" height="500" autoplay="true" loop="true" muted="true" >}}
 
 # Kinematic and Spatial Measurement {.sdaia-dark background-gradient="linear-gradient(135deg, #1C355E, #00C9A7)"}
 
@@ -159,7 +163,7 @@ from ultralytics import solutions
 cap = cv2.VideoCapture("videos/traffic.mp4")
 # ... extract fps
 speedestimator = solutions.SpeedEstimator(
-    show=True, model="yolo26n.pt",
+    show=True, model="weights/yolo26n.pt",
     fps=30, meter_per_pixel=0.05, 
 )
 
@@ -168,6 +172,10 @@ while cap.isOpened():
     if not success: break
     results = speedestimator(im0)
 ```
+
+## Demonstration: Speed Estimation {.center}
+
+{{< video assets/slides/outputs/videos/solution-speed-estimation.mp4 width="900" height="500" autoplay="true" loop="true" muted="true" >}}
 
 # Data Aggregation & Visualization {.sdaia-dark background-gradient="linear-gradient(135deg, #1C355E, #00C9A7)"}
 
@@ -186,14 +194,14 @@ Discover patterns and make informed decisions (Line, Bar, Area, Pie).
 *[View Official Documentation](https://docs.ultralytics.com/guides/analytics/)*
 
 ```python
-import cv2
-from ultralytics import solutions
-
-cap = cv2.VideoCapture("videos/people.mp4")
+video_path = "assets/Pull_ups.mp4"
+if not os.path.exists(video_path):
+    video_path = "slides/assets/Pull_ups.mp4"
+cap = cv2.VideoCapture(video_path)
 analytics = solutions.Analytics(
     show=True,
     analytics_type="line", # "pie", "bar", "area"
-    model="yolo26n.pt", 
+    model="weights/yolo26n.pt", 
 )
 
 frame_count = 0
@@ -210,13 +218,13 @@ Visualize spatial density and movement patterns.
 *[View Official Documentation](https://docs.ultralytics.com/guides/heatmap/)*
 
 ```python
-import cv2
-from ultralytics import solutions
-
-cap = cv2.VideoCapture("videos/traffic.mp4")
+video_path = "assets/videos/traffic.mp4"
+if not os.path.exists(video_path):
+    video_path = "slides/assets/videos/traffic.mp4"
+cap = cv2.VideoCapture(video_path)
 heatmap = solutions.Heatmap(
     show=True,
-    model="yolo26n.pt",
+    model="weights/yolo26n.pt",
     colormap=cv2.COLORMAP_JET
 )
 
@@ -226,12 +234,12 @@ while cap.isOpened():
     results = heatmap(im0)
 ```
 
-![Heatmap Output](slides/outputs/heatmap_output.avif)
 
 
-## Heatmap Output Example
 
-![Heatmap Real Output](slides/outputs/heatmap_output.avif)
+## Demonstration: Heatmap {.center}
+
+{{< video assets/slides/outputs/videos/solution-heatmap.mp4 width="900" height="500" autoplay="true" loop="true" muted="true" >}}
 
 
 # Image Output Manipulation {.sdaia-dark background-gradient="linear-gradient(135deg, #1C355E, #00C9A7)"}
@@ -251,13 +259,13 @@ Automatically blur bounding boxes or segmentation masks to protect privacy.
 *[View Official Documentation](https://docs.ultralytics.com/guides/object-blurring/)*
 
 ```python
-import cv2
-from ultralytics import solutions
-
-cap = cv2.VideoCapture("videos/people.mp4")
+video_path = "assets/Pull_ups.mp4"
+if not os.path.exists(video_path):
+    video_path = "slides/assets/Pull_ups.mp4"
+cap = cv2.VideoCapture(video_path)
 blurrer = solutions.ObjectBlurrer(
     show=True,
-    model="yolo26n.pt", 
+    model="weights/yolo26n.pt", 
     blur_ratio=0.5, # percentage of blur intensity
 )
 
@@ -278,16 +286,18 @@ Utilize specific YOLO architectures (`YOLO-seg`, `YOLO-pose`) to extract granula
 - **Instance Seg Tracking**: Combines pixel-perfect masks with continuous track IDs.
 - **Workouts Monitoring**: Tracks human skeletal connections (pose keypoints) to evaluate biomechanical form.
 
+![Instance Segmentation Output](assets/slides/outputs/images/task-segmentation.png)
+
 ## Example: Workouts Monitoring
 
 Track and evaluate exercise form (like pushups) using YOLO Pose keypoints.
 *[View Official Documentation](https://docs.ultralytics.com/guides/workouts-monitoring/)*
 
 ```python
-import cv2
-from ultralytics import solutions
-
-cap = cv2.VideoCapture("videos/people.mp4")
+video_path = "assets/Pull_ups.mp4"
+if not os.path.exists(video_path):
+    video_path = "slides/assets/Pull_ups.mp4"
+cap = cv2.VideoCapture(video_path)
 gym = solutions.AIGym(
     show=True,
     kpts=[6, 8, 10], # default keypoints for pushups
@@ -299,6 +309,8 @@ while cap.isOpened():
     if not success: break
     results = gym(im0)
 ```
+
+![Workouts Monitoring Output](assets/slides/outputs/images/task-pose.png)
 
 # External System Integrations {.sdaia-dark background-gradient="linear-gradient(135deg, #1C355E, #00C9A7)"}
 
@@ -316,12 +328,12 @@ Trigger email alerts upon detecting specific objects.
 *[View Official Documentation](https://docs.ultralytics.com/guides/security-alarm-system/)*
 
 ```python
-import cv2
-from ultralytics import solutions
-
-cap = cv2.VideoCapture("videos/people.mp4")
+video_path = "assets/Pull_ups.mp4"
+if not os.path.exists(video_path):
+    video_path = "slides/assets/Pull_ups.mp4"
+cap = cv2.VideoCapture(video_path)
 securityalarm = solutions.SecurityAlarm(
-    show=True, model="yolo26n.pt",
+    show=True, model="weights/yolo26n.pt",
     records=1, # send email after 1 detection
 )
 

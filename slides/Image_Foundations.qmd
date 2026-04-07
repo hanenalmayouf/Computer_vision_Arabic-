@@ -33,7 +33,7 @@ How computers store images
 - **4. Processing**: The lens focuses light onto the **retina**. *Photoreceptors* (rods and cones) convert it to electrical signals for the brain.
 :::
 ::: {.column width="50%"}
-![](assets/human_vision_sdaia.png){fig-align="center"}
+![](assets/slides/human_vision_sdaia.png){fig-align="center"}
 <!-- Branded infographic of light reflecting into a human eye -->
 :::
 ::::
@@ -48,7 +48,7 @@ How computers store images
 - **4. Digitization**: Millions of sensor *pixels* convert incoming photons into an electrical charge, which is translated into a digital matrix.
 :::
 ::: {.column width="50%"}
-![](assets/camera_vision_sdaia.png){fig-align="center"}
+![](assets/slides/camera_vision_sdaia.png){fig-align="center"}
 <!-- Branded infographic of light reflecting into a digital camera lens -->
 :::
 ::::

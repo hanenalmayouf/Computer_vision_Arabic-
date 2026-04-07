@@ -46,83 +46,13 @@ Every prediction falls into one of four categories. Example: detecting a **"Car"
 </table>
 ```
 
-
-## The Confusion Matrix
-
-:::: {.columns}
-
-::: {.column width="60%"}
-```{python}
-#| echo: false
-#| fig-align: center
-import numpy as np
-import matplotlib.pyplot as plt
-
-# True labels vs predictions (1=Car, 0=Not Car)
-y_true = np.array([1, 1, 0, 1, 0, 0, 1, 0, 0, 0])
-y_pred = np.array([1, 0, 0, 1, 0, 1, 1, 0, 0, 0])
-
-# Calculate TP, FP, TN, FN
-TP = np.sum((y_true == 1) & (y_pred == 1))
-FP = np.sum((y_true == 0) & (y_pred == 1))
-TN = np.sum((y_true == 0) & (y_pred == 0))
-FN = np.sum((y_true == 1) & (y_pred == 0))
-
-cm = np.array([[TN, FP], [FN, TP]])
-
-# Plotting the Confusion Matrix
-fig, ax = plt.subplots(figsize=(4, 4))
-fig.patch.set_alpha(0.0) 
-ax.imshow(cm, cmap='Blues', alpha=0.8)
-
-# Add text annotations
-thresh = cm.max() / 2.
-for i in range(2):
-    for j in range(2):
-        ax.text(j, i, str(cm[i, j]), ha="center", va="center", 
-                color="white" if cm[i, j] > thresh else "black", 
-                fontsize=16, fontweight='bold')
-
-classes = ['Not Car', 'Car']
-ax.set_xticks([0, 1])
-ax.set_xticklabels(classes)
-ax.set_yticks([0, 1])
-ax.set_yticklabels(classes)
-ax.set_xlabel('Predicted label', fontsize=12, fontweight='bold')
-ax.set_ylabel('True label', fontsize=12, fontweight='bold')
-
-plt.show()
-
-accuracy = (TP + TN) / (TP + TN + FP + FN)
-precision = TP / (TP + FP)
-recall = TP / (TP + FN)
-
-print(f"Accuracy : {accuracy:.2f}")
-print(f"Precision: {precision:.2f}")
-print(f"Recall   : {recall:.2f}")
-```
-:::
-
-::: {.column width="40%" .incremental}
-<br>
-**Matrix Layout:**
-
-- **Rows:** True Labels (Actual)
-- **Columns:** Predicted Labels
-- **Diagonal:** Correct predictions (TP & TN)
-- **Off-Diagonal:** Errors (FP & FN)
-
-:::
-
-::::
-
 ## Scenario: Smart Parking Camera
 
 ::: {style="font-size: 0.9em;"}
 A camera at a parking entrance classifies each frame as **Car Present** or **Not**: 
 :::
 
-![](assets/parking_camera_scenario_cropped.png){fig-align="center"}
+![](assets/slides/parking_camera_scenario_cropped.png){fig-align="center"}
 
 **Dataset:** 24 hours, 10,000 frames (~9s interval)
 
@@ -186,21 +116,21 @@ fig, ax = plt.subplots(figsize=(5, 3.5))
 fig.patch.set_alpha(0.0)
 ax.patch.set_alpha(0.0)
 
-categories = ['True Positives\n(Cars caught)', 'False Positives\n(Empty → "Car")', 'False Negatives\n(Cars missed)']
-values = [500, 1900, 0]
-colors = ['#28a745', '#dc3545', '#ffc107']
+categories = ['True Positives\n(Cars caught)', 'False Positives\n(Empty → "Car")', 'False Negatives\n(Cars missed)', 'True Negatives\n(Correct Rejection)']
+values = [500, 1900, 0, 7600]
+colors = ['#28a745', '#dc3545', '#ffc107', '#17a2b8']
 
 bars = ax.barh(categories, values, color=colors, height=0.5, edgecolor='white', linewidth=1.5)
 for bar, val in zip(bars, values):
-    ax.text(bar.get_width() + 30, bar.get_y() + bar.get_height()/2,
-            str(val), va='center', ha='left', fontsize=12, fontweight='bold', color='#1C355E')
+    ax.text(bar.get_width() + 100, bar.get_y() + bar.get_height()/2,
+            f'{val:,}', va='center', ha='left', fontsize=11, fontweight='bold', color='#1C355E')
 
-ax.set_xlim(0, 2600)
+ax.set_xlim(0, 9000)
 ax.spines['top'].set_visible(False)
 ax.spines['right'].set_visible(False)
 ax.spines['bottom'].set_color('#1C355E')
 ax.spines['left'].set_visible(False)
-ax.tick_params(left=False, colors='#1C355E', labelsize=10)
+ax.tick_params(left=False, colors='#1C355E', labelsize=9)
 ax.set_title('Trigger-Happy Model Results', fontsize=13, fontweight='bold', color='#1C355E')
 plt.tight_layout()
 plt.show()
@@ -208,6 +138,7 @@ plt.show()
 :::
 
 ::: {.column width="45%"}
+::: {style="font-size: 0.85em;"}
 ::: {.fragment .fade-up}
 - **Car Accuracy:** 100%
 - **Empty Accuracy:** 80%
@@ -218,6 +149,13 @@ $$\frac{100\% + 80\%}{2} = \mathbf{90\%}$$
 ::: {.fragment .fade-up}
 ::: {.callout-warning appearance="minimal"}
 **90% looks great** — but that's **1,900 false alarms** hidden inside the score.
+:::
+:::
+
+::: {.fragment .fade-up}
+::: {.callout-tip appearance="minimal"}
+**The TN "Trap":** The **7,600 True Negatives** (correctly ignoring empty spots) are what inflate the accuracy while the false alarms flood your system.
+:::
 :::
 :::
 :::
@@ -544,6 +482,221 @@ Ultralytics saves `F1_curve.png` and `R_curve.png` in your training results auto
 
 
 
+## Case Study: Translating Metrics to ROI
+
+Accuracy and F1 are great for engineers, but management speaks one language: **Money.**
+
+::: {style="font-size: 0.9em;"}
+**Scenario:** A Digital Factory produces high-end circuit boards. We deploy a YOLO model to detect "Defective Solders" before shipping. 
+:::
+
+![](assets/pcb_solder_defect_yolo.png){fig-align="center" width="75%"}
+
+
+## Cost of Every Prediction
+
+Every prediction in our Digital Factory has a tangible financial consequence:
+
+::: {.incremental}
+- ✅ **True Positive (TP):** Defect caught, scrapped early. (Baseline)
+- ✅ **True Negative (TN):** Good board ships. (Baseline)
+- ❌ **False Negative (FN):** Defective board ships to a customer. **Cost: $500** *(Warranty, shipping, brand damage).*
+- ⚠️ **False Positive (FP):** Good board flagged as defective. Requires manual inspection. **Cost: $25** *(Labor).*
+:::
+
+
+
+## The Financial Confusion Matrix
+
+If we test our model on a batch of **10,000 boards** (where 5% actually have defects):
+
+```{=html}
+<table style="width:90%; margin: 1.5rem auto; border-collapse: separate; border-spacing: 8px; font-size: 1.1em; text-align: center;">
+  <tr>
+    <td style="width:20%"></td>
+    <th style="padding:0.6rem; color:#1C355E;">Predicted: Defect</th>
+    <th style="padding:0.6rem; color:#1C355E;">Predicted: Good</th>
+  </tr>
+  <tr>
+    <th style="color:#1C355E; text-align:right; padding-right:0.8rem;">Actual: Defect</th>
+    <td style="background:#d4edda; padding:1rem; border-radius:8px;">✅ <strong>TP</strong><br><small>Cost: $0</small></td>
+    <td style="background:#f8d7da; padding:1rem; border-radius:8px;">❌ <strong>FN (Missed)</strong><br><small style="color:#dc3545; font-weight:bold;">Cost: $500 each</small></td>
+  </tr>
+  <tr>
+    <th style="color:#1C355E; text-align:right; padding-right:0.8rem;">Actual: Good</th>
+    <td style="background:#fff3cd; padding:1rem; border-radius:8px;">⚠️ <strong>FP (False Alarm)</strong><br><small style="color:#FF8C00; font-weight:bold;">Cost: $25 each</small></td>
+    <td style="background:#d4edda; padding:1rem; border-radius:8px;">✅ <strong>TN</strong><br><small>Cost: $0</small></td>
+  </tr>
+</table>
+```
+
+::: {.fragment .fade-up style="text-align: center; margin-top: 1rem;"}
+**Total Financial Loss = $(FN \times \$500) + (FP \times \$25)$**
+:::
+
+
+## Baselines: The Cost of "Dumb" Decisions
+
+What if we didn't use AI at all? Let's look at the financial impact of the two simplest "Dummy" strategies:
+
+:::: {.columns}
+
+::: {.column width="50%" .fragment}
+### 🚢 "Ship Everything"
+*Assume every board is Good*
+
+- **False Negatives (FN):** 500
+- **Cost:** $500 \times 500$
+- **Total Loss:** [**$250,000**]{style="color:#dc3545; font-size:1.2em;"}
+:::
+
+::: {.column width="50%" .fragment}
+### ⚙️ "Scrap Everything"
+*Assume every board is Defective*
+
+- **False Positives (FP):** 9,500
+- **Cost:** $9,500 \times 25$
+- **Total Loss:** [**$237,500**]{style="color:#FF8C00; font-size:1.2em;"}
+:::
+
+::::
+
+::: {.fragment .fade-up style="text-align: center; margin-top: 1.5rem;"}
+::: {.callout-tip appearance="minimal"}
+**The Conclusion:** Even a "basic" model saves the company hundreds of thousands of dollars per batch. Now let's see how much *more* we can save by optimizing.
+:::
+:::
+
+
+## Optimizing for Profit, Not Just F1
+
+Remember how F1 balances Precision and Recall? When money is involved, the balance changes. A missed defect (FN) is 20x more expensive than a false alarm (FP).
+
+:::: {.columns}
+
+::: {.column width="50%" .fragment .fade-up}
+### Option A: Max F1 Score
+Balanced threshold (conf=0.35)
+
+- **FN (Missed):** 81 boards $\times \$500$ = $\$40,500$
+- **FP (False Alarms):** 0 boards $\times \$25$ = $\$0$
+- **Total Loss:** <span style="color:#dc3545; font-weight:bold;">$40,500</span>
+:::
+
+::: {.column width="50%" .fragment .fade-up}
+### Option B: Max ROI
+Loose threshold (conf=0.20)
+
+- **FN (Missed):** 22 boards $\times \$500$ = $\$11,000$
+- **FP (False Alarms):** 2 boards $\times \$25$ = $\$50$
+- **Total Loss:** <span style="color:#00C9A7; font-weight:bold;">$11,050</span>
+:::
+
+::::
+
+::: {.callout-important appearance="minimal" .fragment .fade-up}
+By lowering our threshold and accepting a few False Positives, we saved the business nearly **$30,000** per batch. We optimized for the **business metric**, not the machine learning metric.
+:::
+
+
+## The Cost Curve
+
+Just like we plotted the F1 curve, we can plot a **Cost Curve** to find the optimal threshold for deployment.
+
+```{python}
+#| echo: false
+#| fig-align: center
+import numpy as np
+import matplotlib.pyplot as plt
+import matplotlib.ticker as ticker
+
+# Generate synthetic data
+np.random.seed(42)  # For reproducible results
+total_defects = 500
+total_good = 9500
+
+# Defects have a clear but overlapping distribution
+scores_defects = np.random.normal(0.55, 0.20, total_defects)
+scores_good = np.random.normal(0.10, 0.03, total_good)
+
+# Clip to valid confidence range
+scores_defects = np.clip(scores_defects, 0.01, 0.99)
+scores_good = np.clip(scores_good, 0.01, 0.99)
+
+# Calculate costs across thresholds
+thresholds = np.linspace(0.01, 0.99, 200)
+total_costs = []
+
+for t in thresholds:
+    fn = np.sum(scores_defects < t)
+    fp = np.sum(scores_good >= t)
+    total_costs.append(fn * 500 + fp * 25)
+
+total_costs = np.array(total_costs)
+
+# Find minimum cost
+best_idx = np.argmin(total_costs)
+best_conf = thresholds[best_idx]
+min_cost = total_costs[best_idx]
+
+# Plot
+fig, ax = plt.subplots(figsize=(8, 4.5))
+fig.patch.set_alpha(0.0)
+ax.patch.set_alpha(0.0)
+
+ax.plot(thresholds, total_costs, color='#1C355E', linewidth=3, label='Total Financial Loss ($)')
+
+# Highlight minimum cost
+ax.axvline(best_conf, color='#00C9A7', linewidth=2, linestyle=':')
+ax.scatter([best_conf], [min_cost], color='#00C9A7', zorder=5, s=80)
+ax.annotate(f'Best ROI @ conf={best_conf:.2f}\nCost: ${min_cost:,.0f}',
+            xy=(best_conf, min_cost),
+            xytext=(best_conf + 0.05, min_cost + 20000),
+            fontsize=11, fontweight='bold', color='#00C9A7',
+            arrowprops=dict(arrowstyle='->', color='#00C9A7', lw=2))
+
+# Formatting
+ax.set_xlabel('Confidence Threshold', fontsize=12, color='#1C355E')
+ax.set_ylabel('Total Cost ($)', fontsize=12, color='#1C355E')
+ax.set_title('Financial Loss vs. Confidence Threshold', fontsize=14, fontweight='bold', color='#1C355E')
+ax.set_xlim(0, 1)
+
+# Clean up spines and match brand colors
+ax.spines['top'].set_visible(False)
+ax.spines['right'].set_visible(False)
+ax.spines['bottom'].set_linewidth(2)
+ax.spines['bottom'].set_color('#1C355E')
+ax.spines['left'].set_linewidth(2)
+ax.spines['left'].set_color('#1C355E')
+
+ax.tick_params(colors='#1C355E', width=2, labelsize=12)
+ax.grid(True, linestyle='--', alpha=0.3, color='#1C355E')
+
+# Format Y axis as currency
+formatter = ticker.StrMethodFormatter('${x:,.0f}')
+ax.yaxis.set_major_formatter(formatter)
+
+ax.legend(loc='upper right', frameon=False, fontsize=12, labelcolor='#1C355E')
+
+plt.tight_layout()
+plt.show()
+```
+
+## 🧪 Lab 4A: ROI-Driven Evaluation
+
+Now it's your turn to play the role of the Business Lead!
+
+1. Open `labs/04a_roi_evaluation.ipynb`
+2. Scroll to the **"ROI-Driven Evaluation"** section.
+3. Find the optimal threshold for the **Shoplifting Detection** case study in **Lab 4A**.
+
+::: {.callout-tip appearance="minimal"}
+**Scenario Summary:**
+
+- **Goal:** Minimize Total Financial Loss.
+- **Costs:** Missed Shoplifter ($50) vs. Wrongful Accusal ($2,500).
+:::
+
 
 ## The PR Curve & Average Precision (AP)
 
@@ -863,6 +1016,126 @@ $$mAP = \frac{AP_{cars} + AP_{pedestrians} + AP_{trees} + ...}{Total\ Number\ of
 - **mAP50:** Accuracy considering only "easy" detections (IoU > 0.50).
 - **mAP50-95:** The strict evaluation averaged across multiple IoU thresholds (from 0.50 to 0.95).
 
+## Segmentation: Mask IoU (mIoU)
+
+For segmentation, we evaluate how well the **pixels** overlap, not just bounding boxes.
+
+:::: {.columns}
+
+::: {.column width="50%"}
+```{python}
+#| echo: false
+#| fig-align: center
+import matplotlib.pyplot as plt
+import numpy as np
+
+# Create smooth irregular shapes for "organic" segmentation masks
+def get_blob(center, radius, seed=42):
+    np.random.seed(seed)
+    angles = np.linspace(0, 2*np.pi, 100)
+    noise = 0.12 * np.sin(3*angles) + 0.06 * np.cos(5*angles)
+    r = radius * (1 + noise)
+    x = center[0] + r * np.cos(angles)
+    y = center[1] + r * np.sin(angles)
+    return np.column_stack([x, y])
+
+fig, ax = plt.subplots(figsize=(5, 4))
+fig.patch.set_alpha(0.0)
+ax.patch.set_alpha(0.0)
+
+gt_verts = get_blob((0.42, 0.5), 0.28, seed=10)
+pred_verts = get_blob((0.58, 0.5), 0.28, seed=20)
+
+ax.fill(gt_verts[:,0], gt_verts[:,1], color='#00C9A7', alpha=0.25)
+ax.plot(gt_verts[:,0], gt_verts[:,1], color='#00C9A7', linewidth=4, label='Ground Truth')
+ax.fill(pred_verts[:,0], pred_verts[:,1], color='#FF5252', alpha=0.25)
+ax.plot(pred_verts[:,0], pred_verts[:,1], color='#FF5252', linewidth=4, label='Prediction')
+
+ax.annotate('Intersection\n(Overlap)', xy=(0.5, 0.5), xytext=(0.5, 0.85),
+            ha='center', fontsize=10, fontweight='bold', color='#1C355E',
+            arrowprops=dict(arrowstyle='->', color='#1C355E', lw=2, connectionstyle="arc3,rad=0.2"))
+
+ax.set_xlim(0.05, 0.95); ax.set_ylim(0.05, 0.95); ax.set_aspect('equal'); ax.axis('off')
+ax.legend(loc='lower center', bbox_to_anchor=(0.5, -0.05), ncol=2, frameon=False, fontsize=10, labelcolor='#1C355E')
+plt.show()
+```
+:::
+
+::: {.column width="50%"}
+#### mIoU (Jaccard Index)
+$$
+\begin{aligned}
+\text{mIoU} &= \frac{\text{Area of Overlap}}{\text{Area of Union}} \\[12pt]
+&= \mathbf{\frac{TP}{TP + FP + FN}}
+\end{aligned}
+$$
+
+
+::: {.callout-note appearance="minimal"}
+In Ultralytics, **Mask mAP** is the primary metric for `yolo segment`, calculated using pixel-wise IoU thresholds.
+:::
+:::
+
+::::
+
+
+## The Dice Coefficient (F1)
+
+
+The most common metric in **Medical AI**. It is mathematically identical to the **F1-score** at the pixel level.
+
+:::: {.columns}
+
+::: {.column width="50%"}
+```{python}
+#| echo: false
+#| fig-align: center
+import matplotlib.pyplot as plt
+import numpy as np
+
+def get_blob(center, radius, seed=42):
+    np.random.seed(seed)
+    angles = np.linspace(0, 2*np.pi, 100)
+    noise = 0.08 * np.sin(4*angles) + 0.04 * np.cos(6*angles)
+    r = radius * (1 + noise)
+    return np.column_stack([center[0] + r * np.cos(angles), center[1] + r * np.sin(angles)])
+
+fig, ax = plt.subplots(figsize=(5, 4))
+fig.patch.set_alpha(0.0)
+ax.patch.set_alpha(0.0)
+
+gt = get_blob((0.45, 0.5), 0.3, seed=15)
+pred = get_blob((0.55, 0.5), 0.3, seed=25)
+
+ax.fill(gt[:,0], gt[:,1], color='#00C9A7', alpha=0.2, label='Ground Truth')
+ax.fill(pred[:,0], pred[:,1], color='#FF5252', alpha=0.2, label='Prediction')
+ax.plot(gt[:,0], gt[:,1], color='#00C9A7', linewidth=2.5)
+ax.plot(pred[:,0], pred[:,1], color='#FF5252', linewidth=2.5)
+
+ax.set_xlim(0.05, 0.95); ax.set_ylim(0.05, 0.95); ax.set_aspect('equal'); ax.axis('off')
+ax.legend(loc='lower center', bbox_to_anchor=(0.5, -0.1), ncol=2, frameon=False, fontsize=10, labelcolor='#1C355E')
+plt.show()
+```
+:::
+
+::: {.column width="50%"}
+$$
+\begin{aligned}
+\text{Dice} &= \frac{2 \times \text{Area of Overlap}}{\text{Area of GT} + \text{Area of Pred}} \\[12pt]
+&= \mathbf{\frac{2TP}{2TP + FP + FN}}
+\end{aligned}
+$$
+
+::: {.callout-note appearance="minimal"}
+**Why Dice?** Better for small objects (like tumors) and more balanced error penalization.
+:::
+:::
+
+::::
+
+
+
+
 ## Validating the Model (YOLO CLI/Python)
 
 We use the `val` mode to evaluate a trained model. YOLO automatically generates graphs (`confusion_matrix.png`, `PR_curve.png`) in your `runs/detect/val` folder.
@@ -899,7 +1172,7 @@ metrics = model.val(data="data.yaml")
 
 # Key metrics to access:
 print(f"mAP@0.5:   {metrics.box.map50}")    # Generous IoU threshold
-print(f"mAP@0.5:95 {metrics.box.map}")      # Strict across 10 IoU thresholds
+print(f"mAP@0.5-0.95: {metrics.box.map}")      # Strict across 10 IoU thresholds
 print(f"Precision: {metrics.box.mp}")       # Overall precision
 print(f"Recall:    {metrics.box.mr}")       # Overall recall
 ```
@@ -1333,9 +1606,9 @@ from scipy.ndimage import gaussian_filter, rotate
 import os
 
 # Load a real image for more meaningful augmentation display
-img_path = 'assets/rainy_car.jpg'
+img_path = 'assets/slides/rainy_car.jpg'
 if not os.path.exists(img_path):
-    img_path = 'slides/assets/rainy_car.jpg'
+    img_path = 'slides/assets/slides/rainy_car.jpg'
     
 img = np.array(Image.open(img_path).convert('RGB')) / 255.0
 
@@ -1659,6 +1932,19 @@ plt.show()
 - **Fix deliberately:** augmentation, weight decay, and early stopping cover the majority of training problems
 :::
 
+## 🧪 Lab 4B: Technical Performance & Diagnosis
+
+Now that you know how to read the curves, let's fix a model!
+
+1. Open `labs/04b_evaluation_technical.ipynb`
+2. **Compare** different YOLO model sizes (nano vs small).
+3. **Verify** Intersection over Union (IoU) math.
+4. **Identify** signs of overfitting in a training run.
+
+::: {.callout-tip appearance="minimal"}
+**Goal:** Learn to distinguish between a model that "memorizes" and one that "generalizes."
+:::
+
 ::: {.callout-tip appearance="minimal" .fragment}
 When your model's validation metrics are solid, it's ready for the next step — getting it into production.
 :::
@@ -1704,7 +1990,7 @@ You don't need complex deployment code to use your exported models. The Ultralyt
 
 ### CLI
 ```bash
-yolo predict model=best.onnx source="https://ultralytics.com/images/bus.jpg"
+yolo predict model=best.onnx source="https://ultralytics.com/images/assets/bus.jpg"
 ```
 
 ### Python
@@ -1712,7 +1998,7 @@ yolo predict model=best.onnx source="https://ultralytics.com/images/bus.jpg"
 from ultralytics import YOLO
 
 model = YOLO("best.onnx")
-results = model.predict(source="https://ultralytics.com/images/bus.jpg")
+results = model.predict(source="https://ultralytics.com/images/assets/bus.jpg")
 print(results[0].boxes) 
 ```
 

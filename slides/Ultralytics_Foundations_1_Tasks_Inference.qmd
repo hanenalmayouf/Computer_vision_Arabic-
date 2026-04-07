@@ -101,7 +101,7 @@ yolo TASK MODE ARGS
 
 - **TASK**: What to solve? (`detect`, `segment`, `classify`, `pose`, `obb`)
 - **MODE**: What ML stage? (`predict`, `train`, `val`, `export`, `track`, `benchmark`)
-- **ARGS**: Settings like `model=yolo26n.pt` or `source="image.jpg"`
+- **ARGS**: Settings like `model=weights/yolo26n.pt` or `source="image.jpg"`
 
 
 ## Predefined Classes & Weights
@@ -207,7 +207,7 @@ We just read `top1` that is **single-class** (one winner). But because `probs` s
 Identify what the entire image contains.
 
 ```bash
-yolo task=classify mode=predict model=yolo26n-cls.pt source="https://ultralytics.com/images/bus.jpg"
+yolo task=classify mode=predict model=yolo26n-cls.pt source="https://ultralytics.com/images/assets/bus.jpg"
 ```
 
 ```python
@@ -215,7 +215,7 @@ yolo task=classify mode=predict model=yolo26n-cls.pt source="https://ultralytics
 from ultralytics import YOLO
 
 model = YOLO("yolo26n-cls.pt")
-results = model.predict(source="https://ultralytics.com/images/bus.jpg")
+results = model.predict(source="https://ultralytics.com/images/assets/bus.jpg")
 
 # Access Output Format
 probs = results[0].probs
@@ -229,7 +229,7 @@ print(f"All Probabilities: {probs.data}")    # Tensor of all class probabilities
 
 ## Classification Output Example
 
-![](outputs/classification_output.png)
+![](assets/slides/outputs/images/task-classification.png)
 
 
 ## Object Detection Output & Confidence {auto-animate=true}
@@ -388,15 +388,19 @@ Find and localize objects using bounding boxes.
 
 ```bash
 # Live Example: Try this in your terminal!
-yolo task=detect mode=predict model=yolo26n.pt source="https://ultralytics.com/images/bus.jpg"
+yolo task=detect mode=predict model=yolo26n.pt source="https://ultralytics.com/images/assets/bus.jpg"
 ```
 
 ```python
 # Python Equivalent
+import os
 from ultralytics import YOLO
 
-model = YOLO("yolo26n.pt")
-results = model.predict(source="https://ultralytics.com/images/bus.jpg")
+model_path = "yolo26n.pt"
+if not os.path.exists(model_path):
+    model_path = "../yolo26n.pt"
+model = YOLO(model_path)
+results = model.predict(source="https://ultralytics.com/images/assets/bus.jpg")
 
 # Access Output Shape and Data
 boxes = results[0].boxes
@@ -429,7 +433,7 @@ x1, y1, x2, y2 = boxes[0].tolist()
 
 ## Detection Output Example
 
-![](outputs/detection_output.png)
+![](assets/slides/outputs/images/task-detection.png)
 
 
 ## The Problem with Absolute Pixels
@@ -437,7 +441,7 @@ x1, y1, x2, y2 = boxes[0].tolist()
 Why not just train the model on absolute pixel values like `w = 8.0`?
 
 ::: {.r-stack}
-![](https://ultralytics.com/images/bus.jpg){.fragment width="400" height="300" style="margin-bottom: 20px;"}
+![](https://ultralytics.com/images/assets/bus.jpg){.fragment width="400" height="300" style="margin-bottom: 20px;"}
 
 ![](https://ultralytics.com/images/zidane.jpg){.fragment width="500" height="280" style="margin-bottom: 20px;"}
 :::
@@ -541,7 +545,7 @@ Outline the exact shape (pixels) of each object instance.
 
 ```bash
 # Live Example: See the masks!
-yolo task=segment mode=predict model=yolo26n-seg.pt source="https://ultralytics.com/images/bus.jpg"
+yolo task=segment mode=predict model=yolo26n-seg.pt source="https://ultralytics.com/images/assets/bus.jpg"
 ```
 
 ```python
@@ -549,7 +553,7 @@ yolo task=segment mode=predict model=yolo26n-seg.pt source="https://ultralytics.
 from ultralytics import YOLO
 
 model = YOLO("yolo26n-seg.pt")
-results = model.predict(source="https://ultralytics.com/images/bus.jpg")
+results = model.predict(source="https://ultralytics.com/images/assets/bus.jpg")
 
 # Access Output Shape and Data
 masks = results[0].masks
@@ -562,7 +566,7 @@ print(masks.xy)                            # Polygon coordinates
 
 ## Segmentation Output Example
 
-![](outputs/segmentation_output.png)
+![](assets/slides/outputs/images/task-segmentation.png)
 
 
 ## Pose Estimation Output Concept
@@ -621,7 +625,7 @@ Estimate human body keypoints (elbows, knees).
 
 ```bash
 # Live Example: Track keypoints!
-yolo task=pose mode=predict model=yolo26n-pose.pt source="https://ultralytics.com/images/bus.jpg"
+yolo task=pose mode=predict model=yolo26n-pose.pt source="https://ultralytics.com/images/assets/bus.jpg"
 ```
 
 ```python
@@ -629,7 +633,7 @@ yolo task=pose mode=predict model=yolo26n-pose.pt source="https://ultralytics.co
 from ultralytics import YOLO
 
 model = YOLO("yolo26n-pose.pt")
-results = model.predict(source="https://ultralytics.com/images/bus.jpg")
+results = model.predict(source="https://ultralytics.com/images/assets/bus.jpg")
 
 # Access Output Shape and Data
 keypoints = results[0].keypoints
@@ -642,7 +646,7 @@ print(keypoints.xy)                                # Keypoint coordinates
 
 ## Pose Estimation Output Example
 
-![](outputs/pose_output.png)
+![](assets/slides/outputs/images/task-pose.png)
 
 
 ## OBB (Oriented Bounding Box) Output Concept
@@ -717,7 +721,7 @@ print(obb.xywhr)                       # Center x, y, width, height, rotation an
 
 ## OBB Output Example
 
-![](outputs/obb_output.png)
+![](assets/slides/outputs/images/task-obb.png)
 
 
 ## Object Tracking in Action {.smaller}
@@ -725,13 +729,13 @@ print(obb.xywhr)                       # Center x, y, width, height, rotation an
 Assign distinct IDs to objects and track them continuously across video frames!
 
 ```bash
-yolo task=detect mode=track model=yolo26n.pt source="path/to/video.mp4"
+yolo task=detect mode=track model=weights/yolo26n.pt source="path/to/video.mp4"
 ```
 
 ```python
 from ultralytics import YOLO
 
-model = YOLO("yolo26n.pt")
+model = YOLO("weights/yolo26n.pt")
 # Use track() with stream=True for memory-efficient video processing
 results = model.track(source="path/to/video.mp4", stream=True)
 
@@ -747,9 +751,9 @@ for result in results:
 *Docs Reference: [Tracking](https://docs.ultralytics.com/modes/track/)*
 
 
-## Tracking Output Example
+## Demonstration: Object Tracking {.center}
 
-![](outputs/tracking_output.avif)
+{{< video assets/slides/outputs/videos/task-tracking.mp4 width="900" height="500" autoplay="true" loop="true" muted="true" >}}
 
 
 ## Predict Usage (Python): Batch Input
@@ -760,11 +764,11 @@ Process multiple sources or directories efficiently!
 from ultralytics import YOLO
 
 # Load your model
-model = YOLO("yolo26n.pt")
+model = YOLO("weights/yolo26n.pt")
 
 # Option 1: A list of specific sources
 sources = [
-    "https://ultralytics.com/images/bus.jpg",
+    "https://ultralytics.com/images/assets/bus.jpg",
     "path/to/local/image.jpg",
     "another_image.png"
 ]
