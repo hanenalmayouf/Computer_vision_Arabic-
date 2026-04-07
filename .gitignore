@@ -11,8 +11,12 @@
 !labs/
 !labs/**
 
+!assets/
+!assets/**
 !slides/
 !slides/**
+!scripts/
+!scripts/**
 
 !_quarto.yml
 
