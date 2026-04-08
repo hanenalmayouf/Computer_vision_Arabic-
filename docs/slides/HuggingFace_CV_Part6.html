@@ -9,7 +9,7 @@
 <link href="HuggingFace_CV_Part6_files/libs/quarto-html/quarto-syntax-highlighting-587c61ba64f3a5504c4d52d930310e48.css" rel="stylesheet" id="quarto-text-highlighting-styles"><meta charset="utf-8">
   <meta name="generator" content="quarto-1.8.26">
 
-  <meta name="dcterms.date" content="2026-04-07">
+  <meta name="dcterms.date" content="2026-04-08">
   <title>HuggingFace for Computer Vision</title>
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
@@ -203,7 +203,7 @@
 <div class="quarto-title-authors">
 </div>
 
-  <p class="date">2026-04-07</p>
+  <p class="date">2026-04-08</p>
 </section>
 <section id="agenda" class="slide level2">
 <h2>Agenda</h2>
@@ -211,7 +211,7 @@
   <div style="background:rgba(28,53,94,0.08); padding:1.4rem; border-radius:12px;">
     <div style="font-size:2rem; text-align:center;">✂️</div>
     <strong>SAM3</strong><br>
-    <small>Segment any object with a point or box — no training required</small>
+    <small>Segment any object with text, boxes, or image exemplars</small>
   </div>
   <div style="background:rgba(28,53,94,0.08); padding:1.4rem; border-radius:12px;">
     <div style="font-size:2rem; text-align:center;">🔍</div>
@@ -226,7 +226,12 @@
   <div style="background:rgba(0,201,167,0.10); padding:1.4rem; border-radius:12px;">
     <div style="font-size:2rem; text-align:center;">📄</div>
     <strong>OCR &amp; Documents</strong><br>
-    <small>Read text, extract invoice fields — all with one VLM</small>
+    <small>Read text, extract fields — all with one VLM</small>
+  </div>
+  <div style="background:rgba(255,140,0,0.12); padding:1.4rem; border-radius:12px; grid-column: span 2;">
+    <div style="font-size:2rem; text-align:center;">⚙️</div>
+    <strong>Fine-tuning &amp; Trainer API</strong><br>
+    <small>The standard way to train and adapt any HuggingFace model to your data</small>
   </div>
 </div>
 <div class="callout callout-tip no-icon callout-style-simple">
@@ -319,7 +324,7 @@
     <small>Deploy interactive Gradio apps in minutes — share your model with the world</small>
   </div>
 </div>
-<div id="b400c771" class="cell" data-execution_count="1">
+<div id="9e6f53f7" class="cell" data-execution_count="1">
 <div class="cell-output cell-output-display">
 <div class="quarto-figure quarto-figure-center">
 <figure>
@@ -428,6 +433,46 @@
 </div>
 </div>
 </div>
+</section>
+<section id="the-trainer-api-how-to-fine-tune" class="slide level2">
+<h2>The Trainer API: How to Fine-tune</h2>
+<div class="columns">
+<div class="column" style="width:50%;">
+<p><strong>The standard way to adapt any model</strong></p>
+<ul>
+<li>Handles training loops, evaluation, and logging automatically.</li>
+<li>Checkpointing and model saving built-in.</li>
+<li>Multi-GPU support via <code>accelerate</code>.</li>
+</ul>
+<div class="callout callout-tip no-icon callout-style-simple">
+<div class="callout-body">
+<div class="callout-content">
+<p>One script to train almost any model on the Hub.</p>
+</div>
+</div>
+</div>
+</div><div class="column" style="width:50%;">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href=""></a><span class="im">from</span> transformers <span class="im">import</span> TrainingArguments, Trainer</span>
+<span id="cb3-2"><a href=""></a></span>
+<span id="cb3-3"><a href=""></a><span class="co"># 1. Configure the training setup</span></span>
+<span id="cb3-4"><a href=""></a>args <span class="op">=</span> TrainingArguments(</span>
+<span id="cb3-5"><a href=""></a>    output_dir<span class="op">=</span><span class="st">"my_model"</span>,</span>
+<span id="cb3-6"><a href=""></a>    per_device_train_batch_size<span class="op">=</span><span class="dv">8</span>,</span>
+<span id="cb3-7"><a href=""></a>    num_train_epochs<span class="op">=</span><span class="dv">3</span>,</span>
+<span id="cb3-8"><a href=""></a>    evaluation_strategy<span class="op">=</span><span class="st">"epoch"</span>,</span>
+<span id="cb3-9"><a href=""></a>    logging_steps<span class="op">=</span><span class="dv">10</span></span>
+<span id="cb3-10"><a href=""></a>)</span>
+<span id="cb3-11"><a href=""></a></span>
+<span id="cb3-12"><a href=""></a><span class="co"># 2. Initialize and run</span></span>
+<span id="cb3-13"><a href=""></a>trainer <span class="op">=</span> Trainer(</span>
+<span id="cb3-14"><a href=""></a>    model<span class="op">=</span>model, </span>
+<span id="cb3-15"><a href=""></a>    args<span class="op">=</span>args, </span>
+<span id="cb3-16"><a href=""></a>    train_dataset<span class="op">=</span>train_data,</span>
+<span id="cb3-17"><a href=""></a>    eval_dataset<span class="op">=</span>val_data</span>
+<span id="cb3-18"><a href=""></a>)</span>
+<span id="cb3-19"><a href=""></a></span>
+<span id="cb3-20"><a href=""></a>trainer.train()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div></div>
 </section></section>
 <section>
 <section id="sam3-segment-anything" class="title-slide slide level1 sdaia-dark center" data-background-gradient="linear-gradient(135deg, #1C355E, #00C9A7)">
@@ -437,20 +482,23 @@
 <section id="youve-already-met-sam" class="slide level2">
 <h2>You’ve Already Met SAM</h2>
 <div class="columns">
-<div class="column" style="width:55%;">
-<p>In <strong>Part 3</strong>, you used SAM as a <strong>labeling superpower</strong>.</p>
+<div class="column" style="width:50%;">
+<h3 id="part-3-labeling"><strong>Part 3: Labeling</strong></h3>
+<p><em>SAM as a data assistant</em></p>
 <ul>
-<li>Click an object → <strong>Instant mask</strong></li>
-<li>Huge time saver for training datasets</li>
+<li><strong>Input:</strong> Concept or Example</li>
+<li><strong>Output:</strong> Training Labels</li>
+<li><strong>Goal:</strong> Faster YOLO Datasets</li>
 </ul>
-<p><strong>Today:</strong> We use SAM3 as an <strong>inference engine</strong>.</p>
+<h3 id="today-inference"><strong>Today: Inference</strong></h3>
+<p><em>SAM3 as a standalone engine</em></p>
 <ul>
-<li>No custom training data required</li>
-<li><strong>SAM3.1</strong> (2025): Better edges + video tracking</li>
-<li>High-quality cutouts for any application</li>
+<li><strong>Zero-Shot:</strong> No training needed</li>
+<li><strong>PCS:</strong> Promptable segmentation</li>
+<li><strong>Goal:</strong> Direct production use</li>
 </ul>
-</div><div class="column" style="width:45%;">
-<div id="aec475e4" class="cell" data-execution_count="2">
+</div><div class="column" style="width:50%;">
+<div id="d22c194d" class="cell" data-execution_count="2">
 <div class="cell-output cell-output-display">
 <div class="quarto-figure quarto-figure-center">
 <figure>
@@ -463,7 +511,7 @@
 </section>
 <section id="the-prompting-idea" class="slide level2">
 <h2>The Prompting Idea</h2>
-<div id="957a71eb" class="cell" data-execution_count="3">
+<div id="c3cbb377" class="cell" data-execution_count="3">
 <div class="cell-output cell-output-display">
 <div class="quarto-figure quarto-figure-center">
 <figure>
@@ -475,85 +523,84 @@
 <div class="callout callout-tip no-icon callout-style-simple">
 <div class="callout-body">
 <div class="callout-content">
-<p>SAM does not need class labels. Give it a location — it figures out the object boundary.</p>
+<p>SAM does not need manual class labels. Give it a description (text) or a visual template (box/image) — it figures out the boundary.</p>
 </div>
 </div>
 </div>
 </section>
-<section id="sam3-point-prompt" class="slide level2">
-<h2>SAM3: Point Prompt</h2>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href=""></a><span class="im">from</span> transformers <span class="im">import</span> SamModel, SamProcessor</span>
-<span id="cb3-2"><a href=""></a><span class="im">from</span> PIL <span class="im">import</span> Image</span>
-<span id="cb3-3"><a href=""></a><span class="im">import</span> torch</span>
-<span id="cb3-4"><a href=""></a></span>
-<span id="cb3-5"><a href=""></a><span class="co"># Load model (cached after first download)</span></span>
-<span id="cb3-6"><a href=""></a>processor <span class="op">=</span> SamProcessor.from_pretrained(<span class="st">"facebook/sam3.1"</span>)</span>
-<span id="cb3-7"><a href=""></a>model     <span class="op">=</span> SamModel.from_pretrained(<span class="st">"facebook/sam3.1"</span>)</span>
-<span id="cb3-8"><a href=""></a>model.<span class="bu">eval</span>()</span>
-<span id="cb3-9"><a href=""></a></span>
-<span id="cb3-10"><a href=""></a>image <span class="op">=</span> Image.<span class="bu">open</span>(<span class="st">"car.jpg"</span>).convert(<span class="st">"RGB"</span>)</span>
-<span id="cb3-11"><a href=""></a></span>
-<span id="cb3-12"><a href=""></a><span class="co"># Point prompt: [x, y] pixel coordinates of the object</span></span>
-<span id="cb3-13"><a href=""></a>input_points <span class="op">=</span> [[[<span class="dv">450</span>, <span class="dv">300</span>]]]</span>
-<span id="cb3-14"><a href=""></a></span>
-<span id="cb3-15"><a href=""></a>inputs <span class="op">=</span> processor(</span>
-<span id="cb3-16"><a href=""></a>    image,</span>
-<span id="cb3-17"><a href=""></a>    input_points<span class="op">=</span>input_points,</span>
-<span id="cb3-18"><a href=""></a>    return_tensors<span class="op">=</span><span class="st">"pt"</span></span>
-<span id="cb3-19"><a href=""></a>)</span>
-<span id="cb3-20"><a href=""></a></span>
-<span id="cb3-21"><a href=""></a><span class="cf">with</span> torch.no_grad():</span>
-<span id="cb3-22"><a href=""></a>    outputs <span class="op">=</span> model(<span class="op">**</span>inputs)</span>
-<span id="cb3-23"><a href=""></a></span>
-<span id="cb3-24"><a href=""></a><span class="co"># Post-process: pick the highest-confidence mask</span></span>
-<span id="cb3-25"><a href=""></a>masks <span class="op">=</span> processor.image_processor.post_process_masks(</span>
-<span id="cb3-26"><a href=""></a>    outputs.pred_masks.cpu(),</span>
-<span id="cb3-27"><a href=""></a>    inputs[<span class="st">"original_sizes"</span>].cpu(),</span>
-<span id="cb3-28"><a href=""></a>    inputs[<span class="st">"reshaped_input_sizes"</span>].cpu()</span>
-<span id="cb3-29"><a href=""></a>)</span>
-<span id="cb3-30"><a href=""></a>best_mask <span class="op">=</span> masks[<span class="dv">0</span>][<span class="dv">0</span>][outputs.iou_scores.argmax()].numpy()</span>
-<span id="cb3-31"><a href=""></a><span class="co"># best_mask is a boolean array — True = object pixel</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<section id="sam3-text-only-prompt" class="slide level2">
+<h2>SAM3: Text-Only Prompt</h2>
+<div class="callout callout-note no-icon callout-style-simple">
+<div class="callout-body">
+<div class="callout-content">
+<p>New in SAM 3: <strong>Promptable Concept Segmentation</strong>. You can now segment by name!</p>
+<p><a href="https://huggingface.co/docs/transformers/model_doc/sam3">Hugging Face Docs</a> | <a href="https://docs.ultralytics.com/models/sam-3/">Ultralytics Docs</a></p>
+</div>
+</div>
+</div>
+<div class="callout callout-important no-icon callout-style-simple">
+<div class="callout-body">
+<div class="callout-content">
+<p><strong>Gated Model:</strong> SAM 3 requires users to accept the license on Hugging Face before downloading. Ensure you are logged in using <code>huggingface-cli login</code>.</p>
+</div>
+</div>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb4"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href=""></a><span class="im">from</span> transformers <span class="im">import</span> Sam3Model, Sam3Processor</span>
+<span id="cb4-2"><a href=""></a><span class="im">from</span> PIL <span class="im">import</span> Image</span>
+<span id="cb4-3"><a href=""></a><span class="im">import</span> torch</span>
+<span id="cb4-4"><a href=""></a></span>
+<span id="cb4-5"><a href=""></a>model     <span class="op">=</span> Sam3Model.from_pretrained(<span class="st">"facebook/sam3"</span>)</span>
+<span id="cb4-6"><a href=""></a>processor <span class="op">=</span> Sam3Processor.from_pretrained(<span class="st">"facebook/sam3"</span>)</span>
+<span id="cb4-7"><a href=""></a></span>
+<span id="cb4-8"><a href=""></a>image <span class="op">=</span> Image.<span class="bu">open</span>(<span class="st">"highway.jpg"</span>).convert(<span class="st">"RGB"</span>)</span>
+<span id="cb4-9"><a href=""></a></span>
+<span id="cb4-10"><a href=""></a><span class="co"># Segment by concept name</span></span>
+<span id="cb4-11"><a href=""></a>inputs <span class="op">=</span> processor(images<span class="op">=</span>image, text<span class="op">=</span><span class="st">"yellow school bus"</span>, return_tensors<span class="op">=</span><span class="st">"pt"</span>)</span>
+<span id="cb4-12"><a href=""></a></span>
+<span id="cb4-13"><a href=""></a><span class="cf">with</span> torch.no_grad():</span>
+<span id="cb4-14"><a href=""></a>    outputs <span class="op">=</span> model(<span class="op">**</span>inputs)</span>
+<span id="cb4-15"><a href=""></a></span>
+<span id="cb4-16"><a href=""></a><span class="co"># Post-process to get binary masks and confidence scores</span></span>
+<span id="cb4-17"><a href=""></a>results <span class="op">=</span> processor.post_process_instance_segmentation(</span>
+<span id="cb4-18"><a href=""></a>    outputs, </span>
+<span id="cb4-19"><a href=""></a>    threshold<span class="op">=</span><span class="fl">0.5</span>,</span>
+<span id="cb4-20"><a href=""></a>    target_sizes<span class="op">=</span>inputs.get(<span class="st">"original_sizes"</span>).tolist()</span>
+<span id="cb4-21"><a href=""></a>)[<span class="dv">0</span>]</span>
+<span id="cb4-22"><a href=""></a></span>
+<span id="cb4-23"><a href=""></a><span class="bu">print</span>(<span class="ss">f"Detected </span><span class="sc">{</span><span class="bu">len</span>(results[<span class="st">'masks'</span>])<span class="sc">}</span><span class="ss"> buses"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</section>
+<section id="sam3-negative-box-refinement" class="slide level2">
+<h2>SAM3: Negative Box Refinement</h2>
 <div class="callout callout-tip no-icon callout-style-simple">
 <div class="callout-body">
 <div class="callout-content">
-<p><code>iou_scores</code> ranks the 3 candidate masks SAM returns. Always pick <code>argmax()</code> for the most confident one.</p>
+<p>SAM3 uses <strong>Concepts</strong> (text or templates). If a text prompt is too broad, use <strong>negative boxes</strong> to exclude specific areas.</p>
 </div>
 </div>
 </div>
-</section>
-<section id="sam3-box-prompt-yolo-sam" class="slide level2">
-<h2>SAM3: Box Prompt — YOLO → SAM</h2>
-<div class="columns">
-<div class="column" style="width:50%;">
-<p><strong>The specific “Where” makes SAM better.</strong></p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb4"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href=""></a><span class="co"># 1. YOLO finds the box</span></span>
-<span id="cb4-2"><a href=""></a>yolo_res <span class="op">=</span> yolo.predict(img)[<span class="dv">0</span>]</span>
-<span id="cb4-3"><a href=""></a>box <span class="op">=</span> yolo_res.boxes.xyxy[<span class="dv">0</span>].tolist()</span>
-<span id="cb4-4"><a href=""></a></span>
-<span id="cb4-5"><a href=""></a><span class="co"># 2. SAM converts box to mask</span></span>
-<span id="cb4-6"><a href=""></a>inputs <span class="op">=</span> processor(img, input_boxes<span class="op">=</span>[[box]])</span>
-<span id="cb4-7"><a href=""></a><span class="cf">with</span> torch.no_grad():</span>
-<span id="cb4-8"><a href=""></a>    res <span class="op">=</span> model(<span class="op">**</span>inputs)</span>
-<span id="cb4-9"><a href=""></a></span>
-<span id="cb4-10"><a href=""></a><span class="co"># 3. Post-process to pixel mask</span></span>
-<span id="cb4-11"><a href=""></a>mask <span class="op">=</span> processor.post_process_masks(</span>
-<span id="cb4-12"><a href=""></a>    res.pred_masks, ...</span>
-<span id="cb4-13"><a href=""></a>)[<span class="dv">0</span>][<span class="dv">0</span>][argmax]</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-</div><div class="column" style="width:50%;">
-<div id="5629dd60" class="cell" data-execution_count="4">
-<div class="cell-output cell-output-display">
-<div class="quarto-figure quarto-figure-center">
-<figure>
-<p><img data-src="HuggingFace_CV_Part6_files/figure-revealjs/cell-5-output-1.png" class="quarto-figure quarto-figure-center" width="395" height="389"></p>
-</figure>
-</div>
-</div>
-</div>
-</div><div class="callout callout-tip no-icon callout-style-simple">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb5"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href=""></a><span class="co"># Segment "handle" but exclude the oven handle using a negative box</span></span>
+<span id="cb5-2"><a href=""></a>text <span class="op">=</span> <span class="st">"handle"</span></span>
+<span id="cb5-3"><a href=""></a><span class="co"># Box in [x1, y1, x2, y2] format</span></span>
+<span id="cb5-4"><a href=""></a>oven_handle_box <span class="op">=</span> [<span class="dv">40</span>, <span class="dv">183</span>, <span class="dv">318</span>, <span class="dv">204</span>]</span>
+<span id="cb5-5"><a href=""></a></span>
+<span id="cb5-6"><a href=""></a>inputs <span class="op">=</span> processor(</span>
+<span id="cb5-7"><a href=""></a>    images<span class="op">=</span>image, </span>
+<span id="cb5-8"><a href=""></a>    text<span class="op">=</span>text, </span>
+<span id="cb5-9"><a href=""></a>    input_boxes<span class="op">=</span>[[oven_handle_box]], </span>
+<span id="cb5-10"><a href=""></a>    input_boxes_labels<span class="op">=</span>[[<span class="dv">0</span>]], <span class="co"># 0 = negative (exclude this region)</span></span>
+<span id="cb5-11"><a href=""></a>    return_tensors<span class="op">=</span><span class="st">"pt"</span></span>
+<span id="cb5-12"><a href=""></a>).to(device)</span>
+<span id="cb5-13"><a href=""></a></span>
+<span id="cb5-14"><a href=""></a><span class="cf">with</span> torch.no_grad():</span>
+<span id="cb5-15"><a href=""></a>    outputs <span class="op">=</span> model(<span class="op">**</span>inputs)</span>
+<span id="cb5-16"><a href=""></a></span>
+<span id="cb5-17"><a href=""></a>results <span class="op">=</span> processor.post_process_instance_segmentation(</span>
+<span id="cb5-18"><a href=""></a>    outputs, threshold<span class="op">=</span><span class="fl">0.5</span>, target_sizes<span class="op">=</span>inputs.get(<span class="st">"original_sizes"</span>).tolist()</span>
+<span id="cb5-19"><a href=""></a>)[<span class="dv">0</span>]</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="callout callout-tip no-icon callout-style-simple">
 <div class="callout-body">
 <div class="callout-content">
-<p>YOLO acts as the “eyes” (pointing) and SAM as the “surgeon” (precise cutting).</p>
-</div>
+<p>Label conventions: <strong>1 = Positive</strong> (include), <strong>0 = Negative</strong> (exclude).</p>
 </div>
 </div>
 </div>
@@ -606,11 +653,11 @@
 </div>
 </div>
 </div><div class="column" style="width:55%;">
-<div id="cee4270b" class="cell" data-execution_count="5">
+<div id="ccaa90a5" class="cell" data-execution_count="4">
 <div class="cell-output cell-output-display">
 <div class="quarto-figure quarto-figure-center">
 <figure>
-<p><img data-src="HuggingFace_CV_Part6_files/figure-revealjs/cell-6-output-1.png" class="quarto-figure quarto-figure-center" width="513" height="451"></p>
+<p><img data-src="HuggingFace_CV_Part6_files/figure-revealjs/cell-5-output-1.png" class="quarto-figure quarto-figure-center" width="513" height="451"></p>
 </figure>
 </div>
 </div>
@@ -634,11 +681,11 @@
 </div>
 </div>
 </div><div class="column" style="width:55%;">
-<div id="bdab58c8" class="cell" data-execution_count="6">
+<div id="272abbf3" class="cell" data-execution_count="5">
 <div class="cell-output cell-output-display">
 <div class="quarto-figure quarto-figure-center">
 <figure>
-<p><img data-src="HuggingFace_CV_Part6_files/figure-revealjs/cell-7-output-1.png" class="quarto-figure quarto-figure-center" width="466" height="389"></p>
+<p><img data-src="HuggingFace_CV_Part6_files/figure-revealjs/cell-6-output-1.png" class="quarto-figure quarto-figure-center" width="466" height="389"></p>
 </figure>
 </div>
 </div>
@@ -647,124 +694,132 @@
 </section>
 <section id="clip-zero-shot-classification" class="slide level2">
 <h2>CLIP: Zero-Shot Classification</h2>
-<div class="columns">
-<div class="column" style="width:45%;">
 <h3 id="classify-anything-you-can-describe">Classify anything you can describe</h3>
-<p>CLIP scores labels against images without needing any labeled training data.</p>
+<p>CLIP scores labels against images without needing labeled training data.</p>
 <ul>
 <li><strong>Any Class</strong>: “overexposed”, “foggy”, “night-time”</li>
-<li><strong>Rare Objects</strong>: Things YOLO wasn’t trained on</li>
-<li><strong>Domain Specific</strong>: Complex terminology</li>
+<li><strong>Rare Objects</strong>: Concepts YOLO wasn’t trained on</li>
+<li><strong>Domain Specific</strong>: Complex terminology (medical, satellite)</li>
 </ul>
-<div class="fragment fade-up">
-<blockquote>
-<p>[!TIP] Think of it as “Visual Entailment” — how well does this text describe this image?</p>
-</blockquote>
-</div>
-</div><div class="column" style="width:55%;">
-<p><img data-src="assets/clip_conceptual.png"></p>
-</div></div>
-</section>
-<section id="clip-zero-shot-implementation" class="slide level2">
-<h2>CLIP: Zero-Shot Implementation</h2>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb5"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href=""></a>model     <span class="op">=</span> CLIPModel.from_pretrained(<span class="st">"openai/clip-vit-base-patch32"</span>)</span>
-<span id="cb5-2"><a href=""></a>processor <span class="op">=</span> CLIPProcessor.from_pretrained(<span class="st">"openai/clip-vit-base-patch32"</span>)</span>
-<span id="cb5-3"><a href=""></a></span>
-<span id="cb5-4"><a href=""></a>image  <span class="op">=</span> Image.<span class="bu">open</span>(<span class="st">"scene.jpg"</span>)</span>
-<span id="cb5-5"><a href=""></a>labels <span class="op">=</span> [<span class="st">"construction site"</span>, <span class="st">"street market"</span>, <span class="st">"desert"</span>, <span class="st">"office"</span>]</span>
-<span id="cb5-6"><a href=""></a></span>
-<span id="cb5-7"><a href=""></a>inputs <span class="op">=</span> processor(text<span class="op">=</span>labels, images<span class="op">=</span>image, return_tensors<span class="op">=</span><span class="st">"pt"</span>, padding<span class="op">=</span><span class="va">True</span>)</span>
-<span id="cb5-8"><a href=""></a>output <span class="op">=</span> model(<span class="op">**</span>inputs)</span>
-<span id="cb5-9"><a href=""></a>probs  <span class="op">=</span> output.logits_per_image.softmax(dim<span class="op">=</span><span class="dv">1</span>)</span>
-<span id="cb5-10"><a href=""></a></span>
-<span id="cb5-11"><a href=""></a><span class="cf">for</span> label, prob <span class="kw">in</span> <span class="bu">zip</span>(labels, probs[<span class="dv">0</span>]):</span>
-<span id="cb5-12"><a href=""></a>    <span class="bu">print</span>(<span class="ss">f"</span><span class="sc">{</span>label<span class="sc">}</span><span class="ss">: </span><span class="sc">{</span>prob<span class="sc">.</span>item()<span class="sc">:.3f}</span><span class="ss">"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-</section>
-<section id="clip-image-similarity-search" class="slide level2">
-<h2>CLIP: Image Similarity Search</h2>
-<div class="columns">
-<div class="column" style="width:45%;">
-<h3 id="search-by-visual-meaning">Search by Visual “Meaning”</h3>
-<p>Instead of keyword matching, find images that <em>look</em> like the query image.</p>
-<ol type="1">
-<li><strong>Embed</strong>: Convert library into vectors (once).</li>
-<li><strong>Query</strong>: Embed the target image.</li>
-<li><strong>Match</strong>: Calculate similarity score.</li>
-</ol>
-<div class="fragment fade-up">
 <div class="callout callout-note no-icon callout-style-simple">
 <div class="callout-body">
 <div class="callout-content">
-<p>For millions of images, use a vector DB like <strong>FAISS</strong> or <strong>Qdrant</strong> for scalability.</p>
+<p><a href="https://huggingface.co/docs/transformers/model_doc/clip">Hugging Face CLIP Documentation</a></p>
 </div>
+</div>
+</div>
+<div class="callout callout-tip no-icon callout-style-simple">
+<div class="callout-body">
+<div class="callout-content">
+<p>Think of it as <strong>“Visual Entailment”</strong> — how well does this text describe this image?</p>
+</div>
+</div>
+</div>
+</section>
+<section id="clip-zero-shot-implementation" class="slide level2">
+<h2>CLIP: Zero-Shot Implementation</h2>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb6"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href=""></a>model     <span class="op">=</span> CLIPModel.from_pretrained(<span class="st">"openai/clip-vit-base-patch32"</span>)</span>
+<span id="cb6-2"><a href=""></a>processor <span class="op">=</span> CLIPProcessor.from_pretrained(<span class="st">"openai/clip-vit-base-patch32"</span>)</span>
+<span id="cb6-3"><a href=""></a></span>
+<span id="cb6-4"><a href=""></a>image  <span class="op">=</span> Image.<span class="bu">open</span>(<span class="st">"scene.jpg"</span>)</span>
+<span id="cb6-5"><a href=""></a>labels <span class="op">=</span> [<span class="st">"construction site"</span>, <span class="st">"street market"</span>, <span class="st">"desert"</span>, <span class="st">"office"</span>]</span>
+<span id="cb6-6"><a href=""></a></span>
+<span id="cb6-7"><a href=""></a>inputs <span class="op">=</span> processor(text<span class="op">=</span>labels, images<span class="op">=</span>image, return_tensors<span class="op">=</span><span class="st">"pt"</span>, padding<span class="op">=</span><span class="va">True</span>)</span>
+<span id="cb6-8"><a href=""></a>output <span class="op">=</span> model(<span class="op">**</span>inputs)</span>
+<span id="cb6-9"><a href=""></a>probs  <span class="op">=</span> output.logits_per_image.softmax(dim<span class="op">=</span><span class="dv">1</span>)</span>
+<span id="cb6-10"><a href=""></a></span>
+<span id="cb6-11"><a href=""></a><span class="cf">for</span> label, prob <span class="kw">in</span> <span class="bu">zip</span>(labels, probs[<span class="dv">0</span>]):</span>
+<span id="cb6-12"><a href=""></a>    <span class="bu">print</span>(<span class="ss">f"</span><span class="sc">{</span>label<span class="sc">}</span><span class="ss">: </span><span class="sc">{</span>prob<span class="sc">.</span>item()<span class="sc">:.3f}</span><span class="ss">"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</section>
+<section id="clip-image-similarity-search" class="slide level2">
+<h2>CLIP: Image Similarity Search</h2>
+<h3 id="search-by-visual-meaning">Search by Visual “Meaning”</h3>
+<p>Find images that <em>look</em> like the query image without manual keywords.</p>
+<ol type="1">
+<li><strong>Embed</strong>: Pre-convert your image library into vectors.</li>
+<li><strong>Query</strong>: Convert the user’s target image to a vector.</li>
+<li><strong>Match</strong>: Use cosine similarity to find the nearest neighbors.</li>
+</ol>
+<div class="callout callout-note no-icon callout-style-simple">
+<div class="callout-body">
+<div class="callout-content">
+<p>For millions of images, use a vector DB like <strong>FAISS</strong> or <strong>Qdrant</strong> for sub-millisecond search.</p>
 </div>
 </div>
 </div>
 <p><strong>Common Use Cases:</strong></p>
 <ul>
-<li>E-commerce recommendations</li>
-<li>Quality control (finding defects)</li>
-<li>Duplicate detection in datasets</li>
+<li>E-commerce recommendations (“Shop the Look”)</li>
+<li>Quality control (finding matching defects)</li>
+<li>Dataset deduplication</li>
 </ul>
-</div><div class="column" style="width:55%;">
-<p><img data-src="assets/clip_similarity.png"></p>
-</div></div>
 </section>
 <section id="clip-similarity-implementation" class="slide level2">
 <h2>CLIP: Similarity Implementation</h2>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb6"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href=""></a><span class="kw">def</span> embed(path):</span>
-<span id="cb6-2"><a href=""></a>    img    <span class="op">=</span> Image.<span class="bu">open</span>(path).convert(<span class="st">"RGB"</span>)</span>
-<span id="cb6-3"><a href=""></a>    inputs <span class="op">=</span> processor(images<span class="op">=</span>img, return_tensors<span class="op">=</span><span class="st">"pt"</span>)</span>
-<span id="cb6-4"><a href=""></a>    <span class="cf">with</span> torch.no_grad():</span>
-<span id="cb6-5"><a href=""></a>        feat <span class="op">=</span> model.get_image_features(<span class="op">**</span>inputs)</span>
-<span id="cb6-6"><a href=""></a>    <span class="cf">return</span> F.normalize(feat, dim<span class="op">=-</span><span class="dv">1</span>)</span>
-<span id="cb6-7"><a href=""></a></span>
-<span id="cb6-8"><a href=""></a><span class="co"># 1. Build index</span></span>
-<span id="cb6-9"><a href=""></a>image_paths <span class="op">=</span> [<span class="st">"img1.jpg"</span>, <span class="st">"img2.jpg"</span>, ...]</span>
-<span id="cb6-10"><a href=""></a>index <span class="op">=</span> torch.cat([embed(p) <span class="cf">for</span> p <span class="kw">in</span> image_paths])</span>
-<span id="cb6-11"><a href=""></a></span>
-<span id="cb6-12"><a href=""></a><span class="co"># 2. Query</span></span>
-<span id="cb6-13"><a href=""></a>query  <span class="op">=</span> embed(<span class="st">"query.jpg"</span>)</span>
-<span id="cb6-14"><a href=""></a>scores <span class="op">=</span> (query <span class="op">@</span> index.T).squeeze()</span>
-<span id="cb6-15"><a href=""></a>top5   <span class="op">=</span> scores.topk(<span class="dv">5</span>).indices</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb7"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href=""></a><span class="kw">def</span> embed(path):</span>
+<span id="cb7-2"><a href=""></a>    img    <span class="op">=</span> Image.<span class="bu">open</span>(path).convert(<span class="st">"RGB"</span>)</span>
+<span id="cb7-3"><a href=""></a>    inputs <span class="op">=</span> processor(images<span class="op">=</span>img, return_tensors<span class="op">=</span><span class="st">"pt"</span>)</span>
+<span id="cb7-4"><a href=""></a>    <span class="cf">with</span> torch.no_grad():</span>
+<span id="cb7-5"><a href=""></a>        feat <span class="op">=</span> model.get_image_features(<span class="op">**</span>inputs)</span>
+<span id="cb7-6"><a href=""></a>    <span class="cf">return</span> F.normalize(feat, dim<span class="op">=-</span><span class="dv">1</span>)</span>
+<span id="cb7-7"><a href=""></a></span>
+<span id="cb7-8"><a href=""></a><span class="co"># 1. Build index</span></span>
+<span id="cb7-9"><a href=""></a>image_paths <span class="op">=</span> [<span class="st">"img1.jpg"</span>, <span class="st">"img2.jpg"</span>, ...]</span>
+<span id="cb7-10"><a href=""></a>index <span class="op">=</span> torch.cat([embed(p) <span class="cf">for</span> p <span class="kw">in</span> image_paths])</span>
+<span id="cb7-11"><a href=""></a></span>
+<span id="cb7-12"><a href=""></a><span class="co"># 2. Query</span></span>
+<span id="cb7-13"><a href=""></a>query  <span class="op">=</span> embed(<span class="st">"query.jpg"</span>)</span>
+<span id="cb7-14"><a href=""></a>scores <span class="op">=</span> (query <span class="op">@</span> index.T).squeeze()</span>
+<span id="cb7-15"><a href=""></a>top5   <span class="op">=</span> scores.topk(<span class="dv">5</span>).indices</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </section>
 <section id="dinov3-the-vision-backbone" class="slide level2">
 <h2>DINOv3: The Vision Backbone</h2>
-<div class="columns">
-<div class="column" style="width:45%;">
-<h3 id="why-dinov3">Why DINOv3?</h3>
-<p>DINO learns from images alone — no text captions needed.</p>
+<h3 id="self-supervised-excellence">Self-Supervised Excellence</h3>
+<p>DINO (Self-Distillation with No Labels) learns from images alone.</p>
 <ul>
-<li><strong>Universal Backbone</strong>: Works for any domain (X-ray, Satellite).</li>
-<li><strong>Spatial Precision</strong>: Excellent for segmentation and depth.</li>
-<li><strong>Robustness</strong>: Learns a deeper understanding of object geometry.</li>
+<li><strong>Universal</strong>: Works for any domain (X-ray, Satellite, Microscopic).</li>
+<li><strong>Spatial Precision</strong>: Excellent for segmentation and depth tasks.</li>
+<li><strong>Robustness</strong>: Deep understanding of object geometry.</li>
 </ul>
-<p><strong>CLIP vs.&nbsp;DINO:</strong></p>
-<ul>
-<li><strong>CLIP</strong>: Best for text-image tasks (search, zero-shot).</li>
-<li><strong>DINO</strong>: Best for pure vision tasks (retrieval, geometry).</li>
-</ul>
-</div><div class="column" style="width:55%;">
-<p><img data-src="assets/dinov3_backbone.png"></p>
-</div></div>
+<div class="callout callout-note no-icon callout-style-simple">
+<div class="callout-body">
+<div class="callout-content">
+<p><a href="https://huggingface.co/docs/transformers/model_doc/dinov3">Hugging Face DINOv3 Documentation</a></p>
+</div>
+</div>
+</div>
+<div class="callout callout-important no-icon callout-style-simple">
+<div class="callout-body">
+<div class="callout-content">
+<p><strong>Gated Model:</strong> Like SAM 3, DINOv3 requires you to request access on the Hugging Face model page before it can be downloaded.</p>
+</div>
+</div>
+</div>
+<div class="callout callout-tip no-icon callout-style-simple">
+<div class="callout-body">
+<div class="callout-content">
+<p><strong>CLIP</strong> is for text-to-image. <strong>DINO</strong> is for pure vision (pixel detail).</p>
+</div>
+</div>
+</div>
 </section>
 <section id="dinov3-feature-extraction" class="slide level2">
 <h2>DINOv3: Feature Extraction</h2>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb7"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href=""></a>MODEL <span class="op">=</span> <span class="st">"facebook/dinov3-vitb16-pretrain-lvd1689m"</span></span>
-<span id="cb7-2"><a href=""></a>model <span class="op">=</span> AutoModel.from_pretrained(MODEL, device_map<span class="op">=</span><span class="st">"auto"</span>)</span>
-<span id="cb7-3"><a href=""></a>proc  <span class="op">=</span> AutoImageProcessor.from_pretrained(MODEL)</span>
-<span id="cb7-4"><a href=""></a></span>
-<span id="cb7-5"><a href=""></a>image  <span class="op">=</span> load_image(<span class="st">"satellite_crop.jpg"</span>)</span>
-<span id="cb7-6"><a href=""></a>inputs <span class="op">=</span> proc(images<span class="op">=</span>image, return_tensors<span class="op">=</span><span class="st">"pt"</span>).to(model.device)</span>
-<span id="cb7-7"><a href=""></a></span>
-<span id="cb7-8"><a href=""></a><span class="cf">with</span> torch.inference_mode():</span>
-<span id="cb7-9"><a href=""></a>    out <span class="op">=</span> model(<span class="op">**</span>inputs)</span>
-<span id="cb7-10"><a href=""></a></span>
-<span id="cb7-11"><a href=""></a><span class="co"># Global embedding (image-level)</span></span>
-<span id="cb7-12"><a href=""></a>global_feat <span class="op">=</span> out.pooler_output</span>
-<span id="cb7-13"><a href=""></a></span>
-<span id="cb7-14"><a href=""></a><span class="co"># Patch-level features (pixel-level detail)</span></span>
-<span id="cb7-15"><a href=""></a>patch_feats <span class="op">=</span> out.last_hidden_state</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb8"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href=""></a>MODEL <span class="op">=</span> <span class="st">"facebook/dinov3-vitb16-pretrain-lvd1689m"</span></span>
+<span id="cb8-2"><a href=""></a>model <span class="op">=</span> AutoModel.from_pretrained(MODEL, device_map<span class="op">=</span><span class="st">"auto"</span>)</span>
+<span id="cb8-3"><a href=""></a>proc  <span class="op">=</span> AutoImageProcessor.from_pretrained(MODEL)</span>
+<span id="cb8-4"><a href=""></a></span>
+<span id="cb8-5"><a href=""></a>image  <span class="op">=</span> load_image(<span class="st">"satellite_crop.jpg"</span>)</span>
+<span id="cb8-6"><a href=""></a>inputs <span class="op">=</span> proc(images<span class="op">=</span>image, return_tensors<span class="op">=</span><span class="st">"pt"</span>).to(model.device)</span>
+<span id="cb8-7"><a href=""></a></span>
+<span id="cb8-8"><a href=""></a><span class="cf">with</span> torch.inference_mode():</span>
+<span id="cb8-9"><a href=""></a>    out <span class="op">=</span> model(<span class="op">**</span>inputs)</span>
+<span id="cb8-10"><a href=""></a></span>
+<span id="cb8-11"><a href=""></a><span class="co"># Global embedding (image-level)</span></span>
+<span id="cb8-12"><a href=""></a>global_feat <span class="op">=</span> out.pooler_output</span>
+<span id="cb8-13"><a href=""></a></span>
+<span id="cb8-14"><a href=""></a><span class="co"># Patch-level features (pixel-level detail)</span></span>
+<span id="cb8-15"><a href=""></a>patch_feats <span class="op">=</span> out.last_hidden_state</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </section>
 <section id="clip-vs-dinov3" class="slide level2">
 <h2>CLIP vs DINOv3</h2>
@@ -837,11 +892,11 @@
 </section>
 <section id="the-vision-intelligence-ladder" class="slide level2">
 <h2>The Vision Intelligence Ladder</h2>
-<div id="9248f0ad" class="cell" data-execution_count="7">
+<div id="06a75c8d" class="cell" data-execution_count="6">
 <div class="cell-output cell-output-display">
 <div class="quarto-figure quarto-figure-center">
 <figure>
-<p><img data-src="HuggingFace_CV_Part6_files/figure-revealjs/cell-8-output-1.png" class="quarto-figure quarto-figure-center" width="950" height="298"></p>
+<p><img data-src="HuggingFace_CV_Part6_files/figure-revealjs/cell-7-output-1.png" class="quarto-figure quarto-figure-center" width="950" height="298"></p>
 </figure>
 </div>
 </div>
@@ -884,72 +939,9 @@
 </div>
 </div>
 </section>
-<section id="the-pipeline-entry-point" class="slide level2">
-<h2>The <code>pipeline</code> Entry Point</h2>
-<div class="columns">
-<div class="column" style="width:50%;">
-<p>The fastest way to get started — same pattern as always.</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb8"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href=""></a><span class="im">from</span> transformers <span class="im">import</span> pipeline</span>
-<span id="cb8-2"><a href=""></a><span class="im">from</span> PIL <span class="im">import</span> Image</span>
-<span id="cb8-3"><a href=""></a></span>
-<span id="cb8-4"><a href=""></a><span class="co"># Visual question answering</span></span>
-<span id="cb8-5"><a href=""></a>vqa <span class="op">=</span> pipeline(</span>
-<span id="cb8-6"><a href=""></a>    <span class="st">"visual-question-answering"</span>,</span>
-<span id="cb8-7"><a href=""></a>    model<span class="op">=</span><span class="st">"Qwen/Qwen3.5-27B"</span>,</span>
-<span id="cb8-8"><a href=""></a>    device_map<span class="op">=</span><span class="st">"auto"</span></span>
-<span id="cb8-9"><a href=""></a>)</span>
-<span id="cb8-10"><a href=""></a></span>
-<span id="cb8-11"><a href=""></a>image <span class="op">=</span> Image.<span class="bu">open</span>(<span class="st">"factory_floor.jpg"</span>)</span>
-<span id="cb8-12"><a href=""></a></span>
-<span id="cb8-13"><a href=""></a>result <span class="op">=</span> vqa(</span>
-<span id="cb8-14"><a href=""></a>    image<span class="op">=</span>image,</span>
-<span id="cb8-15"><a href=""></a>    question<span class="op">=</span><span class="st">"Are all workers wearing safety helmets?"</span></span>
-<span id="cb8-16"><a href=""></a>)</span>
-<span id="cb8-17"><a href=""></a><span class="bu">print</span>(result)</span>
-<span id="cb8-18"><a href=""></a><span class="co"># [{'answer': 'No, one worker on the left is not</span></span>
-<span id="cb8-19"><a href=""></a><span class="co">#              wearing a helmet.', 'score': 0.94}]</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-</div><div class="column" style="width:50%;">
-<div class="fragment fade-up">
-<p>Tasks available via <code>pipeline()</code>:</p>
-<table class="caption-top">
-<thead>
-<tr class="header">
-<th>Task string</th>
-<th>Use for</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td><code>"visual-question-answering"</code></td>
-<td>VQA</td>
-</tr>
-<tr class="even">
-<td><code>"image-to-text"</code></td>
-<td>Captioning / OCR</td>
-</tr>
-<tr class="odd">
-<td><code>"any-to-any"</code></td>
-<td>Gemma4 multimodal</td>
-</tr>
-</tbody>
-</table>
-</div>
-<div class="fragment fade-up">
-<div class="callout callout-tip no-icon callout-style-simple">
-<div class="callout-body">
-<div class="callout-content">
-<p><code>device_map="auto"</code> distributes the model across available GPUs automatically.</p>
-</div>
-</div>
-</div>
-</div>
-</div></div>
-</section>
 <section id="qwen3.5-multilingual-visual-reasoning" class="slide level2">
 <h2>Qwen3.5: Multilingual Visual Reasoning</h2>
-<div class="columns">
-<div class="column" style="width:46%;">
-<p><strong><code>Qwen/Qwen3.5-27B</code></strong></p>
+<p><strong><a href="https://huggingface.co/collections/Qwen/qwen35">Qwen 3.5 collection</a></strong> <strong><a href="https://huggingface.co/Qwen/Qwen3.5-27B">Qwen/Qwen3.5-27B</a></strong></p>
 <ul>
 <li>Vision + video + text — unified multimodal</li>
 <li>262K token context window</li>
@@ -957,105 +949,28 @@
 <li>Apache 2.0 license</li>
 <li>Thinking mode by default (generates reasoning before answering)</li>
 </ul>
-<div class="fragment fade-up">
-<div class="callout callout-tip no-icon callout-style-simple">
-<div class="callout-body">
-<div class="callout-content">
-<p>Ideal for Arabic-language applications — government documents, Arabic signage, mixed Arabic/English invoices.</p>
-</div>
-</div>
-</div>
-</div>
-</div><div class="column" style="width:54%;">
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb9"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href=""></a><span class="im">from</span> transformers <span class="im">import</span> AutoProcessor, AutoModelForCausalLM</span>
-<span id="cb9-2"><a href=""></a><span class="im">from</span> PIL <span class="im">import</span> Image</span>
-<span id="cb9-3"><a href=""></a><span class="im">import</span> torch</span>
-<span id="cb9-4"><a href=""></a></span>
-<span id="cb9-5"><a href=""></a>processor <span class="op">=</span> AutoProcessor.from_pretrained(<span class="st">"Qwen/Qwen3.5-27B"</span>)</span>
-<span id="cb9-6"><a href=""></a>model     <span class="op">=</span> AutoModelForCausalLM.from_pretrained(</span>
-<span id="cb9-7"><a href=""></a>                <span class="st">"Qwen/Qwen3.5-27B"</span>, device_map<span class="op">=</span><span class="st">"auto"</span>,</span>
-<span id="cb9-8"><a href=""></a>                torch_dtype<span class="op">=</span>torch.bfloat16)</span>
-<span id="cb9-9"><a href=""></a></span>
-<span id="cb9-10"><a href=""></a>image <span class="op">=</span> Image.<span class="bu">open</span>(<span class="st">"construction_site.jpg"</span>).convert(<span class="st">"RGB"</span>)</span>
-<span id="cb9-11"><a href=""></a></span>
-<span id="cb9-12"><a href=""></a>messages <span class="op">=</span> [{</span>
-<span id="cb9-13"><a href=""></a>    <span class="st">"role"</span>: <span class="st">"user"</span>,</span>
-<span id="cb9-14"><a href=""></a>    <span class="st">"content"</span>: [</span>
-<span id="cb9-15"><a href=""></a>        {<span class="st">"type"</span>: <span class="st">"image"</span>,  <span class="st">"image"</span>: image},</span>
-<span id="cb9-16"><a href=""></a>        {<span class="st">"type"</span>: <span class="st">"text"</span>,</span>
-<span id="cb9-17"><a href=""></a>         <span class="st">"text"</span>: <span class="st">"كم عدد العمال الذين يرتدون الخوذات؟"</span>},</span>
-<span id="cb9-18"><a href=""></a>        <span class="co"># "How many workers are wearing helmets?"</span></span>
-<span id="cb9-19"><a href=""></a>    ]</span>
-<span id="cb9-20"><a href=""></a>}]</span>
-<span id="cb9-21"><a href=""></a></span>
-<span id="cb9-22"><a href=""></a>inputs  <span class="op">=</span> processor.apply_chat_template(</span>
-<span id="cb9-23"><a href=""></a>    messages, return_tensors<span class="op">=</span><span class="st">"pt"</span></span>
-<span id="cb9-24"><a href=""></a>).to(model.device)</span>
-<span id="cb9-25"><a href=""></a></span>
-<span id="cb9-26"><a href=""></a>outputs <span class="op">=</span> model.generate(<span class="op">**</span>inputs, max_new_tokens<span class="op">=</span><span class="dv">256</span>)</span>
-<span id="cb9-27"><a href=""></a><span class="bu">print</span>(processor.decode(outputs[<span class="dv">0</span>], skip_special_tokens<span class="op">=</span><span class="va">True</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-</div></div>
 </section>
 <section id="gemma4-lightweight-on-device-vision" class="slide level2">
 <h2>Gemma4: Lightweight On-Device Vision</h2>
-<div class="columns">
-<div class="column" style="width:46%;">
 <p><strong><code>google/gemma-4-E2B-it</code></strong></p>
 <ul>
 <li><strong>2.3B effective parameters</strong> — fast and practical</li>
 <li>True multimodal: image + text + audio inputs</li>
+</ul>
+<div class="callout callout-note no-icon callout-style-simple">
+<div class="callout-body">
+<div class="callout-content">
+<p><a href="https://huggingface.co/docs/transformers/model_doc/gemma4">Hugging Face Gemma 4 Documentation</a></p>
+</div>
+</div>
+</div>
+<ul>
 <li>Open weights, Apache 2.0 license</li>
 <li>Runs on a single consumer GPU</li>
-<li>Uses <code>pipeline("any-to-any")</code></li>
 </ul>
-<div class="fragment fade-up">
-<div class="callout callout-tip no-icon callout-style-simple">
-<div class="callout-body">
-<div class="callout-content">
-<p>E2B = “Effective 2B” — a Mixture-of-Experts model activating only 2.3B params per token, with a much larger total capacity.</p>
-</div>
-</div>
-</div>
-</div>
-</div><div class="column" style="width:54%;">
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb10"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href=""></a><span class="im">from</span> transformers <span class="im">import</span> pipeline</span>
-<span id="cb10-2"><a href=""></a><span class="im">from</span> PIL <span class="im">import</span> Image</span>
-<span id="cb10-3"><a href=""></a></span>
-<span id="cb10-4"><a href=""></a>pipe <span class="op">=</span> pipeline(</span>
-<span id="cb10-5"><a href=""></a>    <span class="st">"any-to-any"</span>,</span>
-<span id="cb10-6"><a href=""></a>    model<span class="op">=</span><span class="st">"google/gemma-4-E2B-it"</span>,</span>
-<span id="cb10-7"><a href=""></a>    device_map<span class="op">=</span><span class="st">"auto"</span></span>
-<span id="cb10-8"><a href=""></a>)</span>
-<span id="cb10-9"><a href=""></a></span>
-<span id="cb10-10"><a href=""></a>image <span class="op">=</span> Image.<span class="bu">open</span>(<span class="st">"invoice.jpg"</span>)</span>
-<span id="cb10-11"><a href=""></a></span>
-<span id="cb10-12"><a href=""></a>messages <span class="op">=</span> [{</span>
-<span id="cb10-13"><a href=""></a>    <span class="st">"role"</span>: <span class="st">"user"</span>,</span>
-<span id="cb10-14"><a href=""></a>    <span class="st">"content"</span>: [</span>
-<span id="cb10-15"><a href=""></a>        {<span class="st">"type"</span>: <span class="st">"image"</span>,  <span class="st">"image"</span>: image},</span>
-<span id="cb10-16"><a href=""></a>        {<span class="st">"type"</span>: <span class="st">"text"</span>,</span>
-<span id="cb10-17"><a href=""></a>         <span class="st">"text"</span>: <span class="st">"Describe what you see in this image."</span>},</span>
-<span id="cb10-18"><a href=""></a>    ]</span>
-<span id="cb10-19"><a href=""></a>}]</span>
-<span id="cb10-20"><a href=""></a></span>
-<span id="cb10-21"><a href=""></a>result <span class="op">=</span> pipe(messages, max_new_tokens<span class="op">=</span><span class="dv">200</span>,</span>
-<span id="cb10-22"><a href=""></a>              return_full_text<span class="op">=</span><span class="va">False</span>)</span>
-<span id="cb10-23"><a href=""></a><span class="bu">print</span>(result[<span class="dv">0</span>][<span class="st">"generated_text"</span>])</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="fragment fade-up">
-<div class="callout callout-warning no-icon callout-style-simple">
-<div class="callout-body">
-<div class="callout-content">
-<p>For Arabic text in images, prefer <strong>Qwen3.5</strong> — Gemma4 E2B has stronger performance in English.</p>
-</div>
-</div>
-</div>
-</div>
-</div></div>
 </section>
 <section id="ocr-as-a-vlm-use-case" class="slide level2">
 <h2>OCR as a VLM Use Case</h2>
-<div class="columns">
-<div class="column" style="width:46%;">
 <p><strong>Why use a VLM for OCR?</strong></p>
 <ul>
 <li>Handles Arabic, handwriting, curved text, and mixed scripts without special models</li>
@@ -1072,98 +987,38 @@
 </div>
 </div>
 </div>
-</div><div class="column" style="width:54%;">
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb11"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href=""></a><span class="im">from</span> transformers <span class="im">import</span> AutoProcessor, AutoModelForCausalLM</span>
-<span id="cb11-2"><a href=""></a><span class="im">from</span> PIL <span class="im">import</span> Image</span>
-<span id="cb11-3"><a href=""></a><span class="im">import</span> torch</span>
-<span id="cb11-4"><a href=""></a></span>
-<span id="cb11-5"><a href=""></a>processor <span class="op">=</span> AutoProcessor.from_pretrained(<span class="st">"Qwen/Qwen3.5-27B"</span>)</span>
-<span id="cb11-6"><a href=""></a>model     <span class="op">=</span> AutoModelForCausalLM.from_pretrained(</span>
-<span id="cb11-7"><a href=""></a>                <span class="st">"Qwen/Qwen3.5-27B"</span>, device_map<span class="op">=</span><span class="st">"auto"</span>,</span>
-<span id="cb11-8"><a href=""></a>                torch_dtype<span class="op">=</span>torch.bfloat16)</span>
-<span id="cb11-9"><a href=""></a></span>
-<span id="cb11-10"><a href=""></a>image <span class="op">=</span> Image.<span class="bu">open</span>(<span class="st">"arabic_sign.jpg"</span>).convert(<span class="st">"RGB"</span>)</span>
-<span id="cb11-11"><a href=""></a></span>
-<span id="cb11-12"><a href=""></a>messages <span class="op">=</span> [{</span>
-<span id="cb11-13"><a href=""></a>    <span class="st">"role"</span>: <span class="st">"user"</span>,</span>
-<span id="cb11-14"><a href=""></a>    <span class="st">"content"</span>: [</span>
-<span id="cb11-15"><a href=""></a>        {<span class="st">"type"</span>: <span class="st">"image"</span>, <span class="st">"image"</span>: image},</span>
-<span id="cb11-16"><a href=""></a>        {<span class="st">"type"</span>: <span class="st">"text"</span>,  <span class="st">"text"</span>: <span class="st">"What text appears in this image? "</span></span>
-<span id="cb11-17"><a href=""></a>                                  <span class="st">"Transcribe it exactly."</span>},</span>
-<span id="cb11-18"><a href=""></a>    ]</span>
-<span id="cb11-19"><a href=""></a>}]</span>
-<span id="cb11-20"><a href=""></a></span>
-<span id="cb11-21"><a href=""></a>inputs  <span class="op">=</span> processor.apply_chat_template(</span>
-<span id="cb11-22"><a href=""></a>    messages, return_tensors<span class="op">=</span><span class="st">"pt"</span></span>
-<span id="cb11-23"><a href=""></a>).to(model.device)</span>
-<span id="cb11-24"><a href=""></a>outputs <span class="op">=</span> model.generate(<span class="op">**</span>inputs, max_new_tokens<span class="op">=</span><span class="dv">256</span>)</span>
-<span id="cb11-25"><a href=""></a><span class="bu">print</span>(processor.decode(outputs[<span class="dv">0</span>], skip_special_tokens<span class="op">=</span><span class="va">True</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-</div></div>
 </section>
-<section id="document-understanding" class="slide level2">
-<h2>Document Understanding</h2>
-<div class="columns">
-<div class="column" style="width:46%;">
-<p>Plain OCR gives you raw text.</p>
-<p>A VLM gives you <strong>structured understanding</strong> — it knows that a number at the bottom-right of an invoice is likely the total.</p>
-<p>Use case: Invoice and document processing</p>
+<section id="a-moving-target-benchmarks" class="slide level2">
+<h2>A Moving Target: Benchmarks</h2>
+<div class="callout callout-important no-icon callout-style-simple">
+<div class="callout-body">
+<div class="callout-content">
+<p>The field moves fast. New models are released weekly — always check if a better tool has emerged for your use case.</p>
+</div>
+</div>
+</div>
+<p><strong>How to find the best model for your task:</strong></p>
 <ul>
-<li>Extract fields like totals, dates, and IDs</li>
-<li>Return structured JSON — no regex, no templates</li>
-<li>Works across different layouts and languages</li>
+<li><a href="https://artificialanalysis.ai/">Artificial Analysis</a> — Comparison of performance, speed, and cost.</li>
+<li><a href="https://benchmarks.ksaa.gov.sa/b/balsam/leaderboard/">Balsam Leaderboard</a> — Specialized benchmarks for Arabic AI by KSAA.</li>
+<li><a href="https://silma.ai/arabic-llm-leaderboard">Arabic LLM Leaderboard</a> — Silma.ai’s ranking of Arabic language models.</li>
+<li><a href="https://huggingface.co/OALL">Open Arabic LLM Leaderboard (OALL)</a> — The community hub for Arabic model evaluation.</li>
 </ul>
-<div class="fragment fade-up">
 <div class="callout callout-tip no-icon callout-style-simple">
 <div class="callout-body">
 <div class="callout-content">
-<p>State-of-the-art document extraction in 5 lines.</p>
+<p><strong>Pro-tip:</strong> Don’t just look at global scores. Look at benchmarks that match your specific domain (e.g., Arabic, medical, or drone imagery).</p>
 </div>
 </div>
 </div>
-</div>
-</div><div class="column" style="width:54%;">
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb12"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href=""></a><span class="im">import</span> json</span>
-<span id="cb12-2"><a href=""></a><span class="im">from</span> PIL <span class="im">import</span> Image</span>
-<span id="cb12-3"><a href=""></a></span>
-<span id="cb12-4"><a href=""></a>image <span class="op">=</span> Image.<span class="bu">open</span>(<span class="st">"invoice.jpg"</span>).convert(<span class="st">"RGB"</span>)</span>
-<span id="cb12-5"><a href=""></a></span>
-<span id="cb12-6"><a href=""></a>prompt <span class="op">=</span> <span class="st">"""Extract the following fields from this invoice</span></span>
-<span id="cb12-7"><a href=""></a><span class="st">and return a JSON object:</span></span>
-<span id="cb12-8"><a href=""></a><span class="st">{</span></span>
-<span id="cb12-9"><a href=""></a><span class="st">  "vendor_name": "...",</span></span>
-<span id="cb12-10"><a href=""></a><span class="st">  "invoice_date": "...",</span></span>
-<span id="cb12-11"><a href=""></a><span class="st">  "invoice_number": "...",</span></span>
-<span id="cb12-12"><a href=""></a><span class="st">  "subtotal": "...",</span></span>
-<span id="cb12-13"><a href=""></a><span class="st">  "tax_amount": "...",</span></span>
-<span id="cb12-14"><a href=""></a><span class="st">  "total": "..."</span></span>
-<span id="cb12-15"><a href=""></a><span class="st">}</span></span>
-<span id="cb12-16"><a href=""></a><span class="st">Return only the JSON, no extra text."""</span></span>
-<span id="cb12-17"><a href=""></a></span>
-<span id="cb12-18"><a href=""></a>messages <span class="op">=</span> [{</span>
-<span id="cb12-19"><a href=""></a>    <span class="st">"role"</span>: <span class="st">"user"</span>,</span>
-<span id="cb12-20"><a href=""></a>    <span class="st">"content"</span>: [</span>
-<span id="cb12-21"><a href=""></a>        {<span class="st">"type"</span>: <span class="st">"image"</span>, <span class="st">"image"</span>: image},</span>
-<span id="cb12-22"><a href=""></a>        {<span class="st">"type"</span>: <span class="st">"text"</span>,  <span class="st">"text"</span>: prompt},</span>
-<span id="cb12-23"><a href=""></a>    ]</span>
-<span id="cb12-24"><a href=""></a>}]</span>
-<span id="cb12-25"><a href=""></a></span>
-<span id="cb12-26"><a href=""></a>inputs  <span class="op">=</span> processor.apply_chat_template(</span>
-<span id="cb12-27"><a href=""></a>    messages, return_tensors<span class="op">=</span><span class="st">"pt"</span></span>
-<span id="cb12-28"><a href=""></a>).to(model.device)</span>
-<span id="cb12-29"><a href=""></a>outputs <span class="op">=</span> model.generate(<span class="op">**</span>inputs, max_new_tokens<span class="op">=</span><span class="dv">512</span>)</span>
-<span id="cb12-30"><a href=""></a>text    <span class="op">=</span> processor.decode(outputs[<span class="dv">0</span>], skip_special_tokens<span class="op">=</span><span class="va">True</span>)</span>
-<span id="cb12-31"><a href=""></a></span>
-<span id="cb12-32"><a href=""></a>data <span class="op">=</span> json.loads(text)</span>
-<span id="cb12-33"><a href=""></a><span class="bu">print</span>(data[<span class="st">"total"</span>])  <span class="co"># "1,150.00"</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-</div></div>
 </section>
 <section id="when-to-use-what" class="slide level2">
 <h2>When to Use What</h2>
-<div id="5409fbcd" class="cell" data-execution_count="8">
+<div id="e427b959" class="cell" data-execution_count="7">
 <div class="cell-output cell-output-display">
 <div class="quarto-figure quarto-figure-center">
 <figure>
-<p><img data-src="HuggingFace_CV_Part6_files/figure-revealjs/cell-9-output-1.png" class="quarto-figure quarto-figure-center" width="1046" height="470"></p>
+<p><img data-src="HuggingFace_CV_Part6_files/figure-revealjs/cell-8-output-1.png" class="quarto-figure quarto-figure-center" width="1046" height="470"></p>
 </figure>
 </div>
 </div>
@@ -1197,51 +1052,6 @@
     <strong>Qwen3.5 + Gemma4</strong><br>
     <small>Visual reasoning, OCR, document understanding — ask anything in any language</small>
   </div>
-</div>
-</section>
-<section id="when-to-use-what-1" class="slide level2">
-<h2>When to Use What</h2>
-<ul>
-<li><strong>Detect / count / track known classes at speed</strong> → YOLO</li>
-</ul>
-<div class="fragment fade-up">
-<ul>
-<li><strong>Segment any object without training data</strong> → SAM3 (<code>facebook/sam3.1</code>)</li>
-</ul>
-</div>
-<div class="fragment fade-up">
-<ul>
-<li><strong>Search images by text description</strong> → CLIP (<code>openai/clip-vit-base-patch32</code>)</li>
-</ul>
-</div>
-<div class="fragment fade-up">
-<ul>
-<li><strong>Search images by visual similarity only</strong> → DINOv3 (<code>facebook/dinov3-vitb16-pretrain-lvd1689m</code>)</li>
-</ul>
-</div>
-<div class="fragment fade-up">
-<ul>
-<li><strong>Answer questions, read text, understand documents</strong> → Qwen3.5 / Gemma4</li>
-</ul>
-</div>
-<div class="fragment fade-up">
-<ul>
-<li><strong>Arabic language or multilingual</strong> → Qwen3.5 (<code>Qwen/Qwen3.5-27B</code>)</li>
-</ul>
-</div>
-<div class="fragment fade-up">
-<ul>
-<li><strong>Fast, lightweight, on-device</strong> → Gemma4 E2B (<code>google/gemma-4-E2B-it</code>)</li>
-</ul>
-</div>
-<div class="fragment fade-up">
-<div class="callout callout-tip no-icon callout-style-simple">
-<div class="callout-body">
-<div class="callout-content">
-<p>The pattern is always the same: <code>Processor + Model + generate/predict</code>. Learning one teaches you the template for all.</p>
-</div>
-</div>
-</div>
 </div>
 </section>
 <section id="qa" class="slide level2 sdaia-dark" data-background-color="#1C355E">
@@ -1413,7 +1223,7 @@
         hideCursorTime: 5000,
 
         // Opens links in an iframe preview overlay
-        previewLinks: true,
+        previewLinks: false,
 
         // Transition style (none/fade/slide/convex/concave/zoom)
         transition: 'slide',

@@ -698,7 +698,37 @@ Now it's your turn to play the role of the Business Lead!
 :::
 
 
+## The Threshold Dilemma
+
+All metrics so far ($F1$, $ROI$, $Precision$) require us to **choose** a threshold first.
+
+:::: {.columns}
+
+::: {.column width="50%"}
+### 🎯 The "Decision" View
+Useful for **deployment**.
+*"At 0.45 confidence, what is my profit?"*
+
+- Pick one point on the curve.
+- Optimize for a specific business case.
+- Good for **operational decisions**.
+:::
+
+::: {.column width="50%" .fragment .incremental}
+### 📊 The "Model" View
+Useful for **benchmarking**.
+*"Is this model fundamentally better than the last one?"*
+
+- Evaluate over **all thresholds**.
+- Compare architectures fairly.
+- **This is where Average Precision (AP) comes in.**
+:::
+
+::::
+
+
 ## The PR Curve & Average Precision (AP)
+
 
 :::: {.columns}
 

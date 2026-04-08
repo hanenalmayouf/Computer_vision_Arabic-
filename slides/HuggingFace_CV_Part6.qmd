@@ -26,7 +26,7 @@ resources:
   <div style="background:rgba(28,53,94,0.08); padding:1.4rem; border-radius:12px;">
     <div style="font-size:2rem; text-align:center;">✂️</div>
     <strong>SAM3</strong><br>
-    <small>Segment any object with a point or box — no training required</small>
+    <small>Segment any object with text, boxes, or image exemplars</small>
   </div>
   <div style="background:rgba(28,53,94,0.08); padding:1.4rem; border-radius:12px;">
     <div style="font-size:2rem; text-align:center;">🔍</div>
@@ -41,7 +41,12 @@ resources:
   <div style="background:rgba(0,201,167,0.10); padding:1.4rem; border-radius:12px;">
     <div style="font-size:2rem; text-align:center;">📄</div>
     <strong>OCR & Documents</strong><br>
-    <small>Read text, extract invoice fields — all with one VLM</small>
+    <small>Read text, extract fields — all with one VLM</small>
+  </div>
+  <div style="background:rgba(255,140,0,0.12); padding:1.4rem; border-radius:12px; grid-column: span 2;">
+    <div style="font-size:2rem; text-align:center;">⚙️</div>
+    <strong>Fine-tuning & Trainer API</strong><br>
+    <small>The standard way to train and adapt any HuggingFace model to your data</small>
   </div>
 </div>
 ```
@@ -241,6 +246,53 @@ print(processor.decode(outputs[0], skip_special_tokens=True))
 Use `pipeline()` for exploration. Use `AutoModel` when you need batching, fine-tuning, or integration into a training loop.
 :::
 
+## The Trainer API: How to Fine-tune
+
+:::: {.columns}
+
+::: {.column width="50%"}
+
+**The standard way to adapt any model**
+
+- Handles training loops, evaluation, and logging automatically.
+- Checkpointing and model saving built-in.
+- Multi-GPU support via `accelerate`.
+
+::: {.callout-tip appearance="minimal"}
+One script to train almost any model on the Hub.
+:::
+
+:::
+
+::: {.column width="50%"}
+
+```python
+from transformers import TrainingArguments, Trainer
+
+# 1. Configure the training setup
+args = TrainingArguments(
+    output_dir="my_model",
+    per_device_train_batch_size=8,
+    num_train_epochs=3,
+    evaluation_strategy="epoch",
+    logging_steps=10
+)
+
+# 2. Initialize and run
+trainer = Trainer(
+    model=model, 
+    args=args, 
+    train_dataset=train_data,
+    eval_dataset=val_data
+)
+
+trainer.train()
+```
+
+:::
+
+::::
+
 # 2. SAM3 — Segment Anything {.sdaia-dark background-gradient="linear-gradient(135deg, #1C355E, #00C9A7)"}
 
 Zero-shot segmentation. Any object. No labels needed.
@@ -249,20 +301,23 @@ Zero-shot segmentation. Any object. No labels needed.
 
 :::: {.columns}
 
-::: {.column width="55%"}
-In **Part 3**, you used SAM as a **labeling superpower**. 
+::: {.column width="50%"}
+### **Part 3: Labeling**
+*SAM as a data assistant*
 
-- Click an object → **Instant mask**
-- Huge time saver for training datasets
+- **Input:** Concept or Example
+- **Output:** Training Labels
+- **Goal:** Faster YOLO Datasets
 
-**Today:** We use SAM3 as an **inference engine**.
+### **Today: Inference**
+*SAM3 as a standalone engine*
 
-- No custom training data required
-- **SAM3.1** (2025): Better edges + video tracking
-- High-quality cutouts for any application
+- **Zero-Shot:** No training needed
+- **PCS:** Promptable segmentation
+- **Goal:** Direct production use
 :::
 
-::: {.column width="45%"}
+::: {.column width="50%"}
 ```{python}
 #| echo: false
 #| fig-align: center
@@ -352,112 +407,78 @@ plt.show()
 ```
 
 ::: {.callout-tip appearance="minimal"}
-SAM does not need class labels. Give it a location — it figures out the object boundary.
+SAM does not need manual class labels. Give it a description (text) or a visual template (box/image) — it figures out the boundary.
 :::
 
-## SAM3: Point Prompt
+## SAM3: Text-Only Prompt
+
+::: {.callout-note appearance="minimal"}
+New in SAM 3: **Promptable Concept Segmentation**. You can now segment by name!
+
+[Hugging Face Docs](https://huggingface.co/docs/transformers/model_doc/sam3) | [Ultralytics Docs](https://docs.ultralytics.com/models/sam-3/)
+:::
+
+::: {.callout-important appearance="minimal"}
+**Gated Model:** SAM 3 requires users to accept the license on Hugging Face before downloading. Ensure you are logged in using `huggingface-cli login`.
+:::
 
 ```python
-from transformers import SamModel, SamProcessor
+from transformers import Sam3Model, Sam3Processor
 from PIL import Image
 import torch
 
-# Load model (cached after first download)
-processor = SamProcessor.from_pretrained("facebook/sam3.1")
-model     = SamModel.from_pretrained("facebook/sam3.1")
-model.eval()
+model     = Sam3Model.from_pretrained("facebook/sam3")
+processor = Sam3Processor.from_pretrained("facebook/sam3")
 
-image = Image.open("car.jpg").convert("RGB")
+image = Image.open("highway.jpg").convert("RGB")
 
-# Point prompt: [x, y] pixel coordinates of the object
-input_points = [[[450, 300]]]
-
-inputs = processor(
-    image,
-    input_points=input_points,
-    return_tensors="pt"
-)
+# Segment by concept name
+inputs = processor(images=image, text="yellow school bus", return_tensors="pt")
 
 with torch.no_grad():
     outputs = model(**inputs)
 
-# Post-process: pick the highest-confidence mask
-masks = processor.image_processor.post_process_masks(
-    outputs.pred_masks.cpu(),
-    inputs["original_sizes"].cpu(),
-    inputs["reshaped_input_sizes"].cpu()
-)
-best_mask = masks[0][0][outputs.iou_scores.argmax()].numpy()
-# best_mask is a boolean array — True = object pixel
+# Post-process to get binary masks and confidence scores
+results = processor.post_process_instance_segmentation(
+    outputs, 
+    threshold=0.5,
+    target_sizes=inputs.get("original_sizes").tolist()
+)[0]
+
+print(f"Detected {len(results['masks'])} buses")
 ```
 
+## SAM3: Negative Box Refinement
+
 ::: {.callout-tip appearance="minimal"}
-`iou_scores` ranks the 3 candidate masks SAM returns. Always pick `argmax()` for the most confident one.
+SAM3 uses **Concepts** (text or templates). If a text prompt is too broad, use **negative boxes** to exclude specific areas.
 :::
-
-## SAM3: Box Prompt — YOLO → SAM
-
-:::: {.columns}
-
-::: {.column width="50%"}
-**The specific "Where" makes SAM better.**
 
 ```python
-# 1. YOLO finds the box
-yolo_res = yolo.predict(img)[0]
-box = yolo_res.boxes.xyxy[0].tolist()
+# Segment "handle" but exclude the oven handle using a negative box
+text = "handle"
+# Box in [x1, y1, x2, y2] format
+oven_handle_box = [40, 183, 318, 204]
 
-# 2. SAM converts box to mask
-inputs = processor(img, input_boxes=[[box]])
+inputs = processor(
+    images=image, 
+    text=text, 
+    input_boxes=[[oven_handle_box]], 
+    input_boxes_labels=[[0]], # 0 = negative (exclude this region)
+    return_tensors="pt"
+).to(device)
+
 with torch.no_grad():
-    res = model(**inputs)
+    outputs = model(**inputs)
 
-# 3. Post-process to pixel mask
-mask = processor.post_process_masks(
-    res.pred_masks, ...
-)[0][0][argmax]
+results = processor.post_process_instance_segmentation(
+    outputs, threshold=0.5, target_sizes=inputs.get("original_sizes").tolist()
+)[0]
 ```
 
-
-:::
-
-::: {.column width="50%"}
-```{python}
-#| echo: false
-#| fig-align: center
-import matplotlib.pyplot as plt
-from matplotlib.patches import FancyBboxPatch
-
-fig, ax = plt.subplots(figsize=(5, 5))
-fig.patch.set_alpha(0.0)
-ax.set_xlim(0, 10)
-ax.set_ylim(0, 10)
-ax.axis('off')
-
-# Simple handshake diagram
-ax.add_patch(FancyBboxPatch((1, 7.5), 8, 1.5, boxstyle="round,pad=0.1", facecolor="#1C355E"))
-ax.text(5, 8.25, "YOLO: WHERE is the object?", color='white', ha='center', fontweight='bold')
-
-ax.annotate('', xy=(5, 5.5), xytext=(5, 7.3), arrowprops=dict(arrowstyle='->', lw=3, color='#5b6678'))
-ax.text(5.3, 6.4, "Bounding Box [x1, y1, x2, y2]", fontsize=9, color='#1C355E')
-
-ax.add_patch(FancyBboxPatch((1, 3.5), 8, 1.5, boxstyle="round,pad=0.1", facecolor="#00AE8D"))
-ax.text(5, 4.25, "SAM: Exactly WHAT pixels?", color='white', ha='center', fontweight='bold')
-
-ax.annotate('', xy=(5, 1.5), xytext=(5, 3.3), arrowprops=dict(arrowstyle='->', lw=3, color='#5b6678'))
-ax.text(5.3, 2.4, "Pixel Mask", fontsize=9, color='#00AE8D')
-
-ax.add_patch(FancyBboxPatch((2, 0), 6, 1.2, boxstyle="round,pad=0.1", facecolor="#E96852"))
-ax.text(5, 0.6, "Your Resulting App", color='white', ha='center', fontweight='bold')
-
-plt.show()
-```
-:::
 ::: {.callout-tip appearance="minimal"}
-YOLO acts as the "eyes" (pointing) and SAM as the "surgeon" (precise cutting).
+Label conventions: **1 = Positive** (include), **0 = Negative** (exclude). 
 :::
-::::
-
 
 ## SAM3 Use Cases
 
@@ -598,28 +619,22 @@ plt.show()
 
 ## CLIP: Zero-Shot Classification
 
-:::: {.columns}
-
-::: {.column width="45%"}
 ### Classify anything you can describe
 
-CLIP scores labels against images without needing any labeled training data.
+CLIP scores labels against images without needing labeled training data.
 
 - **Any Class**: "overexposed", "foggy", "night-time"
-- **Rare Objects**: Things YOLO wasn't trained on
-- **Domain Specific**: Complex terminology
+- **Rare Objects**: Concepts YOLO wasn't trained on
+- **Domain Specific**: Complex terminology (medical, satellite)
 
-::: {.fragment .fade-up}
-> [!TIP]
-> Think of it as "Visual Entailment" — how well does this text describe this image?
-:::
+::: {.callout-note appearance="minimal"}
+[Hugging Face CLIP Documentation](https://huggingface.co/docs/transformers/model_doc/clip)
 :::
 
-::: {.column width="55%"}
-![](assets/clip_conceptual.png)
+::: {.callout-tip appearance="minimal"}
+Think of it as **"Visual Entailment"** — how well does this text describe this image?
 :::
 
-::::
 
 ## CLIP: Zero-Shot Implementation
 
@@ -640,33 +655,24 @@ for label, prob in zip(labels, probs[0]):
 
 ## CLIP: Image Similarity Search
 
-:::: {.columns}
-
-::: {.column width="50%"}
 ### Search by Visual "Meaning"
 
-Instead of keyword matching, find images that *look* like the query image.
+Find images that *look* like the query image without manual keywords.
 
-1. **Embed**: Convert image library into vectors (once).
-2. **Query**: Embed the target image.
-3. **Match**: Calculate dot product / cosine similarity.
+1. **Embed**: Pre-convert your image library into vectors.
+2. **Query**: Convert the user's target image to a vector.
+3. **Match**: Use cosine similarity to find the nearest neighbors.
 
-::: {.fragment .fade-up}
 ::: {.callout-note appearance="minimal"}
-For millions of images, use a vector DB like **FAISS** or **Qdrant** for scalability.
-:::
-:::
+For millions of images, use a vector DB like **FAISS** or **Qdrant** for sub-millisecond search.
 :::
 
-::: {.column width="50%"}
 **Common Use Cases:**
 
-- E-commerce recommendations
-- Quality control (finding defects)
-- Duplicate detection in datasets
-:::
+- E-commerce recommendations ("Shop the Look")
+- Quality control (finding matching defects)
+- Dataset deduplication
 
-::::
 
 ## CLIP: Similarity Implementation
 
@@ -690,26 +696,26 @@ top5   = scores.topk(5).indices
 
 ## DINOv3: The Vision Backbone
 
-:::: {.columns}
+### Self-Supervised Excellence
 
-::: {.column width="50%"}
-### Why DINOv3?
+DINO (Self-Distillation with No Labels) learns from images alone.
 
-DINO (Self-Distillation with No Labels) learns from images alone — no text captions needed.
+- **Universal**: Works for any domain (X-ray, Satellite, Microscopic).
+- **Spatial Precision**: Excellent for segmentation and depth tasks.
+- **Robustness**: Deep understanding of object geometry.
 
-- **Universal Backbone**: Works for any domain (X-ray, Satellite).
-- **Spatial Precision**: Excellent for segmentation and depth.
-- **Robustness**: Learns a deeper understanding of object geometry.
+::: {.callout-note appearance="minimal"}
+[Hugging Face DINOv3 Documentation](https://huggingface.co/docs/transformers/model_doc/dinov3)
 :::
 
-::: {.column width="50%"}
-**CLIP vs. DINO:**
-
-- **CLIP**: Best for text-image tasks (search, zero-shot).
-- **DINO**: Best for pure vision tasks (dense retrieval, geometry).
+::: {.callout-important appearance="minimal"}
+**Gated Model:** Like SAM 3, DINOv3 requires you to request access on the Hugging Face model page before it can be downloaded.
 :::
 
-::::
+::: {.callout-tip appearance="minimal"}
+**CLIP** is for text-to-image. **DINO** is for pure vision (pixel detail).
+:::
+
 
 ## DINOv3: Feature Extraction
 
@@ -881,63 +887,10 @@ No class list. No bounding boxes. Just ask your question in plain language.
 :::
 :::
 
-## The `pipeline` Entry Point
-
-:::: {.columns}
-
-::: {.column width="50%"}
-The fastest way to get started — same pattern as always.
-
-```python
-from transformers import pipeline
-from PIL import Image
-
-# Visual question answering
-vqa = pipeline(
-    "visual-question-answering",
-    model="Qwen/Qwen3.5-27B",
-    device_map="auto"
-)
-
-image = Image.open("factory_floor.jpg")
-
-result = vqa(
-    image=image,
-    question="Are all workers wearing safety helmets?"
-)
-print(result)
-# [{'answer': 'No, one worker on the left is not
-#              wearing a helmet.', 'score': 0.94}]
-```
-:::
-
-::: {.column width="50%"}
-::: {.fragment .fade-up}
-Tasks available via `pipeline()`:
-
-| Task string | Use for |
-|---|---|
-| `"visual-question-answering"` | VQA |
-| `"image-to-text"` | Captioning / OCR |
-| `"any-to-any"` | Gemma4 multimodal |
-
-:::
-
-::: {.fragment .fade-up}
-::: {.callout-tip appearance="minimal"}
-`device_map="auto"` distributes the model across available GPUs automatically.
-:::
-:::
-:::
-
-::::
-
 ## Qwen3.5: Multilingual Visual Reasoning
 
-:::: {.columns}
-
-::: {.column width="46%"}
-**`Qwen/Qwen3.5-27B`**
+**[Qwen 3.5 collection](https://huggingface.co/collections/Qwen/qwen35)**
+**[Qwen/Qwen3.5-27B](https://huggingface.co/Qwen/Qwen3.5-27B)**
 
 - Vision + video + text — unified multimodal
 - 262K token context window
@@ -945,108 +898,25 @@ Tasks available via `pipeline()`:
 - Apache 2.0 license
 - Thinking mode by default (generates reasoning before answering)
 
-::: {.fragment .fade-up}
-::: {.callout-tip appearance="minimal"}
-Ideal for Arabic-language applications — government documents, Arabic signage, mixed Arabic/English invoices.
-:::
-:::
-:::
-
-::: {.column width="54%"}
-```python
-from transformers import AutoProcessor, AutoModelForCausalLM
-from PIL import Image
-import torch
-
-processor = AutoProcessor.from_pretrained("Qwen/Qwen3.5-27B")
-model     = AutoModelForCausalLM.from_pretrained(
-                "Qwen/Qwen3.5-27B", device_map="auto",
-                torch_dtype=torch.bfloat16)
-
-image = Image.open("construction_site.jpg").convert("RGB")
-
-messages = [{
-    "role": "user",
-    "content": [
-        {"type": "image",  "image": image},
-        {"type": "text",
-         "text": "كم عدد العمال الذين يرتدون الخوذات؟"},
-        # "How many workers are wearing helmets?"
-    ]
-}]
-
-inputs  = processor.apply_chat_template(
-    messages, return_tensors="pt"
-).to(model.device)
-
-outputs = model.generate(**inputs, max_new_tokens=256)
-print(processor.decode(outputs[0], skip_special_tokens=True))
-```
-:::
-
-::::
-
 ## Gemma4: Lightweight On-Device Vision
 
-:::: {.columns}
 
-::: {.column width="46%"}
 **`google/gemma-4-E2B-it`**
 
 - **2.3B effective parameters** — fast and practical
-- True multimodal: image + text + audio inputs
+ - True multimodal: image + text + audio inputs
+
+::: {.callout-note appearance="minimal"}
+[Hugging Face Gemma 4 Documentation](https://huggingface.co/docs/transformers/model_doc/gemma4)
+:::
 - Open weights, Apache 2.0 license
 - Runs on a single consumer GPU
-- Uses `pipeline("any-to-any")`
 
-::: {.fragment .fade-up}
-::: {.callout-tip appearance="minimal"}
-E2B = "Effective 2B" — a Mixture-of-Experts model activating only 2.3B params per token, with a much larger total capacity.
-:::
-:::
-:::
 
-::: {.column width="54%"}
-```python
-from transformers import pipeline
-from PIL import Image
-
-pipe = pipeline(
-    "any-to-any",
-    model="google/gemma-4-E2B-it",
-    device_map="auto"
-)
-
-image = Image.open("invoice.jpg")
-
-messages = [{
-    "role": "user",
-    "content": [
-        {"type": "image",  "image": image},
-        {"type": "text",
-         "text": "Describe what you see in this image."},
-    ]
-}]
-
-result = pipe(messages, max_new_tokens=200,
-              return_full_text=False)
-print(result[0]["generated_text"])
-```
-
-::: {.fragment .fade-up}
-::: {.callout-warning appearance="minimal"}
-For Arabic text in images, prefer **Qwen3.5** — Gemma4 E2B has stronger performance in English.
-:::
-:::
-:::
-
-::::
 
 ## OCR as a VLM Use Case
 
-:::: {.columns}
 
-::: {.column width="46%"}
 **Why use a VLM for OCR?**
 
 - Handles Arabic, handwriting, curved text, and mixed scripts without special models
@@ -1059,101 +929,23 @@ For Arabic text in images, prefer **Qwen3.5** — Gemma4 E2B has stronger perfor
 No TrOCR. No LayoutLM. No separate OCR pipeline — just ask the model.
 :::
 :::
+
+## A Moving Target: Benchmarks
+
+::: {.callout-important appearance="minimal"}
+The field moves fast. New models are released weekly — always check if a better tool has emerged for your use case.
 :::
 
-::: {.column width="54%"}
-```python
-from transformers import AutoProcessor, AutoModelForCausalLM
-from PIL import Image
-import torch
+**How to find the best model for your task:**
 
-processor = AutoProcessor.from_pretrained("Qwen/Qwen3.5-27B")
-model     = AutoModelForCausalLM.from_pretrained(
-                "Qwen/Qwen3.5-27B", device_map="auto",
-                torch_dtype=torch.bfloat16)
+- [Artificial Analysis](https://artificialanalysis.ai/) — Comparison of performance, speed, and cost.
+- [Balsam Leaderboard](https://benchmarks.ksaa.gov.sa/b/balsam/leaderboard/) — Specialized benchmarks for Arabic AI by KSAA.
+- [Arabic LLM Leaderboard](https://silma.ai/arabic-llm-leaderboard) — Silma.ai's ranking of Arabic language models.
+- [Open Arabic LLM Leaderboard (OALL)](https://huggingface.co/OALL) — The community hub for Arabic model evaluation.
 
-image = Image.open("arabic_sign.jpg").convert("RGB")
-
-messages = [{
-    "role": "user",
-    "content": [
-        {"type": "image", "image": image},
-        {"type": "text",  "text": "What text appears in this image? "
-                                  "Transcribe it exactly."},
-    ]
-}]
-
-inputs  = processor.apply_chat_template(
-    messages, return_tensors="pt"
-).to(model.device)
-outputs = model.generate(**inputs, max_new_tokens=256)
-print(processor.decode(outputs[0], skip_special_tokens=True))
-```
-:::
-
-::::
-
-## Document Understanding
-
-:::: {.columns}
-
-::: {.column width="46%"}
-Plain OCR gives you raw text.
-
-A VLM gives you **structured understanding** — it knows that a number at the bottom-right of an invoice is likely the total.
-
-Use case: Invoice and document processing
-
-- Extract fields like totals, dates, and IDs
-- Return structured JSON — no regex, no templates
-- Works across different layouts and languages
-
-::: {.fragment .fade-up}
 ::: {.callout-tip appearance="minimal"}
-State-of-the-art document extraction in 5 lines.
+**Pro-tip:** Don't just look at global scores. Look at benchmarks that match your specific domain (e.g., Arabic, medical, or drone imagery).
 :::
-:::
-:::
-
-::: {.column width="54%"}
-```python
-import json
-from PIL import Image
-
-image = Image.open("invoice.jpg").convert("RGB")
-
-prompt = """Extract the following fields from this invoice
-and return a JSON object:
-{
-  "vendor_name": "...",
-  "invoice_date": "...",
-  "invoice_number": "...",
-  "subtotal": "...",
-  "tax_amount": "...",
-  "total": "..."
-}
-Return only the JSON, no extra text."""
-
-messages = [{
-    "role": "user",
-    "content": [
-        {"type": "image", "image": image},
-        {"type": "text",  "text": prompt},
-    ]
-}]
-
-inputs  = processor.apply_chat_template(
-    messages, return_tensors="pt"
-).to(model.device)
-outputs = model.generate(**inputs, max_new_tokens=512)
-text    = processor.decode(outputs[0], skip_special_tokens=True)
-
-data = json.loads(text)
-print(data["total"])  # "1,150.00"
-```
-:::
-
-::::
 
 ## When to Use What
 
@@ -1250,40 +1042,6 @@ Your expanded Computer Vision toolkit.
   </div>
 </div>
 ```
-
-## When to Use What
-
-- **Detect / count / track known classes at speed** → YOLO
-
-::: {.fragment .fade-up}
-- **Segment any object without training data** → SAM3 (`facebook/sam3.1`)
-:::
-
-::: {.fragment .fade-up}
-- **Search images by text description** → CLIP (`openai/clip-vit-base-patch32`)
-:::
-
-::: {.fragment .fade-up}
-- **Search images by visual similarity only** → DINOv3 (`facebook/dinov3-vitb16-pretrain-lvd1689m`)
-:::
-
-::: {.fragment .fade-up}
-- **Answer questions, read text, understand documents** → Qwen3.5 / Gemma4
-:::
-
-::: {.fragment .fade-up}
-- **Arabic language or multilingual** → Qwen3.5 (`Qwen/Qwen3.5-27B`)
-:::
-
-::: {.fragment .fade-up}
-- **Fast, lightweight, on-device** → Gemma4 E2B (`google/gemma-4-E2B-it`)
-:::
-
-::: {.fragment .fade-up}
-::: {.callout-tip appearance="minimal"}
-The pattern is always the same: `Processor + Model + generate/predict`. Learning one teaches you the template for all.
-:::
-:::
 
 ## Q&A {.sdaia-dark background-color="#1C355E"}
 
