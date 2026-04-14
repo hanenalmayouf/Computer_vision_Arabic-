@@ -9,7 +9,7 @@
 <link href="Ultralytics_Foundations_4_Evaluation_Deployment_files/libs/quarto-html/quarto-syntax-highlighting-587c61ba64f3a5504c4d52d930310e48.css" rel="stylesheet" id="quarto-text-highlighting-styles"><meta charset="utf-8">
   <meta name="generator" content="quarto-1.8.26">
 
-  <meta name="dcterms.date" content="2026-04-07">
+  <meta name="dcterms.date" content="2026-04-14">
   <title>Ultralytics YOLO Foundations: Part 4</title>
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
@@ -203,7 +203,7 @@
 <div class="quarto-title-authors">
 </div>
 
-  <p class="date">2026-04-07</p>
+  <p class="date">2026-04-14</p>
 </section>
 <section>
 <section id="model-evaluation" class="title-slide slide level1 sdaia-dark center" data-background-gradient="linear-gradient(135deg, #1C355E, #00C9A7)">
@@ -308,7 +308,7 @@
 <p><strong>What if our model catches every car, but is “trigger-happy”?</strong></p>
 <div class="columns">
 <div class="column" style="width:55%;">
-<div id="98b0c3a0" class="cell" data-execution_count="1">
+<div id="5e355f5a" class="cell" data-execution_count="1">
 <div class="cell-output cell-output-display">
 <div class="quarto-figure quarto-figure-center">
 <figure>
@@ -366,7 +366,7 @@
 <section id="model-a-over-sensitive" class="slide level2">
 <h2>Model A: “Over-Sensitive”</h2>
 <p><em>Flags everything — never misses a car</em></p>
-<div id="80a87734" class="cell" data-execution_count="2">
+<div id="79f66558" class="cell" data-execution_count="2">
 <div class="cell-output cell-output-display">
 <div class="quarto-figure quarto-figure-center">
 <figure>
@@ -385,7 +385,7 @@
 <section id="model-b-cautious" class="slide level2">
 <h2>Model B: “Cautious”</h2>
 <p><em>Only flags when very confident</em></p>
-<div id="2cdc1057" class="cell" data-execution_count="3">
+<div id="a45136b9" class="cell" data-execution_count="3">
 <div class="cell-output cell-output-display">
 <div class="quarto-figure quarto-figure-center">
 <figure>
@@ -469,7 +469,7 @@
 </section>
 <section id="f1-score-model-comparison" class="slide level2">
 <h2>F1 Score: Model Comparison</h2>
-<div id="e0375c96" class="cell" data-execution_count="4">
+<div id="278dd1f6" class="cell" data-execution_count="4">
 <div class="cell-output cell-output-display">
 <div class="quarto-figure quarto-figure-center">
 <figure>
@@ -488,7 +488,7 @@
 </section>
 <section id="choosing-the-right-threshold" class="slide level2">
 <h2>Choosing the Right Threshold</h2>
-<div id="b39e2609" class="cell" data-execution_count="5">
+<div id="45199fe0" class="cell" data-execution_count="5">
 <div class="cell-output cell-output-display">
 <div class="quarto-figure quarto-figure-center">
 <figure>
@@ -625,7 +625,7 @@
 <section id="the-cost-curve" class="slide level2">
 <h2>The Cost Curve</h2>
 <p>Just like we plotted the F1 curve, we can plot a <strong>Cost Curve</strong> to find the optimal threshold for deployment.</p>
-<div id="c85b3737" class="cell" data-execution_count="6">
+<div id="d8f26f6b" class="cell" data-execution_count="6">
 <div class="cell-output cell-output-display">
 <div class="quarto-figure quarto-figure-center">
 <figure>
@@ -655,6 +655,28 @@
 </div>
 </div>
 </section>
+<section id="the-threshold-dilemma" class="slide level2">
+<h2>The Threshold Dilemma</h2>
+<p>All metrics so far (<span class="math inline">\(F1\)</span>, <span class="math inline">\(ROI\)</span>, <span class="math inline">\(Precision\)</span>) require us to <strong>choose</strong> a threshold first.</p>
+<div class="columns">
+<div class="column" style="width:50%;">
+<h3 id="the-decision-view">🎯 The “Decision” View</h3>
+<p>Useful for <strong>deployment</strong>. <em>“At 0.45 confidence, what is my profit?”</em></p>
+<ul>
+<li>Pick one point on the curve.</li>
+<li>Optimize for a specific business case.</li>
+<li>Good for <strong>operational decisions</strong>.</li>
+</ul>
+</div><div class="column fragment" style="width:50%;">
+<h3 id="the-model-view">📊 The “Model” View</h3>
+<p>Useful for <strong>benchmarking</strong>. <em>“Is this model fundamentally better than the last one?”</em></p>
+<ul>
+<li class="fragment">Evaluate over <strong>all thresholds</strong>.</li>
+<li class="fragment">Compare architectures fairly.</li>
+<li class="fragment"><strong>This is where Average Precision (AP) comes in.</strong></li>
+</ul>
+</div></div>
+</section>
 <section id="the-pr-curve-average-precision-ap" class="slide level2">
 <h2>The PR Curve &amp; Average Precision (AP)</h2>
 <div class="columns">
@@ -673,7 +695,7 @@
 </div>
 <p><br></p>
 </div><div class="column" style="width:50%;">
-<div id="fa27be83" class="cell" data-execution_count="7">
+<div id="a4af30fb" class="cell" data-execution_count="7">
 <div class="cell-output cell-output-display">
 <div class="quarto-figure quarto-figure-center">
 <figure>
@@ -712,7 +734,7 @@
 <section id="intersection-over-union-iou" class="slide level2">
 <h2>Intersection over Union (IoU)</h2>
 <p>How perfectly does the predicted bounding box overlap the <em>ground truth</em> box?</p>
-<div id="cd94c74c" class="cell" data-execution_count="8">
+<div id="70c119f9" class="cell" data-execution_count="8">
 <div class="cell-output cell-output-display">
 <div class="quarto-figure quarto-figure-center">
 <figure>
@@ -728,7 +750,7 @@
 <p>A prediction must be <strong>accurate in location</strong> (<span class="math inline">\(IoU \ge 0.5\)</span>) to count as a <strong>True Positive (TP)</strong>.</p>
 <div class="columns">
 <div class="column" style="width:55%;">
-<div id="7828c126" class="cell" data-execution_count="9">
+<div id="844417d7" class="cell" data-execution_count="9">
 <div class="cell-output cell-output-display">
 <div class="quarto-figure quarto-figure-center">
 <figure>
@@ -758,7 +780,7 @@
 <p>A common question is: <em>“What if the model predicts multiple boxes for the exact same object?”</em></p>
 <div class="columns">
 <div class="column" style="width:50%;">
-<div id="22714280" class="cell" data-execution_count="10">
+<div id="60a5aa02" class="cell" data-execution_count="10">
 <div class="cell-output cell-output-display">
 <div class="quarto-figure quarto-figure-center">
 <figure>
@@ -789,7 +811,7 @@
 <p>For segmentation, we evaluate how well the <strong>pixels</strong> overlap, not just bounding boxes.</p>
 <div class="columns">
 <div class="column" style="width:50%;">
-<div id="3454cca5" class="cell" data-execution_count="11">
+<div id="d9dd029c" class="cell" data-execution_count="11">
 <div class="cell-output cell-output-display">
 <div class="quarto-figure quarto-figure-center">
 <figure>
@@ -820,7 +842,7 @@
 <p>The most common metric in <strong>Medical AI</strong>. It is mathematically identical to the <strong>F1-score</strong> at the pixel level.</p>
 <div class="columns">
 <div class="column" style="width:50%;">
-<div id="19f80b1b" class="cell" data-execution_count="12">
+<div id="0917fa68" class="cell" data-execution_count="12">
 <div class="cell-output cell-output-display">
 <div class="quarto-figure quarto-figure-center">
 <figure>
@@ -897,7 +919,7 @@
 <section id="class-imbalance-fixing-the-bias" class="slide level2">
 <h2>Class Imbalance: Fixing the Bias</h2>
 <p>How do we stop the model from ignoring rare classes during training?</p>
-<div id="cd742cc7" class="cell" data-execution_count="13">
+<div id="0f8e7216" class="cell" data-execution_count="13">
 <div class="cell-output cell-output-display">
 <div class="quarto-figure quarto-figure-center">
 <figure>
@@ -988,7 +1010,7 @@
 <li>Growing gap between the two curves</li>
 </ul>
 </div><div class="column" style="width:58%;">
-<div id="44c3355a" class="cell" data-execution_count="14">
+<div id="dbcf08ef" class="cell" data-execution_count="14">
 <div class="cell-output cell-output-display">
 <div class="quarto-figure quarto-figure-center">
 <figure>
@@ -1043,7 +1065,7 @@
 <li>Curves close together — but both stuck high</li>
 </ul>
 </div><div class="column" style="width:55%;">
-<div id="aab724c0" class="cell" data-execution_count="15">
+<div id="2210635c" class="cell" data-execution_count="15">
 <div class="cell-output cell-output-display">
 <div class="quarto-figure quarto-figure-center">
 <figure>
@@ -1083,7 +1105,7 @@
 <li>Model generalizes — performs well on unseen data</li>
 </ul>
 </div><div class="column" style="width:55%;">
-<div id="fdd36cc6" class="cell" data-execution_count="16">
+<div id="415582ca" class="cell" data-execution_count="16">
 <div class="cell-output cell-output-display">
 <div class="quarto-figure quarto-figure-center">
 <figure>
@@ -1177,7 +1199,7 @@
 <section id="what-data-augmentation-does" class="slide level2">
 <h2>What Data Augmentation Does</h2>
 <p><strong>Concept:</strong> Artificially increase training data variety by applying transformations to existing images.</p>
-<div id="109389a5" class="cell" data-execution_count="17">
+<div id="b667b891" class="cell" data-execution_count="17">
 <div class="cell-output cell-output-display">
 <div class="quarto-figure quarto-figure-center">
 <figure>
@@ -1220,7 +1242,7 @@
 <div class="column" style="width:45%;">
 <p>🔴 <strong>Too High</strong>: Spikes/noise. Model “jumps” over the optimal solution.</p>
 </div><div class="column" style="width:55%;">
-<div id="55c8ec3d" class="cell" data-fig-height="1.6" data-execution_count="18">
+<div id="94a5d807" class="cell" data-fig-height="1.6" data-execution_count="18">
 <div class="cell-output cell-output-display">
 <div class="quarto-figure quarto-figure-center">
 <figure>
@@ -1234,7 +1256,7 @@
 <div class="column" style="width:45%;">
 <p>🔵 <strong>Too Small</strong>: Flat line. Model is too “timid” to learn.</p>
 </div><div class="column" style="width:55%;">
-<div id="0aea051a" class="cell" data-fig-height="1.6" data-execution_count="19">
+<div id="44e26bb6" class="cell" data-fig-height="1.6" data-execution_count="19">
 <div class="cell-output cell-output-display">
 <div class="quarto-figure quarto-figure-center">
 <figure>
@@ -1248,7 +1270,7 @@
 <div class="column" style="width:45%;">
 <p>🟢 <strong>Just Right</strong>: Smooth, rapid decay to a low plateau.</p>
 </div><div class="column" style="width:55%;">
-<div id="191b39a8" class="cell" data-fig-height="1.6" data-execution_count="20">
+<div id="c7f31b86" class="cell" data-fig-height="1.6" data-execution_count="20">
 <div class="cell-output cell-output-display">
 <div class="quarto-figure quarto-figure-center">
 <figure>
@@ -1263,7 +1285,7 @@
 <h2>Hyperparameters: Weight Decay</h2>
 <div class="columns">
 <div class="column" style="width:55%;">
-<div id="dfc99f73" class="cell" data-execution_count="21">
+<div id="18af22fd" class="cell" data-execution_count="21">
 <div class="cell-output cell-output-display">
 <div class="quarto-figure quarto-figure-center">
 <figure>
@@ -1309,7 +1331,7 @@
 <span id="cb9-6"><a href=""></a>            epochs<span class="op">=</span><span class="dv">100</span>, </span>
 <span id="cb9-7"><a href=""></a>            patience<span class="op">=</span><span class="dv">10</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div><div class="column" style="width:55%;">
-<div id="edf60ae8" class="cell" data-execution_count="22">
+<div id="bf94aab1" class="cell" data-execution_count="22">
 <div class="cell-output cell-output-display">
 <div class="quarto-figure quarto-figure-center">
 <figure>
@@ -1631,7 +1653,7 @@
         hideCursorTime: 5000,
 
         // Opens links in an iframe preview overlay
-        previewLinks: true,
+        previewLinks: false,
 
         // Transition style (none/fade/slide/convex/concave/zoom)
         transition: 'slide',
