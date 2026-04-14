@@ -135,9 +135,6 @@ while cap.isOpened():
     results = manager(im0)
 ```
 
-## Demonstration: Parking Management {.center}
-
-{{< video assets/parking_slots.mp4 width="900" height="500" autoplay="true" loop="true" muted="true" >}}
 
 # Kinematic and Spatial Measurement {.sdaia-dark background-gradient="linear-gradient(135deg, #1C355E, #00C9A7)"}
 

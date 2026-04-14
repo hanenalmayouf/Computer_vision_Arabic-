@@ -21,7 +21,7 @@ format:
     slide-number: c/t
     show-slide-number: all
     embed-resources: false
-    preview-links: true
+    preview-links: false
     theme: [default, slides/slides_template/assets/sdaia.scss]
     logo: slides/slides_template/assets/sdaia.svg
     transition: slide

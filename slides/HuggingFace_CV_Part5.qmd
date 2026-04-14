@@ -52,7 +52,7 @@ resources:
 ```
 
 ::: {.callout-tip appearance="minimal"}
-Prerequisites: Parts 1–5 complete. You know YOLO detect / segment / train / export.
+Prerequisites: Parts 1–4 complete. You know YOLO detect / segment / train / export.
 :::
 
 ## From YOLO to HuggingFace

@@ -1,0 +1,231 @@
+import json
+
+notebook = {
+  "cells": [
+    {
+      "cell_type": "markdown",
+      "metadata": {"id": "title"},
+      "source": [
+        "# YOLO Foundations Part 1: Tasks & Inference\n",
+        "\n",
+        "Welcome to the first lab for the Ultralytics YOLO Foundations course! In this lab, we will focus exclusively on running **inference** (`predict` mode) across the various tasks YOLO supports.\n",
+        "\n",
+        "You will not need to train any models today; instead, you will use pre-trained `.pt` weights that come directly from Ultralytics to see what YOLO can do out of the box."
+      ]
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {"id": "setup-md"},
+      "source": [
+        "## 1. Environment Setup\n",
+        "First, let's install the `ultralytics` package and its dependencies."
+      ]
+    },
+    {
+      "cell_type": "code",
+      "execution_count": None,
+      "metadata": {"id": "setup-code"},
+      "outputs": [],
+      "source": [
+        "!uv pip install -q ultralytics\n",
+        "import ultralytics\n",
+        "ultralytics.checks()"
+      ]
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {"id": "cli-md"},
+      "source": [
+        "## 2. Command Line Interface (CLI) Basics\n",
+        "\n",
+        "The YOLO CLI is the easiest way to get started. The basic syntax is `yolo TASK MODE ARGS`.\n",
+        "\n",
+        "Let's run a simple **Object Detection** task using the `predict` mode."
+      ]
+    },
+    {
+      "cell_type": "code",
+      "execution_count": None,
+      "metadata": {"id": "cli-code"},
+      "outputs": [],
+      "source": [
+        "!yolo task=detect mode=predict model=yolo26n.pt source=\"https://ultralytics.com/images/bus.jpg\""
+      ]
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {"id": "python-md"},
+      "source": [
+        "## 3. Python API & Exploring Tasks\n",
+        "\n",
+        "While the CLI is great for quick tests, the Python API is what you'll use to build applications.\n",
+        "\n",
+        "Below, we will explore the 5 core tasks: **Detection, Classification, Segmentation, Pose, and OBB** using the Python API."
+      ]
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {"id": "detect-md"},
+      "source": [
+        "### 3.1 Object Detection\n",
+        "Finds and localizes objects using bounding boxes."
+      ]
+    },
+    {
+      "cell_type": "code",
+      "execution_count": None,
+      "metadata": {"id": "detect-code"},
+      "outputs": [],
+      "source": [
+        "from ultralytics import YOLO\n",
+        "from PIL import Image\n",
+        "\n",
+        "# Load a pre-trained detection model\n",
+        "model = YOLO(\"yolo26n.pt\")\n",
+        "\n",
+        "# Run prediction\n",
+        "results = model.predict(source=\"https://ultralytics.com/images/zidane.jpg\")\n",
+        "\n",
+        "# Explore the results\n",
+        "result = results[0]\n",
+        "print(f\"Detected {len(result.boxes)} objects.\")\n",
+        "print(f\"Boxes Tensor Shape (N, 6): {result.boxes.data.shape}\")\n",
+        "\n",
+        "# Show the annotated image inline\n",
+        "Image.fromarray(result.plot()[:,:,::-1])  # Convert BGR to RGB for correct display"
+      ]
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {"id": "classify-md"},
+      "source": [
+        "### 3.2 Image Classification\n",
+        "Assigns a single label to the entire image."
+      ]
+    },
+    {
+      "cell_type": "code",
+      "execution_count": None,
+      "metadata": {"id": "classify-code"},
+      "outputs": [],
+      "source": [
+        "model_cls = YOLO(\"yolo26n-cls.pt\")\n",
+        "results_cls = model_cls.predict(source=\"https://ultralytics.com/images/bus.jpg\")\n",
+        "\n",
+        "result = results_cls[0]\n",
+        "print(f\"Top-1 Class index: {result.probs.top1}\")\n",
+        "print(f\"Top-1 Class label: {result.names[result.probs.top1]}\")\n",
+        "print(f\"Top-1 Confidence: {result.probs.top1conf:.2f}\")\n",
+        "\n",
+        "Image.fromarray(result.plot()[:,:,::-1])"
+      ]
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {"id": "segment-md"},
+      "source": [
+        "### 3.3 Instance Segmentation\n",
+        "Outlines the exact shape/pixel mask of each object."
+      ]
+    },
+    {
+      "cell_type": "code",
+      "execution_count": None,
+      "metadata": {"id": "segment-code"},
+      "outputs": [],
+      "source": [
+        "model_seg = YOLO(\"yolo26n-seg.pt\")\n",
+        "results_seg = model_seg.predict(source=\"https://ultralytics.com/images/zidane.jpg\")\n",
+        "\n",
+        "result = results_seg[0]\n",
+        "if result.masks:\n",
+        "    print(f\"Masks tensor shape (N, H, W): {result.masks.data.shape}\")\n",
+        "\n",
+        "Image.fromarray(result.plot()[:,:,::-1])"
+      ]
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {"id": "pose-md"},
+      "source": [
+        "### 3.4 Pose Estimation\n",
+        "Detects people and highlights key anatomical points (joints/keypoints)."
+      ]
+    },
+    {
+      "cell_type": "code",
+      "execution_count": None,
+      "metadata": {"id": "pose-code"},
+      "outputs": [],
+      "source": [
+        "model_pose = YOLO(\"yolo26n-pose.pt\")\n",
+        "results_pose = model_pose.predict(source=\"https://ultralytics.com/images/bus.jpg\")\n",
+        "\n",
+        "result = results_pose[0]\n",
+        "if result.keypoints:\n",
+        "    print(f\"Keypoints tensor shape (Persons, Keypoints, Coordinates): {result.keypoints.data.shape}\")\n",
+        "\n",
+        "Image.fromarray(result.plot()[:,:,::-1])"
+      ]
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {"id": "obb-md"},
+      "source": [
+        "### 3.5 Oriented Bounding Boxes (OBB)\n",
+        "Detects objects using rotated boxes, ideal for top-down or aerial imagery."
+      ]
+    },
+    {
+      "cell_type": "code",
+      "execution_count": None,
+      "metadata": {"id": "obb-code"},
+      "outputs": [],
+      "source": [
+        "# Due to yolo26 mostly defaulting to standard tasks, obb might fall back to yolo8/11. \n",
+        "# Ultralytics auto-downloads the best fit if model string is generic.\n",
+        "model_obb = YOLO(\"yolo11n-obb.pt\") \n",
+        "\n",
+        "# Using a sample aerial image for OBB\n",
+        "results_obb = model_obb.predict(source=\"https://ultralytics.com/images/boats.jpg\")\n",
+        "\n",
+        "result = results_obb[0]\n",
+        "if getattr(result, \"obb\", None) is not None:\n",
+        "    print(f\"OBB tensor shape (Boxes, 7): {result.obb.data.shape}\")\n",
+        "    print(\"OBB attributes: cx, cy, w, h, angle, conf, cls\")\n",
+        "\n",
+        "Image.fromarray(result.plot()[:,:,::-1])"
+      ]
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {"id": "conclusion-md"},
+      "source": [
+        "---\n",
+        "## End of Lab\n",
+        "You have successfully completed inference (`predict` mode) across all 5 major YOLO tasks using both the CLI and Python API! \n",
+        "\n",
+        "In Part 2 of this course, we will dive into Custom Data and Training (`train` mode)."
+      ]
+    }
+  ],
+  "metadata": {
+    "colab": {
+      "provenance": []
+    },
+    "kernelspec": {
+      "display_name": "Python 3",
+      "name": "python3"
+    },
+    "language_info": {
+      "name": "python"
+    }
+  },
+  "nbformat": 4,
+  "nbformat_minor": 0
+}
+
+with open("labs/01_tasks_inference.ipynb", "w", encoding="utf-8") as f:
+    json.dump(notebook, f, indent=2)
+
+print("Notebook generated at labs/01_tasks_inference.ipynb")
