@@ -1,7 +1,9 @@
 ---
-title: "Ultralytics YOLO Foundations: Part 3"
-subtitle: "Custom Data & Training"
+title: "أساسيات Ultralytics YOLO: الجزء الثالث"
+subtitle: "البيانات المخصصة وتدريب النماذج"
 date: today
+lang: ar
+dir: rtl
 format:
   revealjs:
     theme: [default, slides_template/assets/sdaia.scss]
@@ -15,198 +17,269 @@ format:
     title-slide-attributes:
       data-background-image: "slides_template/assets/anim.svg"
       data-background-opacity: "0.15"
+    header-includes: |
+      <style>
+      .sdaia-bg .slide-background.present,
+      .reveal.sdaia-bg .slide-background.present,
+      .sdaia-bg .slide-background.present .slide-background-content,
+      .reveal.sdaia-bg .slide-background.present .slide-background-content {
+        background: linear-gradient(135deg, #1C355E, #00C9A7) !important;
+      }
+      .reveal.sdaia-bg .slides section.present,
+      .reveal.sdaia-bg .slides section.present h1,
+      .reveal.sdaia-bg .slides section.present h2,
+      .reveal.sdaia-bg .slides section.present p,
+      .reveal.sdaia-bg .slides section.present li {
+        color: white !important;
+      }
+      .matching-game { margin-top: 20px; }
+      .matching-columns { display: flex; justify-content: space-between; gap: 20px; }
+      .scenarios-col, .solutions-col { width: 48%; }
+      .match-item { 
+          padding: 15px; margin: 10px 0; background: #1C355E; color: white; 
+          border: 2px solid #00AE8D; border-radius: 12px; cursor: pointer; 
+          text-align: center; transition: all 0.3s; font-size: 0.75em;
+      }
+      .match-item:hover { background: #00AE8D; color: #1C355E; }
+      .match-item.selected { border-color: #FFB548; background: #2d4e7e; box-shadow: 0 0 15px #FFB548; }
+      .match-item.matched { background: #6ABF4B !important; color: white !important; border-color: #6ABF4B !important; cursor: default; }
+      </style>
+      <script>
+      let selectedScenario = null;
+      let selectedScenarioBtn = null;
+
+      function selectScenario(btn, scenarioId) {
+          if (btn.classList.contains('matched')) return;
+          if (selectedScenarioBtn) selectedScenarioBtn.classList.remove('selected');
+          selectedScenario = scenarioId;
+          selectedScenarioBtn = btn;
+          btn.classList.add('selected');
+          document.getElementById('game-feedback').innerHTML = "اختر الحل المناسب الآن...";
+      }
+
+      function selectSolution(btn, solutionId) {
+          if (btn.classList.contains('matched') || !selectedScenario) return;
+          if (selectedScenario === solutionId) {
+              btn.classList.add('matched');
+              selectedScenarioBtn.classList.add('matched');
+              document.getElementById('game-feedback').innerHTML = "✅ أحسنت! تطابق صحيح.";
+              selectedScenario = null;
+              selectedScenarioBtn = null;
+          } else {
+              document.getElementById('game-feedback').innerHTML = "❌ خطأ! حاول مجدداً.";
+              btn.style.borderColor = "#E96852";
+              setTimeout(() => { btn.style.borderColor = "#00AE8D"; }, 1000);
+          }
+      }
+      </script>
 ---
-# 4. Training & ML Fundamentals {.sdaia-dark background-gradient="linear-gradient(135deg, #1C355E, #00C9A7)"}
+```{python}
+#| echo: false
+#| output: false
+import matplotlib.pyplot as plt
+try:
+    import matplotlib_inline.backend_inline
+    matplotlib_inline.backend_inline.set_matplotlib_formats('svg')
+except:
+    pass
+plt.rcParams['svg.fonttype'] = 'none'
 
-Teaching the model your custom data.
+def fix_ar(text):
+    return text
+```
 
-## Key Training Concepts 
+# 4. أساسيات التدريب وتعلم الآلة {.sdaia-dark data-background-gradient="linear-gradient(135deg, #1C355E, #00C9A7)" data-state="sdaia-bg"}
 
-Before we dive in, let's lock down the terminology:
+كيف تعلّم الكمبيوتر التعرف على أشيائك الخاصة؟
 
-- **Model**: The mathematical structure with learned weights (e.g., `weights/yolo26n.pt`).
-- **Epoch**: One complete pass through your *entire* training dataset.
-- **mAP (Mean Average Precision)**: The ultimate grading score (0-100%). It grades how well the model finds the object AND correctly identifies it!
+## مفاهيم أساسية قبل التدريب {.smaller}
 
-## Train vs. Validation
+قبل أن نبدأ، دعونا نتفق على هذه المصطلحات:
 
-To train a robust AI, split your data:
+- **النموذج (Model)**: "المخ" الرياضي الذي يحتوي على المعرفة (الأوزان) التي تعلمها (مثل `yolo26n.pt`).
+- **الحقبة (Epoch)**: دورة كاملة يقرأ فيها النموذج *كل* صور التدريب مرة واحدة ليذاكرها.
+- **مقياس الدقة (mAP)**: الدرجة النهائية من 0 إلى 100%. تقيس مدى براعة النموذج في تحديد مكان الكائن واسمه بدقة.
 
-- **Train Set (~80%)**: Data the model actively learns from.
-- **Validation Set (~20%)**: Unseen data evaluated *during* training to measure performance (`mAP`).
+## التدريب مقابل التحقق (مذاكرة أم اختبار؟) {.smaller}
 
-**Crucial**: Never train on validation data! This causes **Data Leakage** where the model memorizes answers but fails in the real world.
+لبناء نموذج ذكي، يجب أن نقسم بياناتنا (كما نُعدّ طالباً للاختبار):
 
-Split your data into train and validation sets [using Ultralytics Data Split](https://docs.ultralytics.com/reference/data/split/#ultralytics.data.split.autosplit) or [using thier Platform](https://docs.ultralytics.com/platform/data/datasets/)
-
-## Data Leakage: The Silent Killer
-
-**The Problem:** Validation/test data accidentally ends up in the training set.
-
-**Common Causes:** Duplicate images, wrong temporal splits, or preprocessing before splitting.
-
-**The Danger:** Val metrics look "perfect," but the model fails in production.
-
-**How to Avoid:**
-
-- Use `autosplit()` for automatic, safe partitioning.
-- Avoid manually copying images between split folders.
-- Check for duplicates/hashes before training.
-
-::: {.callout-warning appearance="simple" icon="false"}
-**Suspiciously perfect metrics? Check for leakage!**
+::: {.callout-tip}
+### تخيلها كأنها:
+- **بيانات التدريب (Train - 80%)**: هي "كتاب المذاكرة"؛ الأسئلة التي يراها الطالب ويحلها مئات المرات ليتعلم منها.
+- **بيانات التحقق (Val - 20%)**: هي "ورقة الاختبار"؛ أسئلة لم يراها الطالب أبداً، نستخدمها لنعرف هل هو فعلاً "فهم" المادة أم "حفظ" الإجابات فقط.
 :::
 
-## Transfer Learning
+**قاعدة ذهبية**: لا تدرّب النموذج أبداً على بيانات الاختبار! هذا يسمى **الغش في الاختبار (Data Leakage)** وسيجعل النموذج يبدو ذكياً في الأرقام لكنه فاشل تماماً في الواقع.
 
-- **`.pt` (Pretrained weights):** Starts with general features (edges, shapes) from large datasets. Fast training, needs little data. (*Always recommended!*)
-- **`.yaml` (Architecture Definition):** Blank blueprint. Random weights, meaning you train entirely from scratch.
+## تسريب البيانات: القاتل الصامت {.smaller}
 
-*Use a `.pt` model for all custom dataset training to leverage Transfer Learning.*
+**المشكلة:** بالغلط، دخلت صور من "الاختبار" إلى "أسئلة المذاكرة". النموذج حفظ الإجابة!
 
-## Understanding the Data Setup
+**الأسباب الشائعة:** وجود صور مكررة، أو تقسيم البيانات يدوياً بطريقة خاطئة.
 
-Different formats for different tasks:
+**الخطر:** الدرجات (mAP) تبدو 100% (ممتازة جداً!)، لكن عندما تستخدم الكاميرا في الواقع، النموذج لا يتعرف على شيء!
 
-- **Classification**: Relies *entirely* on folder structure (e.g., `train/cat/`, `train/dog/`). No label files needed!
-- **Detection & Segmentation**: Uses standard **YOLO format**, pairing images with `.txt` label files.
+**كيف تتجنبها؟**
+- استخدم خاصية التقسيم التلقائي `autosplit()` لضمان عدم اختلاط الأوراق.
+- لا تنسخ الصور يدوياً بين المجلدات.
+- تأكد من عدم وجود صور مكررة في بياناتك.
+
+::: {.callout-warning appearance="simple" icon="false"}
+**الدرجات تبدو مثالية جداً؟ ربما حدث تسريب للبيانات!**
+:::
+
+## نقل المعرفة (Transfer Learning) {.smaller}
+
+كيف نختصر الوقت؟ نستفيد من المعرفة السابقة!
+
+- **النماذج الجاهزة `.pt`**: نماذج سبق وأن تدربت على الملايين من الصور وتعرف الأشكال الأساسية (خطوط، دوائر، حواف). تستخدمها كنقطة انطلاق لتعلم أشياء جديدة بسرعة جداً وببيانات قليلة! (*يُنصح بها دائماً!*)
+- **النماذج الفارغة `.yaml`**: نماذج بيضاء تماماً (مثل طفل حديث الولادة). يجب أن تتعلم كل شيء من الصفر، وتحتاج لبيانات هائلة وأسابيع من التدريب.
+
+*استخدم دائماً نماذج `.pt` لتسريع التدريب.*
+
+## تنظيم مجلدات البيانات {.smaller}
+
+كل مهمة لها طريقة مختلفة في ترتيب الصور:
+
+- **التصنيف (Classification)**: يعتمد على *المجلدات* فقط. (تضع صور القطط في مجلد `cat` وصور الكلاب في مجلد `dog`). لا حاجة لملفات نصوص!
+- **الاكتشاف والتجزئة**: تستخدم **صيغة YOLO**، كل صورة يقابلها ملف نصي `.txt` يحمل نفس الاسم يحتوي على الإحداثيات.
 
 ```text
 my_dataset/
-├── images/
-│   ├── train/
-│   └── val/
-└── labels/
+├── images/           (مجلد الصور)
+│   ├── train/        (صور المذاكرة)
+│   └── val/          (صور الاختبار)
+└── labels/           (مجلد ملفات النصوص/الإحداثيات)
     ├── train/
     └── val/
 ```
 
-## Inside the Labels
+## ماذا يوجد داخل ملفات النصوص؟ {.smaller}
 
-- **Object Detection** (`.txt` Bounding Box):
-  `<class_index> <x_center> <y_center> <width> <height>`
+- **اكتشاف الكائنات** (مربع إحاطة):
+  `<رقم_الصنف> <مركز_x> <مركز_y> <العرض> <الارتفاع>`
 
-- **Instance Segmentation** (`.txt` Polygon):
-  `<class_index> <x1> <y1> <x2> <y2> ... <xn> <yn>`
+- **التجزئة** (مضلع بأضلاع كثيرة):
+  `<رقم_الصنف> <x1> <y1> <x2> <y2> ... <xn> <yn>`
 
-- **Pose Estimation** (`.txt` Keypoints):
-  `<class_index> <x_center> <y_center> <width> <height> <px1> <py1> <p1_vis> ...`
+- **تتبع الهيكل** (نقاط المفاصل):
+  `<رقم_الصنف> <مربع_الإحاطة> <نقطة_x1> <نقطة_y1> <رؤية_النقطة> ...`
 
-**⚠ Note:** Coordinates must **always be normalized** (0.0 to 1.0) to keep annotations independent of image resolution!
+**تنبيه ⚠️:** يجب أن تكون كل الإحداثيات **نسبية** (من 0.0 إلى 1.0) وليست أرقام بيكسل مطلقة!
 
-## The `data.yaml` File
+## ملف الإعدادات `data.yaml` {.smaller}
 
-Linking indices to names.
+هو بمثابة الفهرس الذي يربط أرقام الكائنات بأسمائها، ويدل النموذج على مكان مجلد الصور.
 
 ```yaml
 # data.yaml
-path: ../my_dataset
-train: images/train
-val: images/val
+path: ../my_dataset    # المسار الرئيسي للمجلد
+train: images/train    # مجلد المذاكرة
+val: images/val        # مجلد الاختبار
 
-names:
-  0: my_custom_object
-  1: another_object
+names:                 # أسماء الأشياء
+  0: my_custom_object  # الصنف رقم 0
+  1: another_object    # الصنف رقم 1
 ```
 
+# 5. تجهيز وتصنيف البيانات {.sdaia-dark data-background-gradient="linear-gradient(135deg, #1C355E, #00C9A7)" data-state="sdaia-bg"}
 
-# 5. Custom Data Labeling {.sdaia-dark background-gradient="linear-gradient(135deg, #1C355E, #00C9A7)"}
+منصة Ultralytics وأدوات التسمية
 
-The Ultralytics Platform
+## تصنيف بياناتك الخاصة (Labeling) {.sdaia-dark background-color="#1C355E" .smaller}
 
-## Labeling Your Own Data {.sdaia-dark background-color="#1C355E"}
+كتابة الإحداثيات يدوياً في ملفات نصية هو أمر مستحيل! لذلك نستخدم منصات مثل **Ultralytics HUB** أو Roboflow.
 
-Typing coordinates manually is impossible. Use **Ultralytics HUB**, Roboflow, or CVAT.
+1. ارفع صورك للمنصة.
+2. ارسم المربعات أو المضلعات حول الأشياء بالماوس بكل سهولة.
+3. قم بتصدير البيانات بصيغة **YOLO format** لتحصل على مجلدات (الصور والنصوص) جاهزة للتدريب فوراً!
 
-1. Upload your images.
-2. Draw bounding boxes or polygons visually.
-3. Export in **YOLO format** for a ready-to-train dataset structure!
+*المرجع: [منصة Ultralytics HUB](https://docs.ultralytics.com/hub/)*
 
-*Docs Reference: [Ultralytics HUB](https://docs.ultralytics.com/hub/)*
+## التصنيف التلقائي الذكي (AutoLabeling) {.smaller}
 
-## AutoLabeling with SAM
+وفر وقتك واستخدم نماذج الذكاء الاصطناعي "السحرية" لمساعدتك في التصنيف:
 
-Speed up the labeling process using foundational models:
+1. **التعرف من الصفر (Zero-Shot):** يمكنك استخدام نماذج ذكية جداً مثل **SAM** (Segment Anything Model).
+2. شغل هذا النموذج على صورك، وسيقوم تلقائياً برسم المربعات أو المضلعات حول الأشياء.
+3. هذه النماذج الجبارة تفهم وتتعرف على الأشياء العامة بدون أي تدريب مسبق!
+4. كل ما عليك فعله هو المراجعة وتصحيح الأخطاء البسيطة فقط — أسرع بكثير من الرسم اليدوي!
 
-1. **Zero-Shot Labeling:** Bypass manual labeling using **SAM** (Segment Anything Model) or **FastSAM**.
-2. Run the model on your raw dataset to automatically generate masks and bounding boxes.
-3. These models understand objects generically without needing custom training!
-4. Simply review and correct the auto-generated labels—drastically faster than drawing every box or polygon manually!
-
-*Docs Reference: [Segment Anything Models (SAM)](https://docs.ultralytics.com/models/sam/)*
-
+*المرجع: [نماذج SAM](https://docs.ultralytics.com/models/sam/)*
 
 
-# 6. Kickoff Training {.sdaia-dark background-gradient="linear-gradient(135deg, #1C355E, #00C9A7)"}
 
-Hyperparameters and Configs
+# 6. بدء التدريب (Kickoff) {.sdaia-dark data-background-gradient="linear-gradient(135deg, #1C355E, #00C9A7)" data-state="sdaia-bg"}
 
-## Training
+المعايير والإعدادات
 
-We can start training directly from the command line or Python API:
+## بدء التدريب {.smaller}
+
+بمجرد تجهيز بياناتك، يمكننا بدء التدريب بسطر واحد فقط:
 
 ```bash
 yolo train model=weights/yolo26n.pt data=data.yaml epochs=100 imgsz=640 batch=-1
 ```
 
 ```python
-# Python Equivalent
+# كود بايثون
 from ultralytics import YOLO
 
 model = YOLO("weights/yolo26n.pt")
 results = model.train(data="data.yaml", epochs=100, imgsz=640, batch=-1)
 ```
 
-## Resuming Training
+## استكمال التدريب (Resume) {.smaller}
 
-If your training is interrupted (e.g., power outage or Colab timeout), you can easily resume it from the last saved weights without losing progress!
+ماذا لو انقطع التيار الكهربائي أو توقف جهازك في منتصف التدريب؟
+لا تقلق، يمكنك استكمال التدريب من آخر نقطة وصل إليها النموذج دون خسارة الأيام السابقة!
 
 ```bash
-# Resume training from the last saved checkpoint
+# استكمال التدريب من آخر نقطة حفظ
 yolo train resume model=path/to/runs/train/exp/weights/last.pt
 ```
 
 ```python
-# Python Equivalent
+# كود بايثون
 from ultralytics import YOLO
 
-# Load the last checkpoint
+# تحميل آخر وزن تم حفظه
 model = YOLO("path/to/runs/train/exp/weights/last.pt")
 
-# Resume training
+# استئناف التدريب
 results = model.train(resume=True)
 ```
 
-## Important Hyperparameters
+## المعلمات (Hyperparameters) المهمة {.smaller}
 
-- `epochs` (Default: 100): Pass through the ENTIRE dataset. More = learns more, but risks overfitting.
-- `batch` (Default: 16): Images processed at once.
-  - Higher = faster, stable, takes more GPU memory.
-  - Smaller = adds noise, longer training.
-  - *Pro-tip*: Use `batch: -1` for **AutoBatch** to maximize your GPU memory without crashing!
+- **الحقبة (Epoch)**: عدد مرات "قراءة الكتاب" بالكامل. 
+  - *تخيل*: إذا قرأت الكتاب مرة واحدة (Epoch 1) قد لا تحفظه، وإذا قرأته 10,000 مرة قد تحفظه بصماً دون فهم! (نستهدف رقم متوازن مثل 100).
+- **الدفعة (Batch)**: كم صورة يذاكرها النموذج "في نفس اللحظة" قبل أن يأخذ استراحة ليعدل معلوماته.
+  - *نصيحة*: استخدم `batch=-1` وسيقوم YOLO باختيار أنسب حجم يناسب جهازك تلقائياً!
 
-## Hyperparameters: Image Size and Hardware
+## معلمات إضافية: حجم الصورة والعتاد {.smaller}
 
-- `imgsz` (Default: 640): Target image size. Larger sizes (e.g., 1024) capture more detail (great for tiny objects!) but use more RAM and are slower.
-- `device` (Default: ''): Specify GPUs (e.g., `device=0,1`) to trigger multi-GPU training!
+- `imgsz` (الافتراضي 640): حجم الصورة أثناء التدريب. الأحجام الكبيرة (مثل 1024) تلتقط تفاصيل أدق (ممتازة للأشياء الصغيرة جداً!) لكنها تستهلك ذاكرة أكبر وبطيئة جداً.
+- `device` (الافتراضي ''): تحديد كروت الشاشة (مثال `device=0,1`) لتفعيل التدريب على أكثر من كرت معاً!
 
-## 💡 Tip for Tiny Objects: SAHI
+## 💡 خدعة للأشياء الصغيرة جداً: SAHI {.smaller}
 
-**Problem:** A 4K image resized to 640px makes tiny objects *invisible* to YOLO.
+**المشكلة:** إذا صغرنا صورة بدقة 4K إلى 640 بيكسل للتدريب، ستختفي الأشياء الصغيرة تماماً ولن يراها النموذج!
 
-**Solution — [SAHI](https://docs.ultralytics.com/guides/sahi-tiled-inference/) (Slicing Aided Hyper Inference):**
+**الحل السحري — [SAHI](https://docs.ultralytics.com/guides/sahi-tiled-inference/) (الاستدلال المساعد بالتقسيم):**
 
-1. **Slice** the large image into small, overlapping tiles
-2. **Run YOLO** on each tile at full resolution
-3. **Merge** all detections back together automatically
+1. **التقسيم (Slice)**: يقوم بتقطيع الصورة الكبيرة إلى مربعات صغيرة متداخلة.
+2. **الاستدلال**: يشغل YOLO على كل مربع صغير بدقته الأصلية العالية.
+3. **الدمج**: يجمع كل المربعات ونتائجها ليعيدها صورة واحدة كاملة!
 
-## Demonstration: SAHI Sliced Inference {.center}
+## عرض توضيحي: تقنية SAHI {.center}
 
 {{< video assets/slides/outputs/videos/task-sahi-inference.mp4 width="900" height="500" autoplay="true" loop="true" muted="true" >}}
 
-## Using Config Files (Best Practice)
+## استخدام ملفات الإعدادات (أفضل ممارسة) {.smaller}
 
-For reproducibility, put arguments into a `experiment.yaml` file:
+بدلاً من كتابة كل المعلمات في سطر واحد طويل، ضعها في ملف `experiment.yaml`:
 
 ```yaml
 # experiment.yaml
@@ -219,31 +292,31 @@ batch: 16
 imgsz: 640
 ```
 
-Run with:
 ```bash
+# تشغيل التدريب من ملف الإعدادات
 yolo cfg=experiment.yaml
 ```
 
-## Using Config Files
+## استخدام ملفات الإعدادات في بايثون {.smaller}
 
 ```python
-# Python Equivalent
+# كود بايثون
 from ultralytics import YOLO
 
 model = YOLO("yolo26s.pt")
 model.train(cfg="experiment.yaml")
 ```
 
-## Experiment Tracking
+## تتبع التجارب (Experiment Tracking) {.smaller}
 
-Ultralytics seamlessly integrates with popular MLOps tools to log **metrics** (mAP, loss) and **matrices** (confusion matrix) during training.
+تتكامل Ultralytics بسلاسة مع أدوات MLOps لتسجيل ومراقبة **المقاييس** (الدقة، الخسارة) ورسم **المصفوفات** (مصفوفة الارتباك) الحية أثناء التدريب.
 
-::::{.columns}
+:::::{.columns}
 
 :::{.column}
-**Supported Integrations:**
+**أدوات المراقبة المدعومة:**
 
-- **TensorBoard** (Built-in)
+- **TensorBoard** (مدمجة)
 - **Weights & Biases (W&B)**
 - **Comet**
 - **ClearML**
@@ -252,54 +325,86 @@ Ultralytics seamlessly integrates with popular MLOps tools to log **metrics** (m
 
 :::{.column}
 ```bash
-# Enable TensorBoard logging
+# تفعيل التسجيل في TensorBoard
 yolo settings tensorboard=True
-# In terminal
+
+# تشغيل اللوحة في موجّه الأوامر
 tensorboard --logdir runs/train
-# or in colab
+
+# أو داخل Google Colab
 %load_ext tensorboard
 %tensorboard --logdir path/to/runs
 ```
 :::
 ::::
 
-*Docs Reference: [Integrations](https://docs.ultralytics.com/integrations/)*
+*المرجع: [التكامل مع الأدوات](https://docs.ultralytics.com/integrations/)*
 
 
 
-## Data Augmentation {.smaller}
+## تعزيز البيانات (Data Augmentation) {.smaller}
 
-YOLO natively supports **Albumentations** to improve model robustness, applying default augmentations automatically if installed.
+يدعم YOLO مكتبة **Albumentations** لتعزيز قوة النموذج. ويقوم بتطبيق تأثيرات (مثل تدوير الصورة، تغيير الألوان، التشويش) تلقائياً أثناء التدريب!
 
-**Teaser:** You'll learn why and when to use data augmentation in Part 4 — it's your key weapon against overfitting!
+**تشويقة:** سنتعلم لماذا ومتى نستخدم تعزيز البيانات في الجزء الرابع — إنه سلاحك السري ضد "الحفظ الأعمى" (Overfitting)!
 
-*Docs Reference: [Albumentations Integration](https://docs.ultralytics.com/integrations/albumentations/)*
+# 🎮 تحدي المدرب الذكي {.sdaia-dark data-background-gradient="linear-gradient(135deg, #1C355E, #00C9A7)" data-state="sdaia-bg"}
 
+اختبر معرفتك في أساسيات التدريب
 
-# Conclusion {.sdaia-dark background-gradient="linear-gradient(135deg, #1C355E, #00C9A7)"}
+## تحدي التوصيل: إعدادات التدريب {.smaller}
 
-Wrapping Up Custom Training
+وصل المصطلح بالوصف الذي يناسبه:
 
-## Summary
-
-- **Data Setup**: Formatting datasets correctly for YOLO tasks and avoiding data leaks.
-- **Labeling tools**: Using Ultralytics HUB and auto-labeling with SAM.
-- **Training**: Initiating and resuming training runs efficiently.
-- **Hyperparameters**: Understanding epochs, batch sizes, optimizers, and tracking experiments.
-
-## Next Steps
-
-Next up: **Evaluation & Deployment**
-
-- How to measure your model's real-world accuracy (mAP, Precision, Recall).
-- Deploying your trained model to run blazingly fast in production.
-
-## Q&A {.sdaia-dark background-color="#1C355E"}
-
-::: {.r-fit-text}
-**Thank You!**
-
-Any questions?
-:::
+<div class="matching-game">
+  <div class="matching-columns">
+    <div class="scenarios-col">
+      <div class="match-item" id="s1" onclick="selectScenario(this, 'epoch')">📖 قراءة الكتاب بالكامل مرة واحدة</div>
+      <div class="match-item" id="s2" onclick="selectScenario(this, 'batch')">📸 عدد الصور المعالجة في نفس اللحظة</div>
+      <div class="match-item" id="s3" onclick="selectScenario(this, 'val')">📝 أسئلة الاختبار التي لم يراها النموذج</div>
+      <div class="match-item" id="s4" onclick="selectScenario(this, 'transfer')">🧠 البدء من معرفة سابقة لنموذج قديم</div>
+    </div>
+    <div class="solutions-col">
+      <div class="match-item" id="sol-batch" onclick="selectSolution(this, 'batch')">Batch Size</div>
+      <div class="match-item" id="sol-epoch" onclick="selectSolution(this, 'epoch')">Epoch</div>
+      <div class="match-item" id="sol-transfer" onclick="selectSolution(this, 'transfer')">Transfer Learning</div>
+      <div class="match-item" id="sol-val" onclick="selectSolution(this, 'val')">Validation Set</div>
+    </div>
+  </div>
+  <div id="game-feedback" style="margin-top:20px; font-weight:bold; text-align:center; min-height:1.5em;"></div>
+</div>
 
 
+# الخاتمة {.sdaia-dark data-background-gradient="linear-gradient(135deg, #1C355E, #00C9A7)" data-state="sdaia-bg"}
+
+نهاية جزء تدريب النماذج
+
+## ملخص ما تعلمناه {.smaller}
+
+- **إعداد البيانات**: كيف ننظم المجلدات ونكتب ملفات `data.yaml` ليفهمها YOLO وكيف نتجنب تسريب البيانات.
+- **أدوات التصنيف**: استخدام المنصات والتصنيف التلقائي السريع عبر SAM.
+- **التدريب**: كيف نبدأ ونتوقف ونستكمل التدريب في أي وقت.
+- **المعلمات**: فهم معنى الحقبة (Epochs)، الدفعات (Batch)، وتتبع النتائج.
+
+## الخطوات القادمة {.smaller}
+
+في الدرس القادم: **التقييم والنشر (Evaluation & Deployment)**
+
+- كيف نقيس مدى ذكاء النموذج بأرقام حقيقية (mAP، الدقة، الاستدعاء).
+- كيف نحول النموذج إلى نسخة نهائية سريعة جداً للعمل الحقيقي!
+
+## أسئلة وأجوبة {.sdaia-dark background-color="#1C355E"}
+
+<br><br><br>
+<div style="text-align: center; font-size: 2em; line-height: 1.5;">
+**شكراً لاهتمامكم ووقتكم** <br>
+<span style="font-size: 0.7em; color: #00C9A7;">يُسعدني الإجابة على استفساراتكم ومناقشاتكم</span>
+</div>
+
+<style>
+  /* Fix RTL overflow and styling */
+  .reveal .slide {
+    text-align: right;
+    direction: rtl;
+  }
+</style>

@@ -1,7 +1,9 @@
 ---
-title: "Ultralytics YOLO Foundations: Part 2"
-subtitle: "Real World Use Cases & Solutions"
+title: "أساسيات Ultralytics YOLO: الجزء الثاني"
+subtitle: "حالات الاستخدام والحلول الواقعية"
 date: today
+lang: ar
+dir: rtl
 format:
   revealjs:
     theme: [default, slides_template/assets/sdaia.scss]
@@ -15,111 +17,184 @@ format:
     title-slide-attributes:
       data-background-image: "slides_template/assets/anim.svg"
       data-background-opacity: "0.15"
+    header-includes: |
+      <style>
+      .sdaia-bg .slide-background.present,
+      .reveal.sdaia-bg .slide-background.present,
+      .sdaia-bg .slide-background.present .slide-background-content,
+      .reveal.sdaia-bg .slide-background.present .slide-background-content {
+        background: linear-gradient(135deg, #1C355E, #00C9A7) !important;
+      }
+      .reveal.sdaia-bg .slides section.present,
+      .reveal.sdaia-bg .slides section.present h1,
+      .reveal.sdaia-bg .slides section.present h2,
+      .reveal.sdaia-bg .slides section.present p,
+      .reveal.sdaia-bg .slides section.present li {
+        color: white !important;
+      }
+      .matching-game { margin-top: 20px; }
+      .matching-columns { display: flex; justify-content: space-between; gap: 20px; }
+      .scenarios-col, .solutions-col { width: 48%; }
+      .match-item { 
+          padding: 15px; margin: 10px 0; background: #1C355E; color: white; 
+          border: 2px solid #00AE8D; border-radius: 12px; cursor: pointer; 
+          text-align: center; transition: all 0.3s; font-size: 0.75em;
+      }
+      .match-item:hover { background: #00AE8D; color: #1C355E; }
+      .match-item.selected { border-color: #FFB548; background: #2d4e7e; box-shadow: 0 0 15px #FFB548; }
+      .match-item.matched { background: #6ABF4B !important; color: white !important; border-color: #6ABF4B !important; cursor: default; }
+      </style>
+      <script>
+      let selectedScenario = null;
+      let selectedScenarioBtn = null;
+
+      function selectScenario(btn, scenarioId) {
+          if (btn.classList.contains('matched')) return;
+          if (selectedScenarioBtn) selectedScenarioBtn.classList.remove('selected');
+          selectedScenario = scenarioId;
+          selectedScenarioBtn = btn;
+          btn.classList.add('selected');
+          document.getElementById('game-feedback').innerHTML = "اختر الحل المناسب الآن...";
+      }
+
+      function selectSolution(btn, solutionId) {
+          if (btn.classList.contains('matched') || !selectedScenario) return;
+          if (selectedScenario === solutionId) {
+              btn.classList.add('matched');
+              selectedScenarioBtn.classList.add('matched');
+              document.getElementById('game-feedback').innerHTML = "✅ أحسنت! تطابق صحيح.";
+              selectedScenario = null;
+              selectedScenarioBtn = null;
+          } else {
+              document.getElementById('game-feedback').innerHTML = "❌ خطأ! حاول مجدداً.";
+              btn.style.borderColor = "#E96852";
+              setTimeout(() => { btn.style.borderColor = "#00AE8D"; }, 1000);
+          }
+      }
+      </script>
 ---
+```{python}
+#| echo: false
+#| output: false
+import matplotlib.pyplot as plt
+try:
+    import matplotlib_inline.backend_inline
+    matplotlib_inline.backend_inline.set_matplotlib_formats('svg')
+except:
+    pass
+plt.rcParams['svg.fonttype'] = 'none'
 
-# 3. Real World Use Cases & Solutions {.sdaia-dark background-gradient="linear-gradient(135deg, #1C355E, #00C9A7)"}
+def fix_ar(text):
+    return text
+```
 
-Beyond bounding boxes: actionable insights.
 
-## The "After" of Inference
+# 3. حالات الاستخدام والحلول الواقعية {.sdaia-dark data-background-gradient="linear-gradient(135deg, #1C355E, #00C9A7)" data-state="sdaia-bg"}
 
-You now know how to run tasks like detection and segmentation using pre-trained models.
+أبعد من مجرد مربعات على شاشة: كيف نستفيد من النتائج؟
 
-But what happens **AFTER** the model outputs its predictions? 
+## قصة المساعد الذكي {.smaller}
 
-- Often, you don't just want bounding boxes drawn on an image. 
-- You want **actionable insights**. 
-- You want to trigger alerts, count items, or manage entire systems.
+تخيل أن لديك مساعداً يراقب الكاميرات، هو ذكي جداً ويستطيع رؤية "مربعات" حول كل شيء، لكنه يحتاج لتعليمات واضحة:
 
-## Ultralytics Solutions
+- **الرؤية (Inference):** هي قدرة المساعد على قول: "هذه سيارة، وهذا إنسان".
+- **الفعل (Solution):** هو ما تطلبه منه فعله بهذه المعلومة.
 
-Ultralytics provides a suite of high-level **Solutions** that act as wrappers around your AI model.
+::: {.callout-tip}
+### فكر فيها كأنها:
+"المساعد رأى لصاً (رؤية).. الآن يجب عليه أن يدق الجرس (حل واقعي)!"
+:::
 
-They allow you to deploy world-class computer vision systems with just a few lines of code.
+## حلول Ultralytics الجاهزة {.smaller}
 
-## Solution Categories
+توفر Ultralytics مجموعة من **الحلول (Solutions)** الجاهزة التي تغلف نموذج الذكاء الاصطناعي وتسهل استخدامه.
 
-1. **Region and Boundary Analytics:** Counting, Zones, Parking, Queues
-2. **Kinematic and Spatial Measurement:** Speed, Distance, VisionEye
-3. **Data Aggregation and Visualization:** Analytics, Heatmaps
-4. **Image Output Manipulation:** Cropping, Blurring
-5. **Specialized Model Heads:** Instance Segmentation Tracking, Workouts
-6. **External Integrations:** Live Inference (Streamlit), Security Alarms
-7. **Multimodal Embeddings:** Similarity Search
+تسمح لك هذه الحلول ببناء أنظمة رؤية حاسوبية احترافية ببضعة أسطر برمجية فقط!
 
-## Where are my results saved?
+## فئات الحلول {.smaller}
 
-By default, Ultralytics creates a `runs/` directory in your current working directory.
+1. **تحليلات المناطق والحدود:** عد الأشياء، مراقبة المناطق، إدارة المواقف، وخطوط الانتظار.
+2. **القياسات الحركية والمكانية:** حساب السرعة، قياس المسافات، ومجال الرؤية.
+3. **تجميع البيانات وتصورها:** التحليلات الإحصائية، والخرائط الحرارية (Heatmaps).
+4. **تعديل مخرجات الصور:** قص الأشياء، أو طمسها (التمويه للخصوصية).
+5. **النماذج المتخصصة:** تتبع التجزئة، وتتبع التمارين الرياضية (Workouts).
+6. **التكامل مع الأنظمة:** البث المباشر (Streamlit)، وأنظمة الإنذار الأمنية.
+
+## أين تُحفظ نتائجي؟ {.smaller}
+
+افتراضياً، تقوم Ultralytics بإنشاء مجلد باسم `runs/` في نفس مكان عملك الحالي:
 
 ```text
-project_root/
+مجلد_مشروعك/
 └── runs/
     ├── detect/
-    │   ├── predict/          # CLI predictions
-    │   └── train/            # Training results (weights, plots)
+    │   ├── predict/          # نتائج التوقع (الصور والفيديوهات)
+    │   └── train/            # نتائج التدريب (الأوزان، الرسوم البيانية)
     ├── segment/
     │   └── predict/
-    └── solutions/            # Logged frames & data
+    └── solutions/            # إحصائيات الحلول (كالجداول الزمنية للعد)
 ```
 
 ::: {.callout-note}
-You can change the output directory using the `project` and `name` arguments in both CLI and Python.
+يمكنك تغيير مكان الحفظ واسم المجلد باستخدام أوامر `project` و `name` في الأكواد.
 :::
 
-# Region & Boundary Analytics {.sdaia-dark background-gradient="linear-gradient(135deg, #1C355E, #00C9A7)"}
+# تحليلات المناطق والحدود {.sdaia-dark data-background-gradient="linear-gradient(135deg, #1C355E, #00C9A7)" data-state="sdaia-bg"}
 
-Counting, Zones, and Queues
+العد، المناطق، والطوابير
 
-## Region and Boundary Analytics
+## تحليل المناطق والحدود {.smaller}
 
-These solutions rely on defining geospatial boundaries (lines or polygons) in the frame and cross-referencing tracked object coordinates.
+تعتمد هذه الحلول على رسم خطوط أو مضلعات وهمية (رقمية) على الفيديو، ومراقبة الكائنات عندما تتقاطع معها.
 
-- **Object Counting:** Evaluates line vector intersections.
-- **Regions:** Evaluates continuous occupancy inside a polygon.
-- **Parking Management:** Binary state (occupied/empty) for small polygons.
-- **Queue Management:** Measures object wait times in regions.
-- **Track Objects in Zone:** Masking filter to isolate tracking.
+- **عد الكائنات (Object Counting):** يحسب عدد الأشياء التي تعبر خطاً معيناً.
+- **مراقبة المناطق:** يتأكد مما إذا كانت الأشياء داخل أو خارج منطقة محددة.
+- **إدارة المواقف (Parking):** يراقب المواقف (مشغول/فارغ) برسم مضلعات صغيرة عليها.
+- **إدارة الطوابير (Queues):** يقيس مدة انتظار الأشخاص في منطقة معينة.
 
-## Example: Object Counting
+## مثال: عد الكائنات (Object Counting) {.smaller}
 
-Count objects passing through an area or crossing a line.
-*[View Official Documentation](https://docs.ultralytics.com/guides/object-counting/)*
+ببساطة: "عد أي شخص يلمس هذا الخط الأخضر".
 
+:::: {.columns}
+::: {.column width="50%"}
 ```python
-import cv2
 from ultralytics import solutions
 
-cap = cv2.VideoCapture("videos/traffic.mp4")
-line_points = [(100, 500), (900, 500)]
+# 1. حدد الخط أو المنطقة
+line = [(100, 500), (900, 500)] 
 
+# 2. شغل العداد
 counter = solutions.ObjectCounter(
-    show=True, region=line_points, model="weights/yolo26n.pt"
+    region=line, 
+    model="yolo11n.pt"
 )
-
-while cap.isOpened():
-    success, im0 = cap.read()
-    if not success: break
-    results = counter(im0)
 ```
+:::
+
+::: {.column width="50%"}
+![](object_counting_fun.png){fig-align="center" width="450"}
+:::
+::::
 
 
 
 
-## Demonstration: Object Counting {.center}
+## عرض توضيحي: عد الكائنات {.center}
 
 {{< video assets/slides/outputs/videos/solution-counting.mp4 width="900" height="500" autoplay="true" loop="true" muted="true" >}}
 
 
-## Example: Parking Management
+## مثال: إدارة مواقف السيارات {.smaller}
 
-Organize and direct vehicle flow in parking areas.
-*[View Official Documentation](https://docs.ultralytics.com/guides/parking-management/)*
+تنظيم وتوجيه حركة السيارات في المواقف ومعرفة الشاغر منها.
 
 ```python
 import cv2
 from ultralytics import solutions
 
 cap = cv2.VideoCapture("videos/traffic.mp4")
+# إحداثيات كل موقف سيارة على حدة
 parking_spots = [
     [(10, 10), (10, 50), (100, 50), (100, 10)],
     [(110, 10), (110, 50), (200, 50), (200, 10)]
@@ -136,68 +211,84 @@ while cap.isOpened():
 ```
 
 
-# Kinematic and Spatial Measurement {.sdaia-dark background-gradient="linear-gradient(135deg, #1C355E, #00C9A7)"}
+# القياسات الحركية والمكانية {.sdaia-dark data-background-gradient="linear-gradient(135deg, #1C355E, #00C9A7)" data-state="sdaia-bg"}
 
-Speed, Distance, and Proximity
+السرعة، المسافات، ومجال الرؤية
 
-## Kinematic and Spatial Measurement
+## المسطرة الذكية (القياس المكاني) {.smaller}
 
-Calculate physical, real-world metrics based on relative 2D box positions.
+كيف يعرف الكمبيوتر المسافة وهو يرى مجرد "بكسلات" (نقاط) على الشاشة؟
 
-- **Distance Calculation**: Compares two moving objects to each other.
-- **VisionEye View**: Compares the distance from tracking objects to a single, static observer point.
-- **Speed Estimation**: Tracks the delta of an individual object's position over time, accounting for perspective.
+::: {.callout-tip}
+### تشبيه المسطرة
+تخيل أنك تضع مسطرة على شاشة التلفاز؛ المسطرة تقيس بالسنتيمتر، لكن في الحقيقة السيارة التي تراها قد قطعت كيلومترات!
+نحن نعلم الكمبيوتر "كم متراً حقيقياً يساويه كل بكسل على الشاشة".
+:::
 
-## Example: Speed Estimation
+- **حساب المسافة (Distance)**: مثل "المتر الرقمي" يقيس الفراغ بين شخصين (مثلاً للتباعد الاجتماعي).
+- **عين الرؤية (VisionEye)**: مثل "رادار ثابت" يقيس بعدك عن الكاميرا.
+- **تقدير السرعة (Speed Estimation)**: مثل "ساهر الرقمي" يحسب المسافة المقطوعة مقسومة على الزمن.
 
-Estimate object speed using tracking techniques and perspective transformations.
-*[View Official Documentation](https://docs.ultralytics.com/guides/speed-estimation/)*
+## مثال: تقدير السرعة {.smaller}
+
+الجزء الأهم هو `meter_per_pixel`؛ هو الجسر الذي يربط الشاشة بالواقع.
 
 ```python
 import cv2
 from ultralytics import solutions
 
 cap = cv2.VideoCapture("videos/traffic.mp4")
-# ... extract fps
-speedestimator = solutions.SpeedEstimator(
-    show=True, model="weights/yolo26n.pt",
-    fps=30, meter_per_pixel=0.05, 
+# ضبط ساهر الرقمي
+speed_radar = solutions.SpeedEstimator(
+    show=True, model="yolo11n.pt",
+    meter_per_pixel=0.01 
 )
 
 while cap.isOpened():
     success, im0 = cap.read()
     if not success: break
-    results = speedestimator(im0)
+    results = speed_radar(im0)
 ```
 
-## Demonstration: Speed Estimation {.center}
+::: {.callout-note}
+### لماذا نحتاج السرعة؟
+1. **رصد المخالفات**: تجاوز السرعة المسموحة في الطرق.
+2. **تحليل الرياضة**: حساب سرعة ركض اللاعبين أو سرعة الكرة.
+3. **الأمان**: تنبيه الآلات في المصانع إذا اقتربت منها سيارة بسرعة عالية.
+:::
+
+## عرض توضيحي: تقدير السرعة {.center}
 
 {{< video assets/slides/outputs/videos/solution-speed-estimation.mp4 width="900" height="500" autoplay="true" loop="true" muted="true" >}}
 
-# Data Aggregation & Visualization {.sdaia-dark background-gradient="linear-gradient(135deg, #1C355E, #00C9A7)"}
+# تجميع البيانات وتصورها {.sdaia-dark data-background-gradient="linear-gradient(135deg, #1C355E, #00C9A7)" data-state="sdaia-bg"}
 
-Analytics and Heatmaps
+التحليلات والخرائط الحرارية (Heatmaps)
 
-## Data Aggregation & Visualization
+## دفتر الملاحظات الذكي (تجميع البيانات) {.smaller}
 
-Aggregate detection and tracking data over time to produce high-level visual summaries and distributions.
+بدلاً من مجرد رؤية الكائنات، يقوم الكمبيوتر بتسجيل "تاريخ" ما حدث في تقارير بصرية.
 
-- **Analytics**: Plots statistical temporal trends (line graphs, pie charts) of class frequencies.
-- **Heatmaps**: Plots spatial density and accumulated movement paths directly onto the original image matrix.
+::: {.callout-tip}
+### تخيلها كأنها:
+- **التحليلات (Analytics)**: هي "التقرير الإحصائي"؛ كم سيارة مرت اليوم؟ متى كان وقت الذروة؟ (تظهر كرسوم بيانية).
+- **الخرائط الحرارية (Heatmaps)**: هي "آثار الأقدام"؛ أين وقف الناس أطول مدة؟ أي الرفوف في المتجر هي الأكثر جذباً؟ (تظهر كبقع ملونة فوق الفيديو).
+:::
 
-## Example: Analytics
+- **الهدف**: ليس مجرد "المراقبة"، بل "فهم السلوك" لاتخاذ قرارات تجارية ذكية.
 
-Discover patterns and make informed decisions (Line, Bar, Area, Pie).
-*[View Official Documentation](https://docs.ultralytics.com/guides/analytics/)*
+## مثال: التحليلات الإحصائية {.smaller}
+
+اكتشاف الأنماط واتخاذ قرارات مبنية على بيانات واضحة (رسوم خطية، أعمدة، أو دائرية).
 
 ```python
-video_path = "assets/Pull_ups.mp4"
-if not os.path.exists(video_path):
-    video_path = "slides/assets/Pull_ups.mp4"
-cap = cv2.VideoCapture(video_path)
+import os, cv2
+from ultralytics import solutions
+
+cap = cv2.VideoCapture("assets/Pull_ups.mp4")
 analytics = solutions.Analytics(
     show=True,
-    analytics_type="line", # "pie", "bar", "area"
+    analytics_type="line", # الخيارات: "pie", "bar", "area"
     model="weights/yolo26n.pt", 
 )
 
@@ -209,19 +300,17 @@ while cap.isOpened():
     results = analytics(im0, frame_count) 
 ```
 
-## Example: Heatmap
+## مثال: الخرائط الحرارية (بصمة الحركة) {.smaller}
 
-Visualize spatial density and movement patterns.
-*[View Official Documentation](https://docs.ultralytics.com/guides/heatmap/)*
+تساعدنا في تحويل الفيديو الجاف إلى "خريطة كنز" توضح لنا أين تتركز الأهمية.
 
 ```python
-video_path = "assets/videos/traffic.mp4"
-if not os.path.exists(video_path):
-    video_path = "slides/assets/videos/traffic.mp4"
-cap = cv2.VideoCapture(video_path)
+import os, cv2
+from ultralytics import solutions
+
+cap = cv2.VideoCapture("assets/videos/traffic.mp4")
 heatmap = solutions.Heatmap(
-    show=True,
-    model="weights/yolo26n.pt",
+    show=True, model="weights/yolo26n.pt",
     colormap=cv2.COLORMAP_JET
 )
 
@@ -234,36 +323,35 @@ while cap.isOpened():
 
 
 
-## Demonstration: Heatmap {.center}
+## عرض توضيحي: الخرائط الحرارية {.center}
 
 {{< video assets/slides/outputs/videos/solution-heatmap.mp4 width="900" height="500" autoplay="true" loop="true" muted="true" >}}
 
 
-# Image Output Manipulation {.sdaia-dark background-gradient="linear-gradient(135deg, #1C355E, #00C9A7)"}
+# تعديل مخرجات الصور {.sdaia-dark data-background-gradient="linear-gradient(135deg, #1C355E, #00C9A7)" data-state="sdaia-bg"}
 
-Cropping and Blurring
+القص والتمويه (Blurring)
 
-## Image Output Manipulation
+## تعديل مخرجات الصور {.smaller}
 
-Act purely as downstream image processing steps utilizing box/mask coordinates.
+خطوات معالجة للصور تتم بعد الاستدلال باستخدام إحداثيات المربعات.
 
-- **Object Cropping**: Slices out regions based on boxes and saves them as isolated image files (useful for dataset extraction).
-- **Object Blurring**: Applies a filter to obscure regions in the original full frame (privacy compliance).
+- **قص الكائنات (Cropping)**: استخراج الأشياء من الصورة وحفظ كل كائن في صورة منفصلة (مفيد جداً لبناء قواعد بيانات جديدة).
+- **تمويه الكائنات (Blurring)**: وضع تأثير "الضباب" على الكائنات (كالوجوه أو اللوحات) لحماية الخصوصية.
 
-## Example: Object Blurring
+## مثال: تمويه الكائنات (Blurring) {.smaller}
 
-Automatically blur bounding boxes or segmentation masks to protect privacy.
-*[View Official Documentation](https://docs.ultralytics.com/guides/object-blurring/)*
+طمس المربعات المكتشفة تلقائياً لحماية خصوصية الأفراد المارة أو لوحات السيارات.
 
 ```python
-video_path = "assets/Pull_ups.mp4"
-if not os.path.exists(video_path):
-    video_path = "slides/assets/Pull_ups.mp4"
-cap = cv2.VideoCapture(video_path)
+import os, cv2
+from ultralytics import solutions
+
+cap = cv2.VideoCapture("assets/Pull_ups.mp4")
 blurrer = solutions.ObjectBlurrer(
     show=True,
     model="weights/yolo26n.pt", 
-    blur_ratio=0.5, # percentage of blur intensity
+    blur_ratio=0.5, # نسبة قوة التمويه والضبابية
 )
 
 while cap.isOpened():
@@ -272,32 +360,36 @@ while cap.isOpened():
     results = blurrer(im0)
 ```
 
-# Specialized Model Heads {.sdaia-dark background-gradient="linear-gradient(135deg, #1C355E, #00C9A7)"}
+# النماذج المتخصصة {.sdaia-dark data-background-gradient="linear-gradient(135deg, #1C355E, #00C9A7)" data-state="sdaia-bg"}
 
-Segmentation and Pose
+التجزئة والهيكل
 
-## Specialized Model Heads
+## أبعد من مجرد مربعات (دقة التفاصيل) {.smaller}
 
-Utilize specific YOLO architectures (`YOLO-seg`, `YOLO-pose`) to extract granular, non-rectangular spatial data.
+أحياناً المربع لا يكفي؛ نحتاج لمعرفة الشكل الدقيق أو وضعية الجسم.
 
-- **Instance Seg Tracking**: Combines pixel-perfect masks with continuous track IDs.
-- **Workouts Monitoring**: Tracks human skeletal connections (pose keypoints) to evaluate biomechanical form.
+::: {.callout-tip}
+### تخيلها كأنها:
+- **التجزئة (Segmentation)**: مثل "قالب البسكويت"؛ هي لا تقول لك "هناك بسكويت" فحسب، بل تقصه من الأطراف بدقة. (تفيد في قياس حجم الأورام أو حدود الطريق للسيارات الذاتية).
+- **الهيكل (Pose)**: مثل "رسمة الرجل الخطية"؛ هي ترسم مفاصل الإنسان (أكتاف، ركب، مرافق). (تفيد في تصحيح وضعية التمارين أو اكتشاف السقوط لكبار السن).
+:::
 
-![Instance Segmentation Output](assets/slides/outputs/images/task-segmentation.png)
+- **السر**: نستخدم نماذج متخصصة مثل `YOLO-seg` و `YOLO-pose` للوصول لهذه الدقة.
 
-## Example: Workouts Monitoring
+![مخرجات التجزئة](assets/slides/outputs/images/task-segmentation.png){width="450"}
 
-Track and evaluate exercise form (like pushups) using YOLO Pose keypoints.
-*[View Official Documentation](https://docs.ultralytics.com/guides/workouts-monitoring/)*
+## مثال: مراقبة التمارين الرياضية {.smaller}
+
+تتبع وتقييم الأداء الرياضي (مثل العقلة أو الضغط) باستخدام نقاط الهيكل البشري.
 
 ```python
-video_path = "assets/Pull_ups.mp4"
-if not os.path.exists(video_path):
-    video_path = "slides/assets/Pull_ups.mp4"
-cap = cv2.VideoCapture(video_path)
+import os, cv2
+from ultralytics import solutions
+
+cap = cv2.VideoCapture("assets/Pull_ups.mp4")
 gym = solutions.AIGym(
     show=True,
-    kpts=[6, 8, 10], # default keypoints for pushups
+    kpts=[6, 8, 10], # النقاط الخاصة بالذراعين (لتمارين العقلة/الضغط)
     model="yolov8n-pose.pt", 
 )
 
@@ -307,64 +399,69 @@ while cap.isOpened():
     results = gym(im0)
 ```
 
-![Workouts Monitoring Output](assets/slides/outputs/images/task-pose.png)
+![مخرجات الهيكل](assets/slides/outputs/images/task-pose.png){width="450"}
 
-# External System Integrations {.sdaia-dark background-gradient="linear-gradient(135deg, #1C355E, #00C9A7)"}
+# 🏁 تحدي المبدعين: لعبة التوصيل الذكية {.sdaia-dark data-background-gradient="linear-gradient(135deg, #1C355E, #00C9A7)" data-state="sdaia-bg"}
 
-Alarms, Web Apps, Embeddings
+وصل المشكلة بالحل البرمجي الصحيح
 
-## External Integrations & Embeddings
+## تحدي التوصيل: هل أنت مستعد؟ {.smaller}
 
-- **Live Inference with Streamlit**: Host a real-time, interactive web GUI for easy browser access.
-- **Security Alarm System**: Runs headless, communicates over SMTP to push email notifications upon triggers.
-- *(Bonus)* **Similarity Search**: Utilizes neural embeddings (CLIP) and Meta FAISS for natural language image retrieval.
+اضغط على **المشكلة** أولاً، ثم اضغط على **الحل** الذي تراه مناسباً:
 
-## Example: Security Alarm System
+<div class="matching-game">
+  <div class="matching-columns">
+    <div class="scenarios-col">
+      <div class="match-item" id="s1" onclick="selectScenario(this, 'speed')">🚗 سيارات تسير بسرعة جنونية</div>
+      <div class="match-item" id="s2" onclick="selectScenario(this, 'security')">🚨 دخول شخص لمنطقة محظورة</div>
+      <div class="match-item" id="s3" onclick="selectScenario(this, 'queue')">🛒 زحام شديد عند المحاسب</div>
+      <div class="match-item" id="s4" onclick="selectScenario(this, 'blur')">👤 وجوه تظهر بوضوح في الكاميرا</div>
+    </div>
+    <div class="solutions-col">
+      <div class="match-item" id="sol-blur" onclick="selectSolution(this, 'blur')">Object Blurring</div>
+      <div class="match-item" id="sol-speed" onclick="selectSolution(this, 'speed')">Speed Estimation</div>
+      <div class="match-item" id="sol-queue" onclick="selectSolution(this, 'queue')">Queue Management</div>
+      <div class="match-item" id="sol-security" onclick="selectSolution(this, 'security')">Security Alarm</div>
+    </div>
+  </div>
+  <div id="game-feedback" style="margin-top:20px; font-weight:bold; text-align:center; min-height:1.5em;"></div>
+</div>
 
-Trigger email alerts upon detecting specific objects.
-*[View Official Documentation](https://docs.ultralytics.com/guides/security-alarm-system/)*
-
-```python
-video_path = "assets/Pull_ups.mp4"
-if not os.path.exists(video_path):
-    video_path = "slides/assets/Pull_ups.mp4"
-cap = cv2.VideoCapture(video_path)
-securityalarm = solutions.SecurityAlarm(
-    show=True, model="weights/yolo26n.pt",
-    records=1, # send email after 1 detection
-)
-
-# Remember to use an App Password here if using Gmail!
-securityalarm.authenticate("sen@email", "PASS", "rec@email") 
-
-while cap.isOpened():
-    success, im0 = cap.read()
-    if not success: break
-    results = securityalarm(im0)
-```
-
-# Conclusion {.sdaia-dark background-gradient="linear-gradient(135deg, #1C355E, #00C9A7)"}
-
-Module Wrap-up
-
-## Summary
-
-- **Solutions**: High-level wrappers for tracking, counting, and geospatial analysis.
-- **Analytics**: Generating heatmaps and time-series data from detections.
-- **Integration**: Deploying security alarms and web demos.
-
-## Next Steps
-
-Next up: **Custom Data & Training**
-
-- Learn how to prepare your own datasets for YOLO.
-- Train custom models to detect specific objects.
-- Understand hyperparameter tuning and model tracking.
-
-## Q&A {.sdaia-dark background-color="#1C355E"}
-
-::: {.r-fit-text}
-**Thank You!**
-
-Any questions?
+::: {.fragment .fade-up}
+> [!IMPORTANT]
+> **الذكاء الحقيقي هو توظيف التقنية لحل مشاكل الناس اليومية!**
 :::
+
+# الخاتمة {.sdaia-dark data-background-gradient="linear-gradient(135deg, #1C355E, #00C9A7)" data-state="sdaia-bg"}
+
+نهاية الجزء الثاني
+
+## ملخص ما تعلمناه {.smaller}
+
+- **الحلول الجاهزة**: أدوات مبنية مسبقاً لتسهيل التتبع والعد والتحليلات.
+- **البيانات المتقدمة**: توليد الخرائط الحرارية والرسوم البيانية من حركات الأشياء.
+- **التكامل الواقعي**: بناء أنظمة إنذار أمني وحل مشاكل العمل الحقيقية.
+
+## الخطوات القادمة {.smaller}
+
+في الدرس القادم: **البيانات المخصصة والتدريب**
+
+- كيف نجهز بياناتنا الخاصة (صورنا الخاصة) لندرب YOLO عليها؟
+- تدريب نماذج خاصة لاكتشاف كائنات غير موجودة في النماذج الجاهزة.
+- فهم معايير الضبط وتقييم النماذج.
+
+## أسئلة وأجوبة {.sdaia-dark background-color="#1C355E" data-state="sdaia-bg"}
+
+<br><br><br>
+<div style="text-align: center; font-size: 2em; line-height: 1.5;">
+**شكراً لاهتمامكم ووقتكم** <br>
+<span style="font-size: 0.7em; color: #00C9A7;">يُسعدني الإجابة على استفساراتكم ومناقشاتكم</span>
+</div>
+
+<style>
+  /* Fix RTL overflow and styling */
+  .reveal .slide {
+    text-align: right;
+    direction: rtl;
+  }
+</style>

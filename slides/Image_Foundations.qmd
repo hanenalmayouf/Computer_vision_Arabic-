@@ -1,7 +1,9 @@
 ---
-title: "Digital Image Foundations"
-subtitle: "How computers perceive images"
+title: "أساسيات الصور الرقمية"
+subtitle: "كيف تدرك أجهزة الكمبيوتر الصور"
 date: today
+lang: ar
+dir: rtl
 format:
   revealjs:
     theme: [default, slides_template/assets/sdaia.scss]
@@ -18,53 +20,67 @@ format:
 resources:
   - "assets/**"
 ---
+```{python}
+#| echo: false
+#| output: false
+import matplotlib.pyplot as plt
+try:
+    import matplotlib_inline.backend_inline
+    matplotlib_inline.backend_inline.set_matplotlib_formats('svg')
+except:
+    pass
+plt.rcParams['svg.fonttype'] = 'none'
 
-# 1. Digital Image Foundations {.sdaia-dark background-gradient="linear-gradient(135deg, #1C355E, #00C9A7)"}
+def fix_ar(text):
+    return text
+```
 
-How computers store images
 
-## How We See: Light and The Human Eye
+# 1. أساسيات الصور الرقمية {.sdaia-dark data-background-gradient="linear-gradient(135deg, #1C355E, #00C9A7)"}
+
+كيف تقوم أجهزة الكمبيوتر بتخزين الصور
+
+## الضوء والعين البشرية {.smaller}
 
 :::: {.columns}
 ::: {.column width="50%"}
-- **1. Illumination**: Light from a source (e.g., the sun) hits an object.
-- **2. Reflection**: The object absorbs some colors and reflects others.
-- **3. Capture**: Reflected light enters the eye through the **pupil**.
-- **4. Processing**: The lens focuses light onto the **retina**. *Photoreceptors* (rods and cones) convert it to electrical signals for the brain.
+- **الإضاءة**: يصطدم الضوء الصادر من مصدر بجسم ما.
+- **الانعكاس**: يمتص الجسم ألواناً ويعكس أخرى.
+- **الالتقاط**: يدخل الضوء للعين من خلال **البؤبؤ**.
+- **المعالجة**: تركز العدسة الضوء على **الشبكية**. 
+
+> **ملاحظة:** تنقسم المستقبلات إلى **العصي** للرؤية الليلية وتحديد الأشكال، و **المخاريط** لتمييز الألوان.
 :::
 ::: {.column width="50%"}
 ![](assets/slides/human_vision_sdaia.png){fig-align="center"}
-<!-- Branded infographic of light reflecting into a human eye -->
 :::
 ::::
 
-## How Computers "See": The Digital Camera
+## الكاميرا الرقمية {.smaller}
 
 :::: {.columns}
 ::: {.column width="50%"}
-- **1. Capture**: Just like the eye, the camera captures reflected light.
-- **2. Lens & Aperture**: Light enters through an opening (aperture) and is focused by glass lenses.
-- **3. The Sensor**: Instead of a retina, light hits a **digital sensor** (CMOS/CCD).
-- **4. Digitization**: Millions of sensor *pixels* convert incoming photons into an electrical charge, which is translated into a digital matrix.
+- **الالتقاط**: تلتقط الكاميرا الضوء المنعكس.
+- **العدسة**: يدخل الضوء ويتم تركيزه بالعدسات.
+- **المستشعر**: يصطدم الضوء بـ **مستشعر رقمي** (CMOS/CCD).
+- **الرقمنة**: تحول *البكسلات* الفوتونات لشحنات تترجم لمصفوفة رقمية.
+
+> **ملاحظة:** زيادة عدد البكسلات (الميجابكسل) تزيد من دقة التفاصيل، لكنها تتطلب مساحة تخزين أكبر.
 :::
 ::: {.column width="50%"}
 ![](assets/slides/camera_vision_sdaia.png){fig-align="center"}
-<!-- Branded infographic of light reflecting into a digital camera lens -->
 :::
 ::::
 
-## Grayscale Images: Pixels & Coordinates
+## التدرج الرمادي (Grayscale) {.smaller}
 
-- Images are 2D matrices of numbers. The origin `(0,0)` is top-left.
-- Example: an 8x8 matrix where `0` is black and `1` is white.
-
+- الصور هي مصفوفات ثنائية الأبعاد. نقطة الأصل `(0,0)` أعلى اليسار.
+- في الصور القياسية (8-bit)، تتراوح قيم البكسل من `0` (أسود تام) إلى `255` (أبيض ناصع).
 
 ::::: {.columns}
-
 :::: {.column width="50%"}
-
 ```python
-# 8x8 matrix (0=black, 1=white)
+# مصفوفة مبسطة 8×8
 img = np.array([
     [0,0,0,0,0,0,0,0],
     [0,1,1,0,0,1,1,0],
@@ -75,13 +91,9 @@ img = np.array([
     [0,1,0,0,0,0,1,0],
     [0,0,0,0,0,0,0,0]
 ])
-
 ```
-
 ::::
-
 :::: {.column width="50%"}
-
 ```{python}
 #| echo: false
 #| fig-align: center
@@ -89,7 +101,6 @@ img = np.array([
 import numpy as np
 import matplotlib.pyplot as plt
 
-# 8x8 matrix (0=black, 1=white)
 img = np.array([
     [0,0,0,0,0,0,0,0],
     [0,1,1,0,0,1,1,0],
@@ -101,25 +112,23 @@ img = np.array([
     [0,0,0,0,0,0,0,0]
 ])
 
-fig, ax = plt.subplots(figsize=(4, 4))
+fig, ax = plt.subplots(figsize=(3, 3))
 ax.imshow(img, cmap='gray')
-
-# Annotate pixels with their values
 for i in range(8):
     for j in range(8):
         color = 'black' if img[i, j] == 1 else 'white'
         ax.text(j, i, img[i, j], ha='center', va='center', color=color)
-
 ax.axis('off')
 plt.show()
 ```
 ::::
 :::::
 
-## Color Images: The RGB Channels {.smaller}
+## الصور الملونة: قنوات RGB {.smaller}
 
-- Images are 3D matrices (height × width × **3 channels**).
-- **RGB**: Red, Green, Blue. Values range from `0` (dark) to `255` (bright).
+- مصفوفات ثلاثية الأبعاد (الارتفاع × العرض × **3 قنوات**).
+- **RGB**: (أحمر Red، أخضر Green، أزرق Blue).
+- تتراوح القيم في كل قناة من `0` (مطفأ) إلى `255` (مضاء).
 
 ```{python}
 #| echo: false
@@ -128,174 +137,256 @@ plt.show()
 import numpy as np
 import matplotlib.pyplot as plt
 
-# 4x4 image, 3 channels
 H, W, C = 4, 4, 3
-
-fig = plt.figure(figsize=(6, 6))
+fig = plt.figure(figsize=(4.5, 4.5))
 ax = fig.add_subplot(111, projection='3d')
-
-# Voxels need to be boolean arrays
-# Channels on X, Width on Y, Height on Z
 voxels = np.ones((C, W, H), dtype=bool)
-
-# Define colors for each voxel
 colors = np.empty(voxels.shape, dtype=object)
+colors[0, :, :] = '#ff6666'
+colors[1, :, :] = '#66ff66'
+colors[2, :, :] = '#6666ff'
 
-# Assign colors for each channel layer
-colors[0, :, :] = '#ff6666'  # Red channel
-colors[1, :, :] = '#66ff66'  # Green channel
-colors[2, :, :] = '#6666ff'  # Blue channel
-
-# Plot voxels
-# Note: alpha adds slight transparency so back layers are partially visible
 ax.voxels(voxels, facecolors=colors, edgecolor='black', linewidth=0.5, alpha=0.8)
-
-# Labels
 ax.set_xlabel('Channels (X)', labelpad=10)
 ax.set_ylabel('Width (Y)', labelpad=10)
 ax.set_zlabel('Height (Z)', labelpad=10)
-
-# Adjust 3D view angle to favor looking at the screen (Y-Z plane)
 ax.view_init(elev=20, azim=-35)
-
-# Remove grid and panes for cleaner look
 ax.grid(False)
-# Remove tick labels but keep ticks so axis labels are drawn accurately
 ax.set_xticklabels([])
 ax.set_yticklabels([])
 ax.set_zticklabels([])
-
 ax.xaxis.pane.fill = False
 ax.yaxis.pane.fill = False
 ax.zaxis.pane.fill = False
 ax.xaxis.pane.set_edgecolor('w')
 ax.yaxis.pane.set_edgecolor('w')
 ax.zaxis.pane.set_edgecolor('w')
-
 plt.tight_layout()
 plt.show()
 ```
 
+## مسابقة سريعة
 
-## Essential Image Libraries
+**اختبر معلوماتك**
 
-<br>
+ما هي أقصى قيمة لونية يمكن أن يأخذها بكسل واحد في قناة الألوان الحمراء (R) في صورة قياسية (8-bit)؟
 
-:::: {.columns}
+<div style="display: flex; justify-content: center; gap: 15px; margin: 30px 0;">
+  <button class="quiz-btn" onclick="checkQ1(100)">100</button>
+  <button class="quiz-btn" onclick="checkQ1(1)">1</button>
+  <button class="quiz-btn" onclick="checkQ1(255)">255</button>
+</div>
 
-::: {.column width="33%"}
-::: {.callout-note appearance="minimal" icon="false"}
-<div style="text-align: center; font-size: 3rem; margin-bottom: 0.5rem;">📷</div>
-<div style="text-align: center; font-size: 1.2rem; font-weight: bold; margin-bottom: 1rem; color: #1C355E;">OpenCV</div>
+<p id="feedback1" style="font-weight: bold; font-size: 1.1em; min-height: 40px; text-align: center; color: #00C9A7;"></p>
 
-Very fast C++ library mapped to Python. 
+<script>
+function checkQ1(ans) {
+  var fb = document.getElementById("feedback1");
+  if(ans === 255) {
+    fb.style.color = "#00C9A7";
+    fb.innerHTML = "✅ إجابة صحيحة! تتراوح القيم من 0 إلى 255 حيث 255 هو أقصى درجات السطوع للون.";
+  } else {
+    fb.style.color = "#FF6666";
+    fb.innerHTML = "❌ إجابة خاطئة. النظام مبني على 8 بت (256 قيمة من 0 إلى 255).";
+  }
+}
+</script>
 
-- Uses **BGR** channel order
-- Great for video streams 
-- Low-level transforms
-:::
-:::
+## مكتبة OpenCV (العامل السريع!) {.smaller}
 
-::: {.column width="33%"}
-::: {.callout-tip appearance="minimal" icon="false"}
-<div style="text-align: center; font-size: 3rem; margin-bottom: 0.5rem;">🖼️</div>
-<div style="text-align: center; font-size: 1.2rem; font-weight: bold; margin-bottom: 1rem; color: #1C355E;">Pillow (PIL)</div>
-
-Standard Python image library. 
-
-- Uses **RGB** channel order
-- Simple drawing & resizing 
-- (Our primary tool)
-:::
-:::
-
-::: {.column width="33%"}
-::: {.callout-warning appearance="minimal" icon="false"}
-<div style="text-align: center; font-size: 3rem; margin-bottom: 0.5rem;">🔢</div>
-<div style="text-align: center; font-size: 1.2rem; font-weight: bold; margin-bottom: 1rem; color: #1C355E;">NumPy</div>
-
-The core math library. 
-
-- Images are fundamentally `numpy` tensors
-- Multi-dimensional array operations
-:::
-:::
-
-::::
-
-
-## Coordinates vs. Array Indexing
+تخيل أنك في مصنع يحتاج لفرز ملايين الصور بسرعة هائلة. مكتبة `OpenCV` هي "العامل الآلي" السريع جداً في هذا المصنع.
 
 :::: {.columns}
 ::: {.column width="50%"}
-- We think in geometry: `(x, y)` = `(width, height)`.
-- **NumPy** thinks in matrices: `matrix[row, col]` = `matrix[y, x]`.
-- This causes endless confusion when cropping with bounding boxes `(x1, y1, x2, y2)`.
+- **متى نستخدمها؟** 
+  - عندما نتعامل مع **كاميرات المراقبة** (فيديو مباشر).
+  - عندما نريد تعديل ملايين الصور بلمح البصر.
+- **تنبيه ⚠️:** هذا "العامل الآلي" له طريقة غريبة في رؤية الألوان! فهو يقرأ الألوان معكوسة **(أزرق، أخضر، أحمر - BGR)** بدلاً من (أحمر، أخضر، أزرق).
+:::
+::: {.column width="50%"}
+**مثال بسيط جداً:**
+```python
+import cv2
+
+# اطلب من العامل قراءة الصورة
+img = cv2.imread('image.jpg')
+
+# اطلب منه تغيير مقاسها لتصغيرها
+resized = cv2.resize(img, (224, 224))
+
+# احفظ النتيجة
+cv2.imwrite('output.jpg', resized)
+```
+:::
+::::
+
+## مكتبة Pillow أو PIL (استوديو التصوير) {.smaller}
+
+إذا كانت OpenCV هي المصنع، فإن `Pillow` هي "استوديو تصوير منزلي" أو برنامج (الرسام) المبسط.
+
+:::: {.columns}
+::: {.column width="50%"}
+- **متى نستخدمها؟** 
+  - في المشاريع البسيطة واللطيفة.
+  - لعمليات التعديل البسيطة (مثل: تدوير الصورة، إضافة نص، قص جزء منها).
+  - لتجهيز الصورة قبل إعطائها للذكاء الاصطناعي.
+- **ميزتها:** ترى الألوان بشكل طبيعي كما نراها نحن **(RGB)**، فلا تسبب أي ارتباك !
+:::
+::: {.column width="50%"}
+**مثال بسيط جداً:**
+```python
+from PIL import Image
+
+# افتح الصورة داخل الاستوديو
+img = Image.open('image.jpg')
+
+# قم بتدوير الصورة 90 درجة
+rotated = img.rotate(90)
+
+# احفظها
+rotated.save('output.jpg')
+```
+:::
+::::
+
+## مكتبة NumPy (المُترجم الرقمي) {.smaller}
+
+الكمبيوتر لا يمتلك أعيناً ليرى الصورة كـ "أشجار وسماء"، بل يراها كـ "جدول ضخم من الأرقام". `NumPy` هي "المُترجم" الذي يقوم بهذا العمل.
+
+:::: {.columns}
+::: {.column width="50%"}
+- **كيف تعمل؟**
+  - تأخذ الصورة من (Pillow) وتترجمها إلى **جدول أرقام** (يسمى مصفوفة أو Tensor).
+  - كل خانة في الجدول تمثل لون بكسل معين (مثلاً الرقم 255 يعني ساطع، و 0 يعني مظلم).
+- **النتيجة:** الآن فقط يستطيع الذكاء الاصطناعي فهم الصورة والتعلم منها!
+:::
+::: {.column width="50%"}
+**كيف نترجم الصورة؟**
+```python
+import numpy as np
+from PIL import Image
+
+img = Image.open('image.jpg')
+
+# المُترجم يحول الصورة إلى جدول أرقام!
+img_array = np.array(img)
+
+# طباعة أبعاد هذا الجدول (كم صف وكم عمود)
+print(img_array.shape) 
+```
+:::
+::::
+
+## الصورة الكاملة: كيف تعمل هذه المكتبات معاً؟ {.smaller}
+
+تخيل أنك تبني مصنعاً ذكياً للصور، كل أداة لها وظيفة محددة تسلّمها للأخرى:
+
+1. **الخطوة الأولى (استلام الصورة):** نستخدم `Pillow` أو `OpenCV` كأداة إدخال لفتح الصورة الموجودة في الكمبيوتر.
+2. **الخطوة الثانية (التجهيز):** نستخدم نفس المكتبة في التعديلات الأولية كقص الأطراف، تغيير المقاس، أو التدوير.
+3. **الخطوة الثالثة (الترجمة):** نُسلم الصورة لمكتبة `NumPy` لتحولها إلى **جدول ضخم من الأرقام**.
+4. **الخطوة الرابعة (الذكاء الاصطناعي):** نأخذ هذا الجدول الرقمي وندخله في النماذج الذكية (مثل YOLO) لتحليله واستخراج الكائنات منه.
+
+<div style="text-align: center; margin-top: 30px; padding: 20px; background: rgba(0,201,167,0.1); border-radius: 10px; font-weight: bold; font-size: 1.2em; color: #1C355E;">
+صورة ➡️ Pillow (للقراءة) ➡️ NumPy (للترجمة لأرقام) ➡️ الذكاء الاصطناعي (للتحليل)
+</div>
+
+## تحدي الإحداثيات: كيف نقص جزءاً من الصورة؟ {.smaller}
+
+:::: {.columns}
+::: {.column width="50%"}
+- **الطريقة الهندسية المعتادة:** عندما ترسم مربعاً حول وجه لتقصه، فأنت تفكر هندسياً: كم يبعد المربع عن اليسار **(x)** وكم يبعد عن الأعلى **(y)**.
+- **طريقة الكمبيوتر:** الكمبيوتر يرى الصورة كـ "عمارة سكنية" (جدول NumPy):
+  - **الارتفاع (y):** هو رقم "الدور" (الصف).
+  - **العرض (x):** هو رقم "الشقة" (العمود).
+- **الخلاصة:** عندما تطلب من `NumPy` قص الصورة، يجب أن تعطيه **(رقم الدور أولاً، ثم الشقة)**، أي `صورة[y, x]` وليس `صورة[x, y]`.
 :::
 ::: {.column width="50%"}
 ```python
-# Assuming a bounding box (x1, y1, x2, y2)
+# الإحداثيات التي رسمتها بيدك: (x1, y1, x2, y2)
 
-# WRONG (Crops wrong area or crashes)
+# ❌ خطأ: الكمبيوتر لن يفهم وسيقتص منطقة خاطئة
 crop = img[x1:x2, y1:y2] 
 
-# CORRECT (y = row, x = col)
+# ✅ صحيح: أعطه (الارتفاع/الدور y) ثم (العرض/الشقة x)
 crop = img[y1:y2, x1:x2] 
 ```
 :::
 ::::
 
-## The "Smurf Effect": BGR vs. RGB
+## لغز الألوان: لماذا تبدو الوجوه زرقاء؟ (تأثير السنافر) {.smaller}
 
 :::: {.columns}
 ::: {.column width="50%"}
-- OpenCV historically uses **B**lue-**G**reen-**R**ed (**BGR**).
-- Most other libraries (Matplotlib, Pillow) expect **R**ed-**G**reen-**B**lue (**RGB**).
-- If you read an image with `cv2.imread()` and plot it directly in matplotlib, Red and Blue channels are swapped!
-- *Faces look blue, skies look red.*
+- شاشاتنا تعتمد على دمج الألوان **RGB** (أحمر، أخضر، أزرق) لتكوين الصور.
+- **المشكلة:** مكتبة `OpenCV` تقرأ الألوان بالعكس! فهي تقرأها **BGR** (أزرق، أخضر، أحمر).
+- إذا قرأنا صورة وجه بـ OpenCV وحاولنا عرضها مباشرة على الشاشة، ستظن الشاشة أن القناة الأولى هي "أحمر" بينما هي في الحقيقة "أزرق"! 
+- **النتيجة:** يتم تبديل اللون الأحمر بالأزرق.. وتصبح الوجوه زرقاء كالسنافر!
 :::
 ::: {.column width="50%"}
-#### Basic I/O Operations
+#### الحل السحري لتعديل الألوان:
 ```python
 import cv2
 import matplotlib.pyplot as plt
 
-# 1. Read image (OpenCV loads BGR)
-img_bgr = cv2.imread('dog.jpg')
+# 1. OpenCV تقرأ الصورة بألوان معكوسة (BGR)
+img_bgr = cv2.imread('face.jpg')
 
-# 2. Convert to RGB for accurate display
+# 2. الحل: سطر واحد نعكس فيه الألوان لطبيعتها (RGB)
 img_rgb = cv2.cvtColor(img_bgr, cv2.COLOR_BGR2RGB)
 
-# 3. Display
+# 3. الآن ستظهر الوجوه بلونها الطبيعي
 plt.imshow(img_rgb)
-plt.axis('off')
 plt.show()
 ```
 :::
 ::::
 
-# Conclusion {.sdaia-dark background-gradient="linear-gradient(135deg, #1C355E, #00C9A7)"}
+# الخاتمة {.sdaia-dark data-background-gradient="linear-gradient(135deg, #1C355E, #00C9A7)"}
 
-Wrapping up Image Foundations
+ختام أساسيات الصور
 
-## Summary
+## ملخص سريع {.smaller}
 
-- **Light & Cameras**: How digital sensors capture light and turn it into data.
-- **Pixels & Channels**: Grayscale (2D) vs. Color RGB (3D) representations.
-- **Libraries**: Pillow and NumPy basics.
-- **Gotchas**: BGR vs RGB (The Smurf Effect) and Array Indexing vs Coordinates.
+- **الضوء والكاميرات**: المحاكاة التقنية للعين البشرية.
+- **البكسلات والقنوات**: المصفوفات الثنائية والثلاثية الأبعاد.
+- **المكتبات**: OpenCV للسرعة، Pillow للمعالجة السهلة، و NumPy للعمليات.
+- **أخطاء شائعة**: "تأثير السنافر" بسبب BGR واختلاف إحداثيات (x,y) مع (y,x).
 
-## Next Steps
+## الخطوات القادمة
 
-Next up: **YOLO Inference**
+في القسم التالي: **الاستدلال باستخدام YOLO**
 
-- Using these images with state-of-the-art Computer Vision models.
-- Running inference directly out-of-the-box.
+- إدخال الصور كأرقام لنماذج رؤية الكمبيوتر.
+- استخراج الكائنات الجاهزة.
 
-## Q&A {.sdaia-dark background-color="#1C355E"}
+## أسئلة وأجوبة {.sdaia-dark background-color="#1C355E"}
 
-::: {.r-fit-text}
-**Thank You!**
+<br><br><br>
+<div style="text-align: center; font-size: 2em; line-height: 1.5;">
+**شكراً لاهتمامكم ووقتكم** <br>
+<span style="font-size: 0.7em; color: #00C9A7;">يُسعدني الإجابة على استفساراتكم ومناقشاتكم</span>
+</div>
 
-Any questions?
-:::
+<style>
+  /* Fix RTL overflow and styling */
+  .reveal .slide {
+    text-align: right;
+    direction: rtl;
+  }
+  /* Style quiz buttons to match the SDAIA theme */
+  .quiz-btn {
+    background-color: var(--r-main-color);
+    color: var(--r-background-color);
+    border: 2px solid var(--r-main-color);
+    padding: 10px 20px;
+    font-size: 1em;
+    border-radius: 8px;
+    cursor: pointer;
+    font-family: inherit;
+    transition: 0.3s;
+  }
+  .quiz-btn:hover {
+    background-color: transparent;
+    color: var(--r-main-color);
+  }
+</style>

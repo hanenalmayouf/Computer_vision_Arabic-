@@ -130,6 +130,8 @@ $callout-color-success:     $sdaia-green;
 .reveal .slides section h2 { font-size: 1.3em !important; }
 .reveal .slides section h3 { font-size: 1.1em !important; }
 
+// ─── Global brand bar (removed by user request) ─────────────────────────────
+
 // ─── Title slide ─────────────────────────────────────────────────────────────
 .reveal .slides section.title-slide {
   text-align: left;
@@ -142,10 +144,15 @@ $callout-color-success:     $sdaia-green;
 }
 
 .reveal .slides section.title-slide::after {
+  content: "";
+  position: absolute;
   width: 160px;
   height: 46px;
   top: 18px;
   right: 22px;
+  background-image: url("sdaia.svg");
+  background-size: contain;
+  background-repeat: no-repeat;
 }
 
 // ─── Heading accent underline ─────────────────────────────────────────────────
@@ -266,9 +273,34 @@ $callout-color-success:     $sdaia-green;
 .reveal .slides section.has-dark-background a     { color: var(--sdaia-yellow); }
 .reveal .slides section.has-dark-background .muted { color: rgba(255, 255, 255, 0.78); }
 
-.reveal .slides section.has-dark-background::after {
+.reveal .logo {
+  filter: brightness(0) saturate(100%) invert(20%) sepia(29%) saturate(1412%) hue-rotate(180deg) brightness(92%) contrast(89%); // sdaia-navy fallback
+}
+
+.reveal .slides section.has-dark-background .logo,
+.reveal .slides section.sdaia-dark .logo {
+  filter: brightness(0) invert(1) !important;
+  opacity: 0.92;
+}
+
+// Invert logo in footer/header if present
+.reveal.has-dark-background .logo,
+.reveal.sdaia-bg .logo {
+  filter: brightness(0) invert(1) !important;
+}
+
+.reveal .slides section.has-dark-background::after,
+.reveal .slides section.sdaia-dark::after {
   filter: brightness(0) invert(1);
   opacity: 0.92;
+}
+
+// Slide numbers visibility on dark backgrounds
+.reveal.has-dark-background .slide-number,
+.reveal.sdaia-bg .slide-number,
+.reveal.has-dark-background .controls,
+.reveal.sdaia-bg .controls {
+  color: #ffffff !important;
 }
 
 .reveal .slides section.has-dark-background .pill {
@@ -277,21 +309,38 @@ $callout-color-success:     $sdaia-green;
   color: #ffffff;
 }
 
-.reveal .slides section.sdaia-dark,
-.reveal .slides section.sdaia-dark h1,
-.reveal .slides section.sdaia-dark h2,
-.reveal .slides section.sdaia-dark h3,
-.reveal .slides section.sdaia-dark h4,
-.reveal .slides section.sdaia-dark p,
-.reveal .slides section.sdaia-dark li {
+.reveal .slides section.sdaia-dark {
   color: #ffffff !important;
+  display: flex !important;
+  flex-direction: column;
+  justify-content: center;
+  text-align: right;
+  padding-right: 12% !important;
+  height: 100% !important;
 }
 
+// Target the actual background div created by Reveal.js
+.reveal .backgrounds .slide-background.sdaia-dark,
+.reveal .backgrounds .slide-background[data-background-hash*="sdaia-dark"] {
+  background: linear-gradient(135deg, #1C355E, #00C9A7) !important;
+}
+
+.reveal .slides section.sdaia-dark h1,
 .reveal .slides section.sdaia-dark h2 {
-  border-bottom-color: rgba(255, 255, 255, 0.5);
+  color: #ffffff !important;
+  border-bottom: none !important;
+  font-weight: 800 !important;
+  margin-bottom: 0.1em !important;
+  font-size: 2.4em !important;
+  line-height: 1.1 !important;
 }
 
-.reveal .slides section.sdaia-dark .muted { color: rgba(255, 255, 255, 0.8); }
+.reveal .slides section.sdaia-dark p {
+  color: rgba(255, 255, 255, 0.95) !important;
+  font-size: 1.4em !important;
+  margin-top: 0.5em !important;
+}
+
 
 // ═══════════════════════════════════════════════════════════════════════════════
 // ARABIC / RTL STYLES
@@ -398,11 +447,7 @@ html[dir="rtl"] .reveal pre code,
   font-family: $font-family-monospace; // keep Latin monospace for code
 }
 
-// ── 9. Brand bar gradient — mirror for RTL ────────────────────────────────────
-html[dir="rtl"] .reveal .slides section:not(.title-slide)::before,
-.reveal[dir="rtl"] .slides section:not(.title-slide)::before {
-  background: linear-gradient(270deg, var(--sdaia-navy), var(--sdaia-teal), var(--sdaia-orange));
-}
+// ── 9. Brand bar gradient (removed) ──────────────────────────────────────────
 
 // ── 10. Slide number — move to left side for RTL ─────────────────────────────
 html[dir="rtl"] .reveal .slide-number,

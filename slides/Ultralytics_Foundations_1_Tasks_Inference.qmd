@@ -1,7 +1,9 @@
 ---
-title: "Ultralytics YOLO Foundations: Part 1"
-subtitle: "Tasks & Inference"
+title: "أساسيات Ultralytics YOLO: الجزء الأول"
+subtitle: "المهام والاستدلال (Tasks & Inference)"
 date: today
+lang: ar
+dir: rtl
 format:
   revealjs:
     theme: [default, slides_template/assets/sdaia.scss]
@@ -16,108 +18,123 @@ format:
       data-background-image: "slides_template/assets/anim.svg"
       data-background-opacity: "0.15"
 ---
+```{python}
+#| echo: false
+#| output: false
+import matplotlib.pyplot as plt
+try:
+    import matplotlib_inline.backend_inline
+    matplotlib_inline.backend_inline.set_matplotlib_formats('svg')
+except:
+    pass
+plt.rcParams['svg.fonttype'] = 'none'
 
-# 1. First Steps: What can YOLO do? {.sdaia-dark background-gradient="linear-gradient(135deg, #1C355E, #00C9A7)"}
+def fix_ar(text):
+    return text
+```
 
-Start using AI immediately without training!
 
-## Programs vs. Machine Learning
+# 1. الخطوات الأولى: ماذا يمكن لـ YOLO أن يفعل؟ {.sdaia-dark data-background-gradient="linear-gradient(135deg, #1C355E, #00C9A7)"}
 
+سنتعلم كيف نجعل الكمبيوتر "يرى" و "يفهم" ما حوله في ثوانٍ!
+
+::: {.incremental}
+- هل يمكن للكمبيوتر أن يعرف الفرق بين القطة والكلب؟
+- هل يمكنه تتبع حركة اللاعبين في الملعب؟
+- **الإجابة هي: نعم، وبسهولة مع YOLO!**
+:::
+
+## كيف يتعلم الكمبيوتر؟ (تشبيه بسيط) {.smaller}
+
+:::: {.columns}
+::: {.column width="50%"}
+- **البرمجة التقليدية (مثل وصفة الأكل):**
+  - أنت تعطيه التعليمات خطوة بخطوة: "لو شفت ذيل طويل وأذنين مثلثتين، إذن هذا قط".
+- **تعلم الآلة (مثل التذوق):**
+  - أنت لا تعطيه قواعد، بل تعطيه 1000 صورة لقطط، وهو من كثرة ما "شاهد" يفهم بنفسه كيف يبدو القط!
+:::
+::: {.column width="50%"}
 ```{dot}
 //| echo: false
-//| fig-width: 10
+//| fig-width: 5
 //| fig-height: 4.2
 digraph concept {
-    graph [rankdir=LR fontname="Helvetica" nodesep=0.4 ranksep=1.5]
+    graph [rankdir=LR fontname="Helvetica" nodesep=0.4 ranksep=1.5 bgcolor="transparent"]
     node  [fontname="Helvetica" fontcolor=white style=filled shape=box penwidth=0 margin="0.25,0.15" fontsize=13]
     edge  [penwidth=2.5 arrowsize=1.0 fontname="Helvetica" fontsize=12]
 
     // ── Traditional row ──
     subgraph cluster_trad {
-        label="Traditional Programming" fontcolor="#8899bb" fontsize=13 style=dashed color="#3A5070" margin=18
-        ti [label="Input" fillcolor="#2D4E7E"]
-        tf [label="f(x)\nyou write it" fillcolor="#4a4a6a"]
-        to [label="Output" fillcolor="#2D4E7E"]
+        label="برمجة تقليدية" fontcolor="#8899bb" fontsize=13 style=dashed color="#3A5070" margin=18
+        ti [label="مدخلات" fillcolor="#2D4E7E"]
+        tf [label="قواعد\n(أنت تكتبها)" fillcolor="#4a4a6a"]
+        to [label="مخرجات" fillcolor="#2D4E7E"]
         ti -> tf [color="#8899bb"]
         tf -> to [color="#8899bb"]
     }
 
     // ── Machine Learning row ──
     subgraph cluster_ml {
-        label="Machine Learning" fontcolor="#00C9A7" fontsize=13 style=dashed color="#00C9A7" margin=18
-        mi   [label="Input" fillcolor="#2D4E7E"]
-        mf   [label="f(x)\nlearned from data" fillcolor="#00C9A7" fontcolor="#1C355E" fontname="Helvetica-Bold"]
-        mo   [label="Output" fillcolor="#2D4E7E"]
-        data [label="Data" fillcolor="#1a4060" shape=cylinder]
+        label="تعلم الآلة" fontcolor="#00C9A7" fontsize=13 style=dashed color="#00C9A7" margin=18
+        mi   [label="مدخلات" fillcolor="#2D4E7E"]
+        mf   [label="قواعد\n(يتعلمها من البيانات)" fillcolor="#00C9A7" fontcolor="#1C355E" fontname="Helvetica-Bold"]
+        mo   [label="مخرجات" fillcolor="#2D4E7E"]
+        data [label="البيانات" fillcolor="#1a4060" shape=cylinder]
         { rank=same; mf; data }
         mi   -> mf [color="#00C9A7"]
         mf   -> mo [color="#00C9A7"]
-        data -> mf [label="trains" color="#5599aa" style=dashed fontcolor="#5599aa" fontsize=11]
+        data -> mf [label="يتدرب" color="#5599aa" style=dashed fontcolor="#5599aa" fontsize=11]
     }
 }
 ```
-
-::: {.fragment}
-We'll explore each of these output shapes hands-on during this session!
 :::
+::::
 
+## 🧠 تحدي سريع (30 ثانية): أي مهمة أحتاج؟
 
-## AI Model for Computer Vision
+تخيل أنك تبني تطبيقاً لـ:
 
-```{dot}
-//| echo: false
-//| fig-width: 10
-//| fig-height: 4.2
-digraph cv {
-    graph [rankdir=LR fontname="Helvetica" nodesep=0.55 ranksep=1.4]
-    node  [fontname="Helvetica" fontcolor=white style=filled shape=box penwidth=0 margin="0.2,0.13" fontsize=12]
-    edge  [color="#00C9A7" penwidth=2.5 arrowsize=0.9]
+1. **فرز التمور:** هل هذه التمرة ممتازة أم لا؟ -> (......)
+2. **كاميرا مراقبة:** ارسم مربعاً حول أي لص يدخل المحل -> (......)
+3. **سيارة ذاتية القيادة:** حدد شكل رصيف الشارع بدقة لنمشي بجانبه -> (......)
 
-    input [label="Image / Video" shape=cylinder fillcolor="#2D4E7E" fontsize=13]
-    model [label="Learned f(x)\n(AI Model)" fillcolor="#00C9A7" fontcolor="#1C355E" fontname="Helvetica-Bold" fontsize=13 width=1.6]
+. . .
 
-    cls  [label="Classification\n(C,)"        fillcolor="#3A6186"]
-    det  [label="Detection\n(N, 6)"           fillcolor="#3A6186"]
-    seg  [label="Segmentation\n(N, H, W)"     fillcolor="#3A6186"]
-    pose [label="Pose\n(N, 17, 3)"            fillcolor="#3A6186"]
+**الإجابات:** 1. تصنيف (Classify) | 2. اكتشاف (Detect) | 3. تجزئة (Segment)
 
-    { rank=same; cls det seg pose }
+## كيف نكلم YOLO؟ (لغة الأوامر) {.smaller}
 
-    input -> model
-    model -> cls
-    model -> det
-    model -> seg
-    model -> pose
-}
-```
-
-## The YOLO CLI Structure
-
-Interacting with Ultralytics is simple:
+التعامل مع YOLO يشبه إعطاء أمر لمساعدك الشخصي. المعادلة بسيطة:
 
 ::: {.r-fit-text style="text-align: center; background: rgba(0, 193, 222, 0.1); border: 1px solid rgba(0, 193, 222, 0.2); border-radius: 12px; padding: 0.25em 0.5em; font-family: 'JetBrains Mono', monospace; white-space: nowrap; margin-bottom: 0.5em;"}
-yolo TASK MODE ARGS
+yolo **ماذا تفعل؟** **بأي وضع؟** **الإعدادات**
 :::
 
-- **TASK**: What to solve? (`detect`, `segment`, `classify`, `pose`, `obb`)
-- **MODE**: What ML stage? (`predict`, `train`, `val`, `export`, `track`, `benchmark`)
-- **ARGS**: Settings like `model=weights/yolo26n.pt` or `source="image.jpg"`
+- **المهمة (TASK)**: (اكتشف `detect` الأشخاص، أو صنف `classify` الصورة).
+- **الوضع (MODE)**: (توقع `predict` الآن، أو تدرب `train` من جديد).
+- **المتغيرات (ARGS)**: (استخدم هذا النموذج `model` أو هذه الصورة `source`).
+
+::: {.callout-tip}
+**مسابقة سريعة:** من يكتب أولاً في الشات أمر YOLO لاكتشاف الأشياء في صورة باسم `test.jpg`؟
+:::
 
 
-## Predefined Classes & Weights
+## موديلات جاهزة للعمل فوراً! (COCO) {.smaller}
 
-Models pre-trained on the **COCO dataset** recognize **80 common classes** right out of the box. Using `.pt` models means we utilize these pre-learned weights without training!
+تخيل أن YOLO قد ذهب للمدرسة مسبقاً وتعلّم **80 شيئاً مختلفاً**! هذه المدرسة تسمى مجموعة بيانات **COCO**.
 
-**Model Naming Convention** (e.g., `yolo26n-seg.pt`, `yolo11x-cls.pt`):
+**ماذا يعرف YOLO حالياً؟**
+- سيارات، أشخاص، كراسي، كلاب، طائرات، وحتى "مظلات المطر"!
 
-- **Family**: e.g., `yolo26`, `yolo11`
-- **Size**: `n` (Nano, fastest) up to `x` (Extra Large, most accurate)
-- **Task**: default is detection. `-seg` (Segmentation), `-cls` (Classification), `-pose` (Pose Estimation)
+**لعبة فك الشفرة:** ماذا يعني اسم `yolo11n.pt`؟
+- `yolo11`: الإصدار الجديد والذكي.
+- `n`: (Nano) الصغير والسريع جداً (مناسب للجوالات).
+- `.pt`: امتداد ملف "عقل" النموذج (PyTorch).
 
 
-# 2. Exploring Tasks (Live!) {.sdaia-dark background-gradient="linear-gradient(135deg, #1C355E, #00C9A7)"}
+# 2. استكشاف المهام (عملياً!) {.sdaia-dark data-background-gradient="linear-gradient(135deg, #1C355E, #00C9A7)"}
 
-Let's see the tasks in action using the `predict` mode.
+لنجرب الآن كيف يرى النموذج الصور في وضع التوقع `predict`.
 
 ```{python}
 #| echo: false
@@ -127,7 +144,7 @@ import matplotlib.patches as patches
 import sys; import os; sys.path.insert(0, os.path.abspath('.')); sys.path.insert(0, os.path.abspath('slides')); from plot_utils import draw_base_car, draw_base_human
 ```
 
-## Image Classification Output Concept
+## التصنيف (Image Classification) {.smaller data-background-gradient="linear-gradient(135deg, #1C355E, #00C9A7)"}
 
 ::::: {.columns}
 
@@ -149,13 +166,13 @@ plt.show()
 
 :::: {.column width="45%"}
 
-The model outputs **`probs`**, a probability for **every** possible class:
+يخرج النموذج قائمة بـ **الاحتمالات (`probs`)** لكل صنف ممكن:
 
-| Class ID | Class Name | Probability |
+| المعرف | الصنف | الاحتمال |
 |----------|------------|-------------|
-| 0        | car        | **0.95**    |
-| 1        | bus        | 0.03        |
-| 2        | person     | 0.01        |
+| 0        | سيارة (car)| **0.95**    |
+| 1        | حافلة (bus)| 0.03        |
+| 2        | شخص        | 0.01        |
 | …        | …          | …           |
 
 ::::
@@ -164,11 +181,23 @@ The model outputs **`probs`**, a probability for **every** possible class:
 :::::
 
 
-## From `probs` to `top1`
+## من هو الفائز؟ (مفهوم الـ `top1`) {.smaller data-background-gradient="linear-gradient(135deg, #1C355E, #00C9A7)"}
 
-::::: {.columns}
+تخيل أن هناك **سباقاً** بين الأصناف داخل عقل YOLO:
 
-:::: {.column width="55%"}
+::: {.incremental}
+- **المتسابق الأول (سيارة):** وصل بنسبة ثقة **95%**.
+- **المتسابق الثاني (حافلة):** تعثر ووصل بنسبة **3%**.
+- **المتسابق الثالث (كلب):** بعيد جداً بنسبة **2%**.
+:::
+
+. . .
+
+**إذن، من هو الـ `top1`؟** هو "السيارة" لأنها صاحبة أعلى نسبة.
+
+::: {.callout-tip}
+**مثال واقعي:** لو سألت طفلاً "ما هذا؟" وقال لك: "أنا متأكد بنسبة كبيرة أنها قطة، وبنسبة بسيطة ربما تكون نمر"، فإن إجابته النهائية (قطة) هي الـ **top1**.
+:::
 ```{python}
 #| echo: false
 #| fig-align: center
@@ -186,128 +215,99 @@ plt.show()
 
 :::: {.column width="45%" .incremental}
 
-Ultralytics pre-computes the answer for us:
+تقوم مكتبة Ultralytics بتسهيل الأمر وتحسب النتيجة النهائية فوراً:
 
-- **`probs`**: Raw probability array for *all* classes.
-- **`probs.top1`** → `0` : Index of the highest-probability class.
-- **`probs.top1conf`** → `0.95` : Its confidence score.
+- **`probs`**: قائمة الاحتمالات لجميع الأصناف.
+- **`probs.top1`** → `0` : رقم (ID) الصنف الفائز (الأعلى احتمالاً).
+- **`probs.top1conf`** → `0.95` : نسبة الثقة في هذه الإجابة (95%).
 
 ::::
 
 :::::
 
 ::: {.callout-note appearance="simple" icon="false" .fragment}
-**Single-Class vs. Multi-Label Classification**
-We just read `top1` that is **single-class** (one winner). But because `probs` scores *every* class, we can also do **multi-label** classification: keep all classes whose probability exceeds a threshold (e.g., `prob > 0.50`) to assign several labels to one image.
-:::  
+**تعدد الأشياء (Multi-Label): مثل قائمة الناجحين!**
+بدلاً من البحث عن "الأول على الفصل" فقط (`top1`)، نحن نبحث عن "كل الناجحين". أي صنف يحصل على درجة أعلى من 50% نعتبره موجوداً في الصورة. 
+*مثال:* لو كانت الصورة فيها "بيتزا" (90%) و"طاولة" (85%)، فكلاهما ناجح وموجود!
+:::
 
 
-## Image Classification in Action
+## التصنيف عملياً بالكود {.smaller data-background-gradient="linear-gradient(135deg, #1C355E, #00C9A7)"}
 
-Identify what the entire image contains.
+تحديد "ما هو الشيء الموجود في الصورة بشكل عام".
 
 ```bash
 yolo task=classify mode=predict model=yolo26n-cls.pt source="https://ultralytics.com/images/assets/bus.jpg"
 ```
 
 ```python
-# Python Equivalent
+# كود بايثون
 from ultralytics import YOLO
 
 model = YOLO("yolo26n-cls.pt")
 results = model.predict(source="https://ultralytics.com/images/assets/bus.jpg")
 
-# Access Output Format
+# الوصول للنتيجة
 probs = results[0].probs
-print(f"Top-1 Class: {probs.top1}")          # Index of the most likely class
-print(f"Top-1 Confidence: {probs.top1conf}") # Confidence score
-print(f"All Probabilities: {probs.data}")    # Tensor of all class probabilities
+print(f"الصنف الفائز: {probs.top1}")          # رقم الصنف
+print(f"نسبة الثقة: {probs.top1conf}") # نسبة التأكد
+print(f"كل الاحتمالات: {probs.data}")    # مصفوفة جميع القيم
 ```
 
-*Docs Reference: [Classification](https://docs.ultralytics.com/tasks/classify/)*
+*المرجع: [التصنيف في المستندات](https://docs.ultralytics.com/tasks/classify/)*
 
 
-## Classification Output Example
+## مثال: مخرجات التصنيف
 
 ![](assets/slides/outputs/images/task-classification.png)
 
 
-## Object Detection Output & Confidence {auto-animate=true}
+## 1. الاكتشاف (Detection): "لعبة الصناديق" {.smaller}
 
-::::: {.columns data-id="model-output"}
+تخيل أنك تعطي طفلاً مجموعة من الصناديق وتقول له: "ضع كل سيارة تراها داخل صندوق".
+- **ماذا يفعل YOLO؟** يرسم صندوقاً حول كل شيء يراه (سيارة، شخص، كلب).
+- **مثال:** كاميرا مراقبة في مواقف السيارات، ترسم صندوقاً أخضر حول كل سيارة موجودة.
 
-:::: {.column width="55%"}
-```{python}
-#| echo: false
-#| fig-align: center
-fig, ax = plt.subplots(figsize=(4.8, 4.8))
-fig.patch.set_alpha(0.0)
-ax.patch.set_alpha(1.0)
-ax.set_facecolor('white')
+---
 
-draw_base_car(ax)
+## 2. التجزئة (Segmentation): "التلوين بدقة" {.smaller}
 
-# 2. Add the Predicted Box
-rect = patches.Rectangle((3.5, 4.0), 8, 7, linewidth=3.5, edgecolor='#00ff00', facecolor='none', zorder=2)
-ax.add_patch(rect)
+بدلاً من الصندوق، تخيل أنك تطلب من الطفل أن **يلون** السيارة نفسها فقط دون الخروج عن الخطوط.
+- **الفائدة:** نعرف شكل السيارة بالضبط، وليس فقط مكانها.
+- **مثال:** طبيب يستخدم الذكاء الاصطناعي لتحديد حجم "ورم" بدقة بيكسل ببيكسل لتجهيز الجراحة.
 
-# 3. Add Visual Annotations mapping to the Tensor
-# Center dot (Black for better contrast)
-ax.plot(7.5, 7.5, marker='o', color='black', markersize=9, zorder=3)
+---
 
-# Width dimension (Orange)
-ax.annotate('', xy=(3.5, 3.2), xytext=(11.5, 3.2),
-            arrowprops=dict(arrowstyle='<->', color='#ff8c00', lw=2.5))
-ax.text(7.5, 2.7, 'w', color='#ff8c00', fontsize=14, ha='center', fontweight='bold')
+## 3. الهيكل (Pose): "الرجل العصا" {.smaller}
 
-# Height dimension (Blue)
-ax.annotate('', xy=(12.2, 4.0), xytext=(12.2, 11.0),
-            arrowprops=dict(arrowstyle='<->', color='#0088cc', lw=2.5))
-ax.text(12.7, 7.5, 'h', color='#0088cc', fontsize=14, va='center', ha='left', fontweight='bold')
+تخيل أننا نرسم خطوطاً بين مفاصل الإنسان (الركبة، المرفق، الرأس) كأننا نصنع "رجل عصا" (Stick Figure).
+- **الفائدة:** فهم كيف يتحرك الشخص.
+- **مثال:** تطبيق رياضي يخبرك إذا كانت وضعية "القرفصاء" (Squat) التي تقوم بها صحيحة أم لا.
 
-plt.tight_layout()
-plt.show()
-```
-::::
+---
 
-:::: {.column width="45%" .incremental}
+## 4. المربعات المائلة (OBB): "الصناديق الذكية" {.smaller}
 
-Model Output:
-
-- **<code style="color: #000000;">cx, cy</code> (7.5, 7.5)**: The center coordinates.
-- **<code style="color: #ff8c00;">w</code> (8.0)** & **<code style="color: #0088cc;">h</code> (7.0)**: The box width and height.
-- **`conf` (0.85)**: The confidence score.
-- **`cls` (0)**: The class ID.
-
-::::
-
-:::::
-
-::: {.callout-note appearance="simple" icon="false"}
-**Filtering Predictions**
-We use a **Confidence Threshold** to automatically drop weak predictions (e.g., ignoring any box with `conf < 0.50`).
-:::
+أحياناً تكون الأشياء مائلة (مثل سفينة في البحر). الصندوق العادي سيأخذ مساحة كبيرة فارغة.
+- **الحل:** نميل الصندوق ليكون على مقاس الشيء بالضبط.
+- **مثال:** تصوير الطائرات من الأعلى لمعرفة اتجاه السفن في الموانئ.
 
 
-## Confidence: Model's Belief vs. Ground Truth
+## ما هي "الثقة" (Confidence)؟ {.smaller}
 
-- **Question:** Does `conf=1.0` mean there is a true object 100% of the time?
- 
+- **تحدي ذهني:** لو قال لك الكمبيوتر "أنا متأكد بنسبة 90% أن هذه سيارة"، هل يعني هذا أنها سيارة حتماً؟
+
 . . .
 
-- **Answer:** **No.**
+- **الجواب الحقيقي:** ليس دائماً! 
+- الثقة هي **"يقين النموذج"** الداخلي. أحياناً يكون النموذج واثقاً جداً ولكنه "مخطئ" (مثلاً يظن أن صورة سيارة لعبة هي سيارة حقيقية).
 
-::: {.incremental}
-- **Confidence** is just a "feeling": How strongly the model **believes** this is the answer.
-- It does **NOT** guarantee the answer is correct in the real world.
-:::
-
-::: {.fragment}
-You'll learn how to actually measure correctness in **Part 4** using Precision and Recall
+::: {.callout-warning}
+في المشاريع الحساسة (مثل الطب)، لا نكتفي بكلمة "أنا واثق"، بل نختبر النموذج بآلاف الصور لنعرف دقته الحقيقية.
 :::
 
 
-## Mapping to Bounding Boxes {auto-animate=true}
+## الإحداثيات: من المركز للأطراف {auto-animate=true .smaller}
 
 ::::: {.columns data-id="model-output"}
 
@@ -356,7 +356,8 @@ plt.show()
 
 :::: {.column width="45%" .incremental}
 
-**Mapping to $(x_{min}, y_{min}, x_{max}, y_{max})$:**
+**كيف نحصل على أطراف المربع؟**
+إذا عرفنا نقطة المركز، نقوم بطرح نصف العرض للحصول على الطرف الأيسر، وجمع نصف العرض للطرف الأيمن:
 
 $$
 \begin{align*}
@@ -372,27 +373,27 @@ $$
 :::::
 
 
-## The Concept of N Objects
+## أكثر من كائن في الصورة (N Objects) {.smaller}
 
-Rarely does an image contain exactly one object!
+من النادر أن تحتوي الصورة على كائن واحد فقط!
 
 :::{.incremental}
-- YOLO evaluates the image and can predict multiple bounding boxes at once.
-- The single 6-element array `[cx, cy, w, h, conf, cls]` is stacked $N$ times.
-- Resulting Output Shape: **$(N, 6)$** (where $N$ is the number of detected objects).
+- يرى YOLO الصورة بالكامل ويستطيع اكتشاف عدة أشياء في نفس الوقت.
+- إذا وجد 3 أشياء، سيقوم بإنشاء 3 مربعات، كل مربع يحتوي على `[cx, cy, w, h, conf, cls]`.
+- يُسمى هذا المخرج مصفوفة أبعادها: **$(N, 6)$** (حيث $N$ هو عدد الكائنات).
 :::
 
-## Object Detection in Action 
+## اكتشاف الكائنات عملياً بالكود {.smaller}
 
-Find and localize objects using bounding boxes.
+إيجاد أماكن الأشياء (مربعات الإحاطة).
 
 ```bash
-# Live Example: Try this in your terminal!
+# جرب هذا الأمر!
 yolo task=detect mode=predict model=yolo26n.pt source="https://ultralytics.com/images/assets/bus.jpg"
 ```
 
 ```python
-# Python Equivalent
+# كود بايثون
 import os
 from ultralytics import YOLO
 
@@ -402,78 +403,68 @@ if not os.path.exists(model_path):
 model = YOLO(model_path)
 results = model.predict(source="https://ultralytics.com/images/assets/bus.jpg")
 
-# Access Output Shape and Data
+# استخراج شكل البيانات
 boxes = results[0].boxes
-print(f"Boxes shape: {boxes.shape}")  # (N, 6) -> N boxes: x1, y1, x2, y2, conf, cls
+print(f"شكل المربعات: {boxes.shape}")  # ستكون (N, 6)
 ```
 
 
-*Docs Reference: [Detection](https://docs.ultralytics.com/tasks/detect/)*
+*المرجع: [الاكتشاف في المستندات](https://docs.ultralytics.com/tasks/detect/)*
 
-## Deep Dive: Accessing Bounding Boxes
+## استخراج الإحداثيات بطرق مختلفة {.smaller}
 
-The `result.boxes` object provides several ways to access coordinates:
+كائن `result.boxes` يوفر لك الإحداثيات بعدة صيغ جاهزة للاستخدام:
 
-- **`.xyxy`**: $[x_{min}, y_{min}, x_{max}, y_{max}]$ (Top-left, Bottom-right)
-- **`.xywh`**: $[c_x, c_y, w, h]$ (Center coordinates, width, height)
-- **`.xyxyn` / `.xywhn`**: Normalized versions (values between 0.0 and 1.0)
+- **`.xyxy`**: الطرفيات الأربعة $[x_{min}, y_{min}, x_{max}, y_{max}]$.
+- **`.xywh`**: المركز والأبعاد $[c_x, c_y, w, h]$.
+- **`.xyxyn` / `.xywhn`**: القيم كنسبة مئوية (Normalized) بين 0.0 و 1.0.
 
-**Code Example:**
+**مثال تطبيقي:**
 ```python
-# Accessing raw tensors
-boxes = result.boxes.xyxy   # [N, 4] tensor
-conf = result.boxes.conf    # [N] tensor
-cls = result.boxes.cls      # [N] tensor
+# استخراج القيم كمصفوفات
+boxes = result.boxes.xyxy   
+conf = result.boxes.conf    
+cls = result.boxes.cls      
 
-# Extracting first detection
+# قراءة إحداثيات الكائن الأول فقط
 x1, y1, x2, y2 = boxes[0].tolist() 
 ```
 
 
 
-## Detection Output Example
+## مثال: مخرجات الاكتشاف
 
 ![](assets/slides/outputs/images/task-detection.png)
 
 
-## The Problem with Absolute Pixels
+## مشكلة "اختلاف أحجام الصور" {.smaller}
 
-Why not just train the model on absolute pixel values like `w = 8.0`?
+:::: {.columns}
+::: {.column width="50%"}
+تخيل لو قلت لك: "ارسم نقطة على بعد 5 سم من حافة الورقة".
+- لو الورقة صغيرة (A5)، النقطة ستكون في المنتصف.
+- لو الورقة كبيرة (A3)، النقطة ستكون قريبة جداً من الحافة!
 
-::: {.r-stack}
-![](https://ultralytics.com/images/assets/bus.jpg){.fragment width="400" height="300" style="margin-bottom: 20px;"}
-
-![](https://ultralytics.com/images/zidane.jpg){.fragment width="500" height="280" style="margin-bottom: 20px;"}
+**هذه مشكلة!** الذكاء الاصطناعي سيحتار لو تغير حجم الصورة (مثل الفرق بين جودة 4K وصورة واتساب).
 :::
 
-::: {.fragment .incremental}
-- Images come in all shapes and sizes (4K, 1080p, square, portrait).
-- A car that is `800` pixels wide in a 4K image might only be `200` pixels wide in a 1080p image.
-- If the model learns "cars are 800 pixels wide", it will fail on smaller images!
+::: {.column width="50%"}
+![](normalization_concept.png){fig-align="center"}
 :::
-
-## The Solution: Normalized Coordinates
-
-. . .
-
-Instead of pixels, we teach the model using **fractions of the image size** (0.0 to 1.0).
-
-. . .
-
-- $cx_{norm} = cx_{pixel} / image\_width$
-- $w_{norm} = w_{pixel} / image\_width$
-
-. . .
-
-***A car that takes up half the image width is always $w = 0.5$, regardless of whether the image is 4K or 1080p!***
-
-::: {.callout-note appearance="simple" icon="false"}
-**Training vs. Predicting**
-You **MUST** provide normalized coordinates (0.0 to 1.0) when *training* the model. However, when you use `model.predict()`, the Ultralytics Python API conveniently un-normalizes them back into standard absolute pixels (like `boxes.xyxy`) for immediate use!
-:::
+::::
 
 
-## Instance Segmentation Output Concept
+---
+
+## الحل السحري: "النسبة المئوية" (0 إلى 1) {.smaller}
+
+بدلاً من "5 سم"، سنقول: "ضع النقطة في **منتصف** الورقة دائماً".
+- في الورقة الصغيرة، المنتصف هو المنتصف.
+- في الورقة الكبيرة، المنتصف يبقى هو المنتصف!
+- **بالمثل في YOLO:** نقول له السيارة في النقطة `0.5` (يعني في نص الصورة بالضبط) مهما كان حجم الصورة عملاقاً أو صغيراً.
+
+
+## التجزئة (Instance Segmentation) {.smaller}
 
 ::::: {.columns}
 
@@ -527,49 +518,49 @@ plt.show()
 
 :::: {.column width="45%" .incremental}
 
-Model Output (Mask / Polygon):
+هنا لا نرسم مربعاً عادياً، بل نرسم شكل السيارة بدقة بيكسل ببيكسل! 
 
-- **Mask Tensor**: A 2D array (bitmap) of pixels indicating the object's exact shape (`1` = object, `0` = background).
-- **Coordinates**: Sequence of $(x, y)$ polygon coordinates derived from the mask.
-- **`conf` (0.89)**: Confidence score.
-- **`cls` (0)**: Class ID.
+- **قناع البيكسل (Mask Tensor)**: جدول يحمل رقم `1` إذا كان البيكسل يمثل السيارة، و `0` إذا كان يمثل الخلفية.
+- **الإحداثيات**: زوايا المضلع $(x, y)$ التي تشكل حدود السيارة بدقة.
+- **`conf`**: نسبة الثقة.
+- **`cls`**: الصنف (سيارة).
 
 ::::
 
 :::::
 
 
-## Instance Segmentation in Action
+## التجزئة عملياً بالكود {.smaller}
 
-Outline the exact shape (pixels) of each object instance.
+استخراج الشكل الدقيق للأشياء في الصورة!
 
 ```bash
-# Live Example: See the masks!
+# جرب هذا الأمر وشاهد النتائج الملونة!
 yolo task=segment mode=predict model=yolo26n-seg.pt source="https://ultralytics.com/images/assets/bus.jpg"
 ```
 
 ```python
-# Python Equivalent
+# كود بايثون
 from ultralytics import YOLO
 
 model = YOLO("yolo26n-seg.pt")
 results = model.predict(source="https://ultralytics.com/images/assets/bus.jpg")
 
-# Access Output Shape and Data
+# استخراج معلومات الأقنعة (Masks)
 masks = results[0].masks
-print(f"Masks shape: {masks.data.shape}")  # (N, H, W) -> N masks of HxW size
-print(masks.xy)                            # Polygon coordinates
+print(f"شكل الأقنعة: {masks.data.shape}")  # (N, H, W)
+print(masks.xy)                            # إحداثيات المضلعات الدقيقة
 ```
 
-*Docs Reference: [Segmentation](https://docs.ultralytics.com/tasks/segment/)*
+*المرجع: [التجزئة في المستندات](https://docs.ultralytics.com/tasks/segment/)*
 
 
-## Segmentation Output Example
+## مثال: مخرجات التجزئة
 
 ![](assets/slides/outputs/images/task-segmentation.png)
 
 
-## Pose Estimation Output Concept
+## الهيكل (Pose Estimation) {.smaller}
 
 ::::: {.columns}
 
@@ -607,49 +598,48 @@ plt.show()
 
 :::: {.column width="45%" .incremental}
 
-Model Output (Keypoints):
+هنا نتعرف على "مفاصل" الجسم وتشكيله (مفيد جداً لتحليل الحركة والرياضة):
 
-- **`x, y`**: Coordinate pair for each predefined keypoint.
-- **`kp_conf`** (per keypoint): Confidence score for each keypoint's location.
-- **`conf` (0.92)**: Overall person detection confidence score.
-- **`cls` (0)**: Class ID (always 0 = person for pose models).
+- **`x, y`**: الإحداثيات لكل مفصل (مثل الأنف، المرفق، الركبة).
+- **`kp_conf`**: نسبة التأكد من مكان هذا المفصل بالذات.
+- **`conf`**: نسبة التأكد من وجود الشخص كاملاً.
+- **`cls` (0)**: دائماً الصنف 0 (شخص) في نماذج الهيكل.
 
 ::::
 
 :::::
 
 
-## Pose Estimation in Action
+## الهيكل عملياً بالكود {.smaller}
 
-Estimate human body keypoints (elbows, knees).
+استخراج وتتبع المفاصل البشرية.
 
 ```bash
-# Live Example: Track keypoints!
 yolo task=pose mode=predict model=yolo26n-pose.pt source="https://ultralytics.com/images/assets/bus.jpg"
 ```
 
 ```python
-# Python Equivalent
+# كود بايثون
 from ultralytics import YOLO
 
 model = YOLO("yolo26n-pose.pt")
 results = model.predict(source="https://ultralytics.com/images/assets/bus.jpg")
 
-# Access Output Shape and Data
+# استخراج نقاط المفاصل
 keypoints = results[0].keypoints
-print(f"Keypoints shape: {keypoints.data.shape}")  # (N, 17, 3) -> N persons, 17 keypoints, (x, y, conf)
-print(keypoints.xy)                                # Keypoint coordinates
+print(f"شكل المفاصل: {keypoints.data.shape}")  # (N, 17, 3) 17 مفصلاً لكل شخص
+print(keypoints.xy)                                # إحداثيات المفاصل
 ```
 
-*Docs Reference: [Pose](https://docs.ultralytics.com/tasks/pose/)*
+*المرجع: [استخراج الهيكل في المستندات](https://docs.ultralytics.com/tasks/pose/)*
 
 
-## Pose Estimation Output Example
+## مثال: مخرجات الهيكل
 
 ![](assets/slides/outputs/images/task-pose.png)
 
 
-## OBB (Oriented Bounding Box) Output Concept
+## المربعات المائلة (OBB) {.smaller}
 
 ::::: {.columns}
 
@@ -683,22 +673,22 @@ plt.show()
 
 :::: {.column width="45%" .incremental}
 
-Model Output (Oriented Box):
+هذه مربعات إحاطة ولكن "مائلة"! مفيدة جداً في صور الأقمار الصناعية والطائرات بدون طيار (الدرون).
 
-- **<code style="color: #000000;">cx, cy</code>**: The center coordinates.
-- **`w`** & **`h`**: The box width and height.
-- **`angle`**: The rotation angle of the box.
-- **`conf`**: The confidence score.
-- **`cls`**: The class ID.
+- **<code style="color: #000000;">cx, cy</code>**: نقطة المركز.
+- **`w`** و **`h`**: العرض والارتفاع.
+- **`angle`**: **زاوية الدوران**.
+- **`conf`**: نسبة الثقة.
+- **`cls`**: رقم الصنف.
 
 ::::
 
 :::::
 
 
-## OBB in Action
+## المربعات المائلة (OBB) عملياً {.smaller}
 
-Detect objects with oriented bounding boxes (useful for aerial/satellite imagery or rotated objects).
+ممتازة للتعرف على السفن، السيارات من الأعلى، أو الأشياء المائلة.
 
 ```bash
 yolo task=obb mode=predict model=yolo26n-obb.pt source="https://ultralytics.com/images/boats.jpg"
@@ -710,23 +700,23 @@ from ultralytics import YOLO
 model = YOLO("yolo26n-obb.pt")
 results = model.predict(source="https://ultralytics.com/images/boats.jpg")
 
-# Access Output Shape and Data
+# استخراج المعلومات
 obb = results[0].obb
-print(f"OBB shape: {obb.data.shape}")  # (N, 7) -> N boxes: cx, cy, w, h, angle, conf, cls
-print(obb.xywhr)                       # Center x, y, width, height, rotation angle
+print(f"شكل المربعات المائلة: {obb.data.shape}")  # (N, 7)
+print(obb.xywhr)                       # المركز، الأبعاد، وزاوية الدوران
 ```
 
-*Docs Reference: [OBB](https://docs.ultralytics.com/tasks/obb/)*
+*المرجع: [OBB في المستندات](https://docs.ultralytics.com/tasks/obb/)*
 
 
-## OBB Output Example
+## مثال: مخرجات المربعات المائلة (OBB)
 
 ![](assets/slides/outputs/images/task-obb.png)
 
 
-## Object Tracking in Action {.smaller}
+## تتبع الكائنات (Tracking) {.smaller}
 
-Assign distinct IDs to objects and track them continuously across video frames!
+إعطاء (بطاقة هوية ID) خاصة لكل كائن وتتبعه عبر إطارات الفيديو (ممتاز لكاميرات المراقبة)!
 
 ```bash
 yolo task=detect mode=track model=weights/yolo26n.pt source="path/to/video.mp4"
@@ -736,37 +726,36 @@ yolo task=detect mode=track model=weights/yolo26n.pt source="path/to/video.mp4"
 from ultralytics import YOLO
 
 model = YOLO("weights/yolo26n.pt")
-# Use track() with stream=True for memory-efficient video processing
+# استخدم track() بدلاً من predict() للفيديو
 results = model.track(source="path/to/video.mp4", stream=True)
 
-# Iterate through the video frames
+# المرور على إطارات الفيديو
 for result in results:
     boxes = result.boxes
     if boxes.id is not None:
-        # Extract IDs as a list of integers
+        # استخراج أرقام الهوية
         ids = boxes.id.int().tolist()
-        print(f"Tracking IDs: {ids}")  # e.g., [1, 2]
+        print(f"أرقام التتبع: {ids}")  # مثال: [1, 2]
 ```
 
-*Docs Reference: [Tracking](https://docs.ultralytics.com/modes/track/)*
+*المرجع: [التتبع في المستندات](https://docs.ultralytics.com/modes/track/)*
 
 
-## Demonstration: Object Tracking {.center}
+## عرض توضيحي: التتبع المستمر {.center}
 
 {{< video assets/slides/outputs/videos/task-tracking.mp4 width="900" height="500" autoplay="true" loop="true" muted="true" >}}
 
 
-## Predict Usage (Python): Batch Input
+## طريقة التوقع الاحترافية: الدفعات (Batches) {.smaller}
 
-Process multiple sources or directories efficiently!
+كيف تعالج مئات الصور مرة واحدة وبسرعة؟
 
 ```python
 from ultralytics import YOLO
 
-# Load your model
 model = YOLO("weights/yolo26n.pt")
 
-# Option 1: A list of specific sources
+# الطريقة 1: تمرير قائمة من الصور
 sources = [
     "https://ultralytics.com/images/assets/bus.jpg",
     "path/to/local/image.jpg",
@@ -774,53 +763,58 @@ sources = [
 ]
 results = model.predict(source=sources)
 
-# Option 2: An entire directory
+# الطريقة 2: تمرير مجلد كامل!
 # results = model.predict(source="path/to/my_images_folder/")
 ```
 
-## Predict Usage (Python): Processing Results
-
-Process the batch results or use a memory-efficient stream.
+## معالجة مخرجات الدفعات {.smaller}
 
 ```python
-# Process the batch results
+# المرور على نتائج الصور
 for result in results:
-    boxes = result.boxes  # Bounding boxes
-    probs = result.probs  # Classification probabilities
-    result.show()         # Display each result
-    result.save(filename=f"result_{result.path.name}")
+    boxes = result.boxes  # المربعات
+    probs = result.probs  # الاحتمالات 
+    result.show()         # عرض النتيجة على الشاشة
+    result.save(filename=f"result_{result.path.name}") # الحفظ
 ```
 
-**Stream/Generator:**
-For very large datasets, you can use `stream=True` in the predict call:
+**معالجة الفيديوهات الضخمة (Stream):**
+استخدم `stream=True` لضمان عدم امتلاء الذاكرة أثناء معالجة فيديو طويل جداً:
 ```python
 model.predict(source="dir/", stream=True)
 ```
 
 
-# Conclusion {.sdaia-dark background-gradient="linear-gradient(135deg, #1C355E, #00C9A7)"}
+# 🏁 مسابقة نهاية اليوم الأول {.sdaia-dark data-background-gradient="linear-gradient(135deg, #1C355E, #00C9A7)"}
 
-Wrapping Up Day 1
+**تحدي "الخبير الصغير":**
 
-## Summary
+1. ما هو اسم المهمة التي ترسم "نقاطاً" على مفاصل الإنسان؟
+2. أيهما أسرع: نموذج `yolo11n` أم `yolo11x`؟
+3. هل يمكن لـ YOLO تتبع الأشخاص في فيديو؟
 
-- **YOLO Basics**: We explored how to use the CLI and Python API for various tasks.
-- **Tasks**: Object Detection, Image Classification, Instance Segmentation, Pose Estimation, and OBB.
-- **Coordinates**: The importance of normalized coordinates over absolute pixels.
-- **Inference**: How to predict on single images, videos, and batches efficiently.
-
-## Next Steps
-
-Next up: **Real World Use Cases & Solutions**
-
-- Learn how to extract actionable insights from trained models.
-- Discover out-of-the-box solutions for real-world problems.
-- Integrate object tracking, counting, and more into your applications.
-
-## Q&A {.sdaia-dark background-color="#1C355E"}
-
-::: {.r-fit-text}
-**Thank You!**
-
-Any questions?
+::: {.fragment}
+**الإجابات:** 1. الهيكل (Pose) | 2. يولو نانو (n) هو الأسرع | 3. نعم، باستخدام وضع التتبع (Track).
 :::
+
+---
+
+# الخاتمة {.sdaia-dark data-background-gradient="linear-gradient(135deg, #1C355E, #00C9A7)"}
+
+لقد قطعت الشوط الأول بنجاح! 👏
+الآن أنت تعرف كيف تجعل الآلة "تبصر".
+
+في اللقاء القادم: سننزل للميدان ونرى كيف تستخدم الشركات العالمية هذه التقنية!
+
+<div style="text-align: center; font-size: 2em; line-height: 1.5; margin-top: 50px;">
+**شكراً لاهتمامكم ووقتكم** <br>
+<span style="font-size: 0.7em; color: #00C9A7;">نلتقي في الجزء القادم بإذن الله</span>
+</div>
+
+<style>
+  /* Fix RTL overflow and styling */
+  .reveal .slide {
+    text-align: right;
+    direction: rtl;
+  }
+</style>

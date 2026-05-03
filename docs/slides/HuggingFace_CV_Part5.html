@@ -1,16 +1,17 @@
 <!DOCTYPE html>
-<html lang="en"><head>
+<html lang="ar" dir="rtl"><head>
 <script src="HuggingFace_CV_Part5_files/libs/clipboard/clipboard.min.js"></script>
 <script src="HuggingFace_CV_Part5_files/libs/quarto-html/tabby.min.js"></script>
 <script src="HuggingFace_CV_Part5_files/libs/quarto-html/popper.min.js"></script>
 <script src="HuggingFace_CV_Part5_files/libs/quarto-html/tippy.umd.min.js"></script>
 <link href="HuggingFace_CV_Part5_files/libs/quarto-html/tippy.css" rel="stylesheet">
 <link href="HuggingFace_CV_Part5_files/libs/quarto-html/light-border.css" rel="stylesheet">
-<link href="HuggingFace_CV_Part5_files/libs/quarto-html/quarto-syntax-highlighting-587c61ba64f3a5504c4d52d930310e48.css" rel="stylesheet" id="quarto-text-highlighting-styles"><meta charset="utf-8">
-  <meta name="generator" content="quarto-1.8.26">
+<link href="HuggingFace_CV_Part5_files/libs/quarto-html/quarto-html.min.css" rel="stylesheet" data-mode="light">
+<link href="HuggingFace_CV_Part5_files/libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles"><meta charset="utf-8">
+  <meta name="generator" content="quarto-1.4.554">
 
-  <meta name="dcterms.date" content="2026-04-14">
-  <title>HuggingFace for Computer Vision</title>
+  <meta name="dcterms.date" content="2026-05-03">
+  <title>مكتبة HuggingFace للرؤية الحاسوبية</title>
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui">
@@ -28,80 +29,212 @@
       margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
       vertical-align: middle;
     }
-    /* CSS for syntax highlighting */
-    html { -webkit-text-size-adjust: 100%; }
-    pre > code.sourceCode { white-space: pre; position: relative; }
-    pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
-    pre > code.sourceCode > span:empty { height: 1.2em; }
-    .sourceCode { overflow: visible; }
-    code.sourceCode > span { color: inherit; text-decoration: inherit; }
-    div.sourceCode { margin: 1em 0; }
-    pre.sourceCode { margin: 0; }
-    @media screen {
-    div.sourceCode { overflow: auto; }
-    }
-    @media print {
-    pre > code.sourceCode { white-space: pre-wrap; }
-    pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
-    }
-    pre.numberSource code
-      { counter-reset: source-line 0; }
-    pre.numberSource code > span
-      { position: relative; left: -4em; counter-increment: source-line; }
-    pre.numberSource code > span > a:first-child::before
-      { content: counter(source-line);
-        position: relative; left: -1em; text-align: right; vertical-align: baseline;
-        border: none; display: inline-block;
-        -webkit-touch-callout: none; -webkit-user-select: none;
-        -khtml-user-select: none; -moz-user-select: none;
-        -ms-user-select: none; user-select: none;
-        padding: 0 4px; width: 4em;
-        color: #aaaaaa;
-      }
-    pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
-    div.sourceCode
-      { color: #003b4f; background-color: #f1f3f5; }
-    @media screen {
-    pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
-    }
-    code span { color: #003b4f; } /* Normal */
-    code span.al { color: #ad0000; } /* Alert */
-    code span.an { color: #5e5e5e; } /* Annotation */
-    code span.at { color: #657422; } /* Attribute */
-    code span.bn { color: #ad0000; } /* BaseN */
-    code span.bu { } /* BuiltIn */
-    code span.cf { color: #003b4f; font-weight: bold; } /* ControlFlow */
-    code span.ch { color: #20794d; } /* Char */
-    code span.cn { color: #8f5902; } /* Constant */
-    code span.co { color: #5e5e5e; } /* Comment */
-    code span.cv { color: #5e5e5e; font-style: italic; } /* CommentVar */
-    code span.do { color: #5e5e5e; font-style: italic; } /* Documentation */
-    code span.dt { color: #ad0000; } /* DataType */
-    code span.dv { color: #ad0000; } /* DecVal */
-    code span.er { color: #ad0000; } /* Error */
-    code span.ex { } /* Extension */
-    code span.fl { color: #ad0000; } /* Float */
-    code span.fu { color: #4758ab; } /* Function */
-    code span.im { color: #00769e; } /* Import */
-    code span.in { color: #5e5e5e; } /* Information */
-    code span.kw { color: #003b4f; font-weight: bold; } /* Keyword */
-    code span.op { color: #5e5e5e; } /* Operator */
-    code span.ot { color: #003b4f; } /* Other */
-    code span.pp { color: #ad0000; } /* Preprocessor */
-    code span.sc { color: #5e5e5e; } /* SpecialChar */
-    code span.ss { color: #20794d; } /* SpecialString */
-    code span.st { color: #20794d; } /* String */
-    code span.va { color: #111111; } /* Variable */
-    code span.vs { color: #20794d; } /* VerbatimString */
-    code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
   </style>
-  <link rel="stylesheet" href="HuggingFace_CV_Part5_files/libs/revealjs/dist/theme/quarto-090e625264d31d7a518ad9f601b8a232.css">
+  <link rel="stylesheet" href="HuggingFace_CV_Part5_files/libs/revealjs/dist/theme/quarto.css">
   <link href="HuggingFace_CV_Part5_files/libs/revealjs/plugin/quarto-line-highlight/line-highlight.css" rel="stylesheet">
   <link href="HuggingFace_CV_Part5_files/libs/revealjs/plugin/reveal-menu/menu.css" rel="stylesheet">
   <link href="HuggingFace_CV_Part5_files/libs/revealjs/plugin/reveal-menu/quarto-menu.css" rel="stylesheet">
   <link href="HuggingFace_CV_Part5_files/libs/revealjs/plugin/reveal-chalkboard/font-awesome/css/all.css" rel="stylesheet">
   <link href="HuggingFace_CV_Part5_files/libs/revealjs/plugin/reveal-chalkboard/style.css" rel="stylesheet">
   <link href="HuggingFace_CV_Part5_files/libs/revealjs/plugin/quarto-support/footer.css" rel="stylesheet">
+  <style type="text/css">
+
+  .callout {
+    margin-top: 1em;
+    margin-bottom: 1em;  
+    border-radius: .25rem;
+  }
+
+  .callout.callout-style-simple { 
+    padding: 0em 0.5em;
+    border-left: solid #acacac .3rem;
+    border-right: solid 1px silver;
+    border-top: solid 1px silver;
+    border-bottom: solid 1px silver;
+    display: flex;
+  }
+
+  .callout.callout-style-default {
+    border-left: solid #acacac .3rem;
+    border-right: solid 1px silver;
+    border-top: solid 1px silver;
+    border-bottom: solid 1px silver;
+  }
+
+  .callout .callout-body-container {
+    flex-grow: 1;
+  }
+
+  .callout.callout-style-simple .callout-body {
+    font-size: 1rem;
+    font-weight: 400;
+  }
+
+  .callout.callout-style-default .callout-body {
+    font-size: 0.9rem;
+    font-weight: 400;
+  }
+
+  .callout.callout-titled.callout-style-simple .callout-body {
+    margin-top: 0.2em;
+  }
+
+  .callout:not(.callout-titled) .callout-body {
+      display: flex;
+  }
+
+  .callout:not(.no-icon).callout-titled.callout-style-simple .callout-content {
+    padding-left: 1.6em;
+  }
+
+  .callout.callout-titled .callout-header {
+    padding-top: 0.2em;
+    margin-bottom: -0.2em;
+  }
+
+  .callout.callout-titled .callout-title  p {
+    margin-top: 0.5em;
+    margin-bottom: 0.5em;
+  }
+    
+  .callout.callout-titled.callout-style-simple .callout-content  p {
+    margin-top: 0;
+  }
+
+  .callout.callout-titled.callout-style-default .callout-content  p {
+    margin-top: 0.7em;
+  }
+
+  .callout.callout-style-simple div.callout-title {
+    border-bottom: none;
+    font-size: .9rem;
+    font-weight: 600;
+    opacity: 75%;
+  }
+
+  .callout.callout-style-default  div.callout-title {
+    border-bottom: none;
+    font-weight: 600;
+    opacity: 85%;
+    font-size: 0.9rem;
+    padding-left: 0.5em;
+    padding-right: 0.5em;
+  }
+
+  .callout.callout-style-default div.callout-content {
+    padding-left: 0.5em;
+    padding-right: 0.5em;
+  }
+
+  .callout.callout-style-simple .callout-icon::before {
+    height: 1rem;
+    width: 1rem;
+    display: inline-block;
+    content: "";
+    background-repeat: no-repeat;
+    background-size: 1rem 1rem;
+  }
+
+  .callout.callout-style-default .callout-icon::before {
+    height: 0.9rem;
+    width: 0.9rem;
+    display: inline-block;
+    content: "";
+    background-repeat: no-repeat;
+    background-size: 0.9rem 0.9rem;
+  }
+
+  .callout-title {
+    display: flex
+  }
+    
+  .callout-icon::before {
+    margin-top: 1rem;
+    padding-right: .5rem;
+  }
+
+  .callout.no-icon::before {
+    display: none !important;
+  }
+
+  .callout.callout-titled .callout-body > .callout-content > :last-child {
+    padding-bottom: 0.5rem;
+    margin-bottom: 0;
+  }
+
+  .callout.callout-titled .callout-icon::before {
+    margin-top: .5rem;
+    padding-right: .5rem;
+  }
+
+  .callout:not(.callout-titled) .callout-icon::before {
+    margin-top: 1rem;
+    padding-right: .5rem;
+  }
+
+  /* Callout Types */
+
+  div.callout-note {
+    border-left-color: #4582ec !important;
+  }
+
+  div.callout-note .callout-icon::before {
+    background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAAAXNSR0IArs4c6QAAAERlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAA6ABAAMAAAABAAEAAKACAAQAAAABAAAAIKADAAQAAAABAAAAIAAAAACshmLzAAAEU0lEQVRYCcVXTWhcVRQ+586kSUMMxkyaElstCto2SIhitS5Ek8xUKV2poatCcVHtUlFQk8mbaaziwpWgglJwVaquitBOfhQXFlqlzSJpFSpIYyXNjBNiTCck7x2/8/LeNDOZxDuEkgOXe++553zfefee+/OYLOXFk3+1LLrRdiO81yNqZ6K9cG0P3MeFaMIQjXssE8Z1JzLO9ls20MBZX7oG8w9GxB0goaPrW5aNMp1yOZIa7Wv6o2ykpLtmAPs/vrG14Z+6d4jpbSKuhdcSyq9wGMPXjonwmESXrriLzFGOdDBLB8Y6MNYBu0dRokSygMA/mrun8MGFN3behm6VVAwg4WR3i6FvYK1T7MHo9BK7ydH+1uurECoouk5MPRyVSBrBHMYwVobG2aOXM07sWrn5qgB60rc6mcwIDJtQrnrEr44kmy+UO9r0u9O5/YbkS9juQckLed3DyW2XV/qWBBB3ptvI8EUY3I9p/67OW+g967TNr3Sotn3IuVlfMLVnsBwH4fsnebJvyGm5GeIUA3jljERmrv49SizPYuq+z7c2H/jlGC+Ghhupn/hcapqmcudB9jwJ/3jvnvu6vu5lVzF1fXyZuZZ7U8nRmVzytvT+H3kilYvH09mLWrQdwFSsFEsxFVs5fK7A0g8gMZjbif4ACpKbjv7gNGaD8bUrlk8x+KRflttr22JEMRUbTUwwDQScyzPgedQHZT0xnx7ujw2jfVfExwYHwOsDTjLdJ2ebmeQIlJ7neo41s/DrsL3kl+W2lWvAga0tR3zueGr6GL78M3ifH0rGXrBC2aAR8uYcIA5gwV8zIE8onoh8u0Fca/ciF7j1uOzEnqcIm59sEXoGc0+z6+H45V1CvAvHcD7THztu669cnp+L0okAeIc6zjbM/24LgGM1gZk7jnRu1aQWoU9sfUOuhrmtaPIO3YY1KLLWZaEO5TKUbMY5zx8W9UJ6elpLwKXbsaZ4EFl7B4bMtDv0iRipKoDQT2sNQI9b1utXFdYisi+wzZ/ri/1m7QfDgEuvgUUEIJPq3DhX/5DWNqIXDOweC2wvIR90Oq3lDpdMIgD2r0dXvGdsEW5H6x6HLRJYU7C69VefO1x8Gde1ZFSJLfWS1jbCnhtOPxmpfv2LXOA2Xk2tvnwKKPFuZ/oRmwBwqRQDcKNeVQkYcOjtWVBuM/JuYw5b6isojIkYxyYAFn5K7ZBF10fea52y8QltAg6jnMqNHFBmGkQ1j+U43HMi2xMar1Nv0zGsf1s8nUsmUtPOOrbFIR8bHFDMB5zL13Gmr/kGlCkUzedTzzmzsaJXhYawnA3UmARpiYj5ooJZiUoxFRtK3X6pgNPv+IZVPcnwbOl6f+aBaO1CNvPW9n9LmCp01nuSaTRF2YxHqZ8DYQT6WsXT+RD6eUztwYLZ8rM+rcPxamv1VQzFUkzFXvkiVrySGQgJNvXHJAxiU3/NwiC03rSf05VBaPtu/Z7/B8Yn/w7eguloAAAAAElFTkSuQmCC');
+  }
+
+  div.callout-note.callout-style-default .callout-title {
+    background-color: #dae6fb
+  }
+
+  div.callout-important {
+    border-left-color: #d9534f !important;
+  }
+
+  div.callout-important .callout-icon::before {
+    background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAAAXNSR0IArs4c6QAAAERlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAA6ABAAMAAAABAAEAAKACAAQAAAABAAAAIKADAAQAAAABAAAAIAAAAACshmLzAAAEKklEQVRYCcVXTWhcVRS+575MJym48A+hSRFr00ySRQhURRfd2HYjk2SSTokuBCkU2o0LoSKKraKIBTcuFCoidGFD08nkBzdREbpQ1EDNIv8qSGMFUboImMSZd4/f9zJv8ibJMC8xJQfO3HPPPef7zrvvvnvviIkpC9nsw0UttFunbUhpFzFtarSd6WJkStVMw5xyVqYTvkwfzuf/5FgtkVoB0729j1rjXwThS7Vio+Mo6DNnvLfahoZ+i/o32lULuJ3NNiz7q6+pyAUkJaFF6JwaM2lUJlV0MlnQn5aTRbEu0SEqHUa0A4AdiGuB1kFXRfVyg5d87+Dg4DL6m2TLAub60ilj7A1Ec4odSAc8X95sHh7+ZRPCFo6Fnp7HfU/fBng/hi10CjCnWnJjsxvDNxWw0NfV6Rv5GgP3I3jGWXumdTD/3cbEOP2ZbOZp69yniG3FQ9z1jD7bnBu9Fc2tKGC2q+uAJOQHBDRiZX1x36o7fWBs7J9ownbtO+n0/qWkvW7UPIfc37WgT6ZGR++EOJyeQDSb9UB+DZ1G6DdLDzyS+b/kBCYGsYgJbSQHuThGKRcw5xdeQf8YdNHsc6ePXrlSYMBuSIAFTGAtQo+VuALo4BX83N190NWZWbynBjhOHsmNfFWLeL6v+ynsA58zDvvAC8j5PkbOcXCMg2PZFk3q8MjI7WAG/Dp9AwP7jdGBOOQkAvlFUB+irtm16I1Zw9YBcpGTGXYmk3kQIC/Cds55l+iMI3jqhjAuaoe+am2Jw5GT3Nbz3CkE12NavmzN5+erJW7046n/CH1RO/RVa8lBLozXk9uqykkGAyRXLWlLv5jyp4RFsG5vGVzpDLnIjTWgnRy2Rr+tDKvRc7Y8AyZq10jj8DqXdnIRNtFZb+t/ZRtXcDiVnzpqx8mPcDWxgARUqx0W1QB9MeUZiNrV4qP+Ehc+BpNgATsTX8ozYKL2NtFYAHc84fG7ndxUPr+AR/iQSns7uSUufAymwDOb2+NjK27lEFocm/EE2WpyIy/Hi66MWuMKJn8RvxIcj87IM5Vh9663ziW36kR0HNenXuxmfaD8JC7tfKbrhFr7LiZCrMjrzTeGx+PmkosrkNzW94ObzwocJ7A1HokLolY+AvkTiD/q1H0cN48c5EL8Crkttsa/AXQVDmutfyku0E7jShx49XqV3MFK8IryDhYVbj7Sj2P2eBxwcXoe8T8idsKKPRcnZw1b+slFTubwUwhktrfnAt7J++jwQtLZcm3sr9LQrjRzz6cfMv9aLvgmnAGvpoaGLxM4mAEaLV7iAzQ3oU0IvD5x9ix3yF2RAAuYAOO2f7PEFWCXZ4C9Pb2UsgDeVnFSpbFK7/IWu7TPTvBqzbGdCHOJQSxiEjt6IyZmxQyEJHv6xyQsYk//moVFsN2zP6fRImjfq7/n/wFDguUQFNEwugAAAABJRU5ErkJggg==');
+  }
+
+  div.callout-important.callout-style-default .callout-title {
+    background-color: #f7dddc
+  }
+
+  div.callout-warning {
+    border-left-color: #f0ad4e !important;
+  }
+
+  div.callout-warning .callout-icon::before {
+    background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAAAXNSR0IArs4c6QAAAERlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAA6ABAAMAAAABAAEAAKACAAQAAAABAAAAIKADAAQAAAABAAAAIAAAAACshmLzAAAETklEQVRYCeVWW2gcVRg+58yaTUnizqbipZeX4uWhBEniBaoUX1Ioze52t7sRq6APio9V9MEaoWlVsFasRq0gltaAPuxms8lu0gcviE/FFOstVbSIxgcv6SU7EZqmdc7v9+9mJtNks51NTUH84ed889/PP+cmxP+d5FIbMJmNbpREu4WUkiTtCicKny0l1pIKmBzovF2S+hIJHX8iEu3hZJ5lNZGqyRrGSIQpq15AzF28jgpeY6yk6GVdrfFqdrD6Iw+QlB8g0YS2g7dyQmXM/IDhBhT0UCiRf59lfqmmDvzRt6kByV/m4JjtzuaujMUM2c5Z2d6JdKrRb3K2q6mA+oYVz8JnDdKPmmNthzkAk/lN63sYPgevrguc72aZX/L9C6x09GYyxBgCX4NlvyGUHOKELlm5rXeR1kchuChJt4SSwyddZRXgvwMGvYo4QSlk3/zkHD8UHxwVJA6zjZZqP8v8kK8OWLnIZtLyCAJagYC4rTGW/9Pqj92N/c+LUaAj27movwbi19tk/whRCIE7Q9vyI6yvRpftAKVTdUjOW40X3h5OXsKCdmFcx0xlLJoSuQngnrJe7Kcjm4OMq9FlC7CMmScQANuNvjfP3PjGXDBaUQmbp296S5L4DrpbrHN1T87ZVEZVCzg1FF0Ft+dKrlLukI+/c9ENo+TvlTDbYFvuKPtQ9+l052rXrgKoWkDAFnvh0wTOmYn8R5f4k/jN/fZiCM1tQx9jQQ4ANhqG4hiL0qIFTGViG9DKB7GYzgubnpofgYRwO+DFjh0Zin2m4b/97EDkXkc+f6xYAPX0KK2I/7fUQuwzuwo/L3AkcjugPNixC8cHf0FyPjWlItmLxWw4Ou9YsQCr5fijMGoD/zpdRy95HRysyXA74MWOnscpO4j2y3HAVisw85hX5+AFBRSHt4ShfLFkIMXTqyKFc46xdzQM6XbAi702a7sy04J0+feReMFKp5q9esYLCqAZYw/k14E/xcLLsFElaornTuJB0svMuJINy8xkIYuL+xPAlWRceH6+HX7THJ0djLUom46zREu7tTkxwmf/FdOZ/sh6Q8qvEAiHpm4PJ4a/doJe0gH1t+aHRgCzOvBvJedEK5OFE5jpm4AGP2a8Dxe3gGJ/pAutug9Gp6he92CsSsWBaEcxGx0FHytmIpuqGkOpldqNYQK8cSoXvd+xLxXADw0kf6UkJNFtdo5MOgaLjiQOQHcn+A6h5NuL2s0qsC2LOM75PcF3yr5STuBSAcGG+meA14K/CI21HcS4LBT6tv0QAh8Dr5l93AhZzG5ZJ4VxAqdZUEl9z7WJ4aN+svMvwHHL21UKTd1mqvChH7/Za5xzXBBKrUcB0TQ+Ulgkfbi/H/YT5EptrGzsEK7tR1B7ln9BBwckYfMiuSqklSznIuoIIOM42MQO+QnduCoFCI0bpkzjCjddHPN/F+2Yu+sd9bKNpVwHhbS3LluK/0zgfwD0xYI5dXuzlQAAAABJRU5ErkJggg==');
+  }
+
+  div.callout-warning.callout-style-default .callout-title {
+    background-color: #fcefdc
+  }
+
+  div.callout-tip {
+    border-left-color: #02b875 !important;
+  }
+
+  div.callout-tip .callout-icon::before {
+    background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAAAXNSR0IArs4c6QAAAERlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAA6ABAAMAAAABAAEAAKACAAQAAAABAAAAIKADAAQAAAABAAAAIAAAAACshmLzAAADr0lEQVRYCe1XTWgTQRj9ZjZV8a9SPIkKgj8I1bMHsUWrqYLVg4Ue6v9BwZOxSYsIerFao7UiUryIqJcqgtpimhbBXoSCVxUFe9CTiogUrUp2Pt+3aUI2u5vdNh4dmMzOzHvvezuz8xNFM0mjnbXaNu1MvFWRXkXEyE6aYOYJpdW4IXuA4r0fo8qqSMDBU0v1HJUgVieAXxzCsdE/YJTdFcVIZQNMyhruOMJKXYFoLfIfIvVIMWdsrd+Rpd86ZmyzzjJmLStqRn0v8lzkb4rVIXvnpScOJuAn2ACC65FkPzEdEy4TPWRLJ2h7z4cArXzzaOdKlbOvKKX25Wl00jSnrwVxAg3o4dRxhO13RBSdNvH0xSARv3adTXbBdTf64IWO2vH0LT+cv4GR1DJt+DUItaQogeBX/chhbTBxEiZ6gftlDNXTrvT7co4ub5A6gp9HIcHvzTa46OS5fBeP87Qm0fQkr4FsYgVQ7Qg+ZayaDg9jhg1GkWj8RG6lkeSacrrHgDaxdoBiZPg+NXV/KifMuB6//JmYH4CntVEHy/keA6x4h4CU5oFy8GzrBS18cLJMXcljAKB6INjWsRcuZBWVaS3GDrqB7rdapVIeA+isQ57Eev9eCqzqOa81CY05VLd6SamW2wA2H3SiTbnbSxmzfp7WtKZkqy4mdyAlGx7ennghYf8voqp9cLSgKdqNfa6RdRsAAkPwRuJZNbpByn+RrJi1RXTwdi8RQF6ymDwGMAtZ6TVE+4uoKh+MYkcLsT0Hk8eAienbiGdjJHZTpmNjlbFJNKDVAp2fJlYju6IreQxQ08UJDNYdoLSl6AadO+fFuCQqVMB1NJwPm69T04Wv5WhfcWyfXQB+wXRs1pt+nCknRa0LVzSA/2B+a9+zQJadb7IyyV24YAxKp2Jqs3emZTuNnKxsah+uabKbMk7CbTgJx/zIgQYErIeTKRQ9yD9wxVof5YolPHqaWo7TD6tJlh7jQnK5z2n3+fGdggIOx2kaa2YI9QWarc5Ce1ipNWMKeSG4DysFF52KBmTNMmn5HqCFkwy34rDg05gDwgH3bBi+sgFhN/e8QvRn8kbamCOhgrZ9GJhFDgfcMHzFb6BAtjKpFhzTjwv1KCVuxHvCbsSiEz4CANnj84cwHdFXAbAOJ4LTSAawGWFn5tDhLMYz6nWeU2wJfIhmIJBefcd/A5FWQWGgrWzyORZ3Q6HuV+Jf0Bj+BTX69fm1zWgK7By1YTXchFDORywnfQ7GpzOo6S+qECrsx2ifVQAAAABJRU5ErkJggg==');
+  }
+
+  div.callout-tip.callout-style-default .callout-title {
+    background-color: #ccf1e3
+  }
+
+  div.callout-caution {
+    border-left-color: #fd7e14 !important;
+  }
+
+  div.callout-caution .callout-icon::before {
+    background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAAAXNSR0IArs4c6QAAAERlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAA6ABAAMAAAABAAEAAKACAAQAAAABAAAAIKADAAQAAAABAAAAIAAAAACshmLzAAACV0lEQVRYCdVWzWoUQRCuqp2ICBLJXgITZL1EfQDBW/bkzUMUD7klD+ATSHBEfAIfQO+iXsWDxJsHL96EHAwhgzlkg8nBg25XWb0zIb0zs9muYYWkoKeru+vn664fBqElyZNuyh167NXJ8Ut8McjbmEraKHkd7uAnAFku+VWdb3reSmRV8PKSLfZ0Gjn3a6Xlcq9YGb6tADjn+lUfTXtVmaZ1KwBIvFI11rRXlWlatwIAAv2asaa9mlB9wwygiDX26qaw1yYPzFXg2N1GgG0FMF8Oj+VIx7E/03lHx8UhvYyNZLN7BwSPgekXXLribw7w5/c8EF+DBK5idvDVYtEEwMeYefjjLAdEyQ3M9nfOkgnPTEkYU+sxMq0BxNR6jExrAI31H1rzvLEfRIdgcv1XEdj6QTQAS2wtstEALLG1yEZ3QhH6oDX7ExBSFEkFINXH98NTrme5IOaaA7kIfiu2L8A3qhH9zRbukdCqdsA98TdElyeMe5BI8Rs2xHRIsoTSSVFfCFCWGPn9XHb4cdobRIWABNf0add9jakDjQJpJ1bTXOJXnnRXHRf+dNL1ZV1MBRCXhMbaHqGI1JkKIL7+i8uffuP6wVQAzO7+qVEbF6NbS0LJureYcWXUUhH66nLR5rYmva+2tjRFtojkM2aD76HEGAD3tPtKM309FJg5j/K682ywcWJ3PASCcycH/22u+Bh7Aa0ehM2Fu4z0SAE81HF9RkB21c5bEn4Dzw+/qNOyXr3DCTQDMBOdhi4nAgiFDGCinIa2owCEChUwD8qzd03PG+qdW/4fDzjUMcE1ZpIAAAAASUVORK5CYII=');
+  }
+
+  div.callout-caution.callout-style-default .callout-title {
+    background-color: #ffe5d0
+  }
+
+  </style>
   <style type="text/css">
     .reveal div.sourceCode {
       margin: 0;
@@ -190,885 +323,321 @@
     }
   </style>
   <link rel="icon" type="image/svg+xml" href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA4MCA4MCI+DQogIDxkZWZzPg0KICAgIDxsaW5lYXJHcmFkaWVudCBpZD0iYSIgeDE9Ii0xLjkxMSIgeDI9IjIuOTg1IiB5MT0iLS44NDEiIHkyPSIxLjQxNCIgZ3JhZGllbnRVbml0cz0ib2JqZWN0Qm91bmRpbmdCb3giPg0KICAgICAgPHN0b3Agb2Zmc2V0PSIwIiBzdG9wLWNvbG9yPSIjOTlkNjMzIi8+DQogICAgICA8c3RvcCBvZmZzZXQ9Ii41IiBzdG9wLWNvbG9yPSIjM2M5Ii8+DQogICAgICA8c3RvcCBvZmZzZXQ9IjEiIHN0b3AtY29sb3I9IiMyNzM0NzAiLz4NCiAgICA8L2xpbmVhckdyYWRpZW50Pg0KICAgIDxsaW5lYXJHcmFkaWVudCBocmVmPSIjYSIgaWQ9ImQiIHgxPSItMy41NjkiIHgyPSIxLjMyOCIgeTE9Ii0xLjYwNSIgeTI9Ii42NTEiLz4NCiAgICA8bGluZWFyR3JhZGllbnQgaHJlZj0iI2EiIGlkPSJlIiB4MT0iLTMuMDQ3IiB4Mj0iMS44NDkiIHkxPSItLjkwNCIgeTI9IjEuMzUyIi8+DQogICAgPGxpbmVhckdyYWRpZW50IGhyZWY9IiNhIiBpZD0iZiIgeDE9Ii0yLjg5IiB4Mj0iMi4wMDciIHkxPSItMS4yOTIiIHkyPSIuOTY0Ii8+DQogICAgPGxpbmVhckdyYWRpZW50IGhyZWY9IiNhIiBpZD0iZyIgeDE9Ii0yLjQiIHgyPSIyLjQ5NyIgeTE9Ii0xLjA2NiIgeTI9IjEuMTg5Ii8+DQogICAgPGxpbmVhckdyYWRpZW50IGhyZWY9IiNhIiBpZD0iaCIgeDE9Ii0uOTkyIiB4Mj0iMi42NzkiIHkxPSItLjQxOCIgeTI9IjEuMjczIi8+DQogICAgPGxpbmVhckdyYWRpZW50IGhyZWY9IiNhIiBpZD0iaSIgeDE9Ii0xLjUxMiIgeDI9IjIuMTU5IiB5MT0iLS4xOTciIHkyPSIxLjQ5NSIvPg0KICAgIDxsaW5lYXJHcmFkaWVudCBocmVmPSIjYSIgaWQ9ImoiIHgxPSItLjkxNCIgeDI9IjIuNzU4IiB5MT0iLjA3OSIgeTI9IjEuNzcxIi8+DQogICAgPGxpbmVhckdyYWRpZW50IGhyZWY9IiNhIiBpZD0iayIgeDE9Ii0zLjQwNSIgeDI9IjEuNDkzIiB5MT0iLTEuMDY4IiB5Mj0iMS4xODciLz4NCiAgICA8bGluZWFyR3JhZGllbnQgaHJlZj0iI2EiIGlkPSJsIiB4MT0iLjM0NyIgeDI9IjMuMjg1IiB5MT0iLjE5OSIgeTI9IjEuNTUyIi8+DQogICAgPGxpbmVhckdyYWRpZW50IGhyZWY9IiNhIiBpZD0ibSIgeDE9Ii0uOTA1IiB4Mj0iMi43NjciIHkxPSIuMDgzIiB5Mj0iMS43NzUiLz4NCiAgICA8bGluZWFyR3JhZGllbnQgaHJlZj0iI2EiIGlkPSJuIiB4MT0iLTIuMTE5IiB4Mj0iMi43NzgiIHkxPSItLjQ3NiIgeTI9IjEuNzc5Ii8+DQogICAgPGxpbmVhckdyYWRpZW50IGhyZWY9IiNhIiBpZD0ibyIgeDE9Ii01LjY0NCIgeDI9Ii40ODYiIHkxPSItMi45OTgiIHkyPSIuNzQxIi8+DQogICAgPGxpbmVhckdyYWRpZW50IGhyZWY9IiNhIiBpZD0icCIgeDE9Ii0zLjQ5NSIgeDI9IjIuNjM2IiB5MT0iLTEuNjg3IiB5Mj0iMi4wNTMiLz4NCiAgICA8bGluZWFyR3JhZGllbnQgaHJlZj0iI2EiIGlkPSJxIiB4MT0iLTEuNDIyIiB4Mj0iMy4xNzUiIHkxPSItLjkyMyIgeTI9IjEuODgyIi8+DQogICAgPGxpbmVhckdyYWRpZW50IGhyZWY9IiNhIiBpZD0iciIgeDE9Ii0zLjMwNiIgeDI9IjIuODI1IiB5MT0iLTIuMDcyIiB5Mj0iMS42NjgiLz4NCiAgICA8bGluZWFyR3JhZGllbnQgaHJlZj0iI2EiIGlkPSJzIiB4MT0iLTEuNjgzIiB4Mj0iMi45MTQiIHkxPSItMS4wODEiIHkyPSIxLjcyMyIvPg0KICAgIDxsaW5lYXJHcmFkaWVudCBocmVmPSIjYSIgaWQ9InQiIHgxPSItMS4xNTgiIHgyPSIyLjUyMSIgeTE9Ii0uMjYxIiB5Mj0iMS45ODMiLz4NCiAgICA8bGluZWFyR3JhZGllbnQgaWQ9ImIiIHgxPSIuMjYxIiB4Mj0iLjYyNCIgeTE9IjMuNTYiIHkyPSItMS40NjkiIGdyYWRpZW50VW5pdHM9Im9iamVjdEJvdW5kaW5nQm94Ij4NCiAgICAgIDxzdG9wIG9mZnNldD0iMCIgc3RvcC1jb2xvcj0iIzZjZiIvPg0KICAgICAgPHN0b3Agb2Zmc2V0PSIuNSIgc3RvcC1jb2xvcj0iIzYyNThhNiIvPg0KICAgICAgPHN0b3Agb2Zmc2V0PSIxIiBzdG9wLWNvbG9yPSIjMjczNDcwIi8+DQogICAgPC9saW5lYXJHcmFkaWVudD4NCiAgICA8bGluZWFyR3JhZGllbnQgaHJlZj0iI2IiIGlkPSJ1IiB4MT0iLjE2MyIgeDI9Ii41MjYiIHkxPSI0LjkyNCIgeTI9Ii0uMTAzIi8+DQogICAgPGxpbmVhckdyYWRpZW50IGhyZWY9IiNiIiBpZD0idiIgeDE9Ii4zODYiIHgyPSIuNjU4IiB5MT0iMS44MjUiIHkyPSItMS45NDUiLz4NCiAgICA8bGluZWFyR3JhZGllbnQgaHJlZj0iI2IiIGlkPSJ3IiB4MT0iLjI1MiIgeDI9Ii42MTUiIHkxPSI0LjE4MiIgeTI9Ii0uODQ1Ii8+DQogICAgPGxpbmVhckdyYWRpZW50IGhyZWY9IiNiIiBpZD0ieCIgeDE9Ii40MTciIHgyPSIuNjg5IiB5MT0iMS45IiB5Mj0iLTEuODciLz4NCiAgICA8bGluZWFyR3JhZGllbnQgaHJlZj0iI2IiIGlkPSJ5IiB4MT0iLjQ4NSIgeDI9Ii43MDMiIHkxPSIuOTU2IiB5Mj0iLTIuMDYiLz4NCiAgICA8bGluZWFyR3JhZGllbnQgaHJlZj0iI2IiIGlkPSJ6IiB4MT0iLjM3NyIgeDI9Ii42NDkiIHkxPSIyLjQ1NSIgeTI9Ii0xLjMxNCIvPg0KICAgIDxsaW5lYXJHcmFkaWVudCBocmVmPSIjYiIgaWQ9IkEiIHgxPSIuMTk5IiB4Mj0iLjU2MiIgeTE9IjQuOTIyIiB5Mj0iLS4xMDUiLz4NCiAgICA8bGluZWFyR3JhZGllbnQgaHJlZj0iI2IiIGlkPSJCIiB4MT0iLjQzNyIgeDI9Ii43MDkiIHkxPSIxLjYyNSIgeTI9Ii0yLjE0NSIvPg0KICAgIDxsaW5lYXJHcmFkaWVudCBocmVmPSIjYiIgaWQ9IkMiIHgxPSIuMjYxIiB4Mj0iLjYyNCIgeTE9IjQuMDU1IiB5Mj0iLS45NzIiLz4NCiAgICA8bGluZWFyR3JhZGllbnQgaHJlZj0iI2IiIGlkPSJEIiB4MT0iLjUiIHgyPSIuNSIgeTE9IjMuMDQ1IiB5Mj0iLTEuOTI3Ii8+DQogICAgPGxpbmVhckdyYWRpZW50IGhyZWY9IiNiIiBpZD0iRSIgeDE9Ii41IiB4Mj0iLjUiIHkxPSI0LjkwMSIgeTI9Ii0uMDcyIi8+DQogICAgPGxpbmVhckdyYWRpZW50IGhyZWY9IiNiIiBpZD0iRiIgeDE9Ii41IiB4Mj0iLjUiIHkxPSIyLjQzNSIgeTI9Ii0xLjI5NiIvPg0KICAgIDxsaW5lYXJHcmFkaWVudCBocmVmPSIjYiIgaWQ9IkciIHgxPSIuNSIgeDI9Ii41IiB5MT0iLjkzNCIgeTI9Ii0yLjA1Ii8+DQogICAgPGxpbmVhckdyYWRpZW50IGhyZWY9IiNiIiBpZD0iSCIgeDE9Ii41IiB4Mj0iLjUiIHkxPSIzLjc4NSIgeTI9Ii0xLjE4NyIvPg0KICAgIDxsaW5lYXJHcmFkaWVudCBocmVmPSIjYiIgaWQ9IkkiIHgxPSIuNSIgeDI9Ii41IiB5MT0iMS44MDkiIHkyPSItMS45MjEiLz4NCiAgICA8bGluZWFyR3JhZGllbnQgaHJlZj0iI2IiIGlkPSJKIiB4MT0iLjUiIHgyPSIuNSIgeTE9IjMuMDQ2IiB5Mj0iLTEuOTI4Ii8+DQogICAgPGxpbmVhckdyYWRpZW50IGhyZWY9IiNiIiBpZD0iSyIgeDE9Ii41IiB4Mj0iLjUiIHkxPSIyLjc5NCIgeTI9Ii0yLjE3NyIvPg0KICAgIDxsaW5lYXJHcmFkaWVudCBpZD0iYyIgeDE9IjUuMDEiIHgyPSItMi4yNzciIHkxPSItMS4zODMiIHkyPSIyLjAzOSIgZ3JhZGllbnRVbml0cz0ib2JqZWN0Qm91bmRpbmdCb3giPg0KICAgICAgPHN0b3Agb2Zmc2V0PSIwIiBzdG9wLWNvbG9yPSIjZmRiZDRkIi8+DQogICAgICA8c3RvcCBvZmZzZXQ9Ii41IiBzdG9wLWNvbG9yPSIjZjYzIi8+DQogICAgICA8c3RvcCBvZmZzZXQ9IjEiIHN0b3AtY29sb3I9IiMyNzM0NzAiLz4NCiAgICA8L2xpbmVhckdyYWRpZW50Pg0KICAgIDxsaW5lYXJHcmFkaWVudCBocmVmPSIjYyIgaWQ9IkwiIHgxPSIyLjIzOSIgeDI9Ii0yLjEzNCIgeTE9Ii0uMDgyIiB5Mj0iMS45NzEiLz4NCiAgICA8bGluZWFyR3JhZGllbnQgaHJlZj0iI2MiIGlkPSJNIiB4MT0iNi4wOTgiIHgyPSItMS4xOTEiIHkxPSItMS44OTMiIHkyPSIxLjUyOCIvPg0KICAgIDxsaW5lYXJHcmFkaWVudCBocmVmPSIjYyIgaWQ9Ik4iIHgxPSIzLjM4NCIgeDI9Ii0yLjA4MSIgeTE9Ii0xLjA4OCIgeTI9IjEuNDc3Ii8+DQogICAgPGxpbmVhckdyYWRpZW50IGhyZWY9IiNjIiBpZD0iTyIgeDE9IjIuNzgiIHgyPSItMi42ODYiIHkxPSItLjgwNSIgeTI9IjEuNzYxIi8+DQogICAgPGxpbmVhckdyYWRpZW50IGhyZWY9IiNjIiBpZD0iUCIgeDE9IjcuMDc0IiB4Mj0iLS4yMTIiIHkxPSItMi4zNTMiIHkyPSIxLjA2OSIvPg0KICAgIDxsaW5lYXJHcmFkaWVudCBocmVmPSIjYyIgaWQ9IlEiIHgxPSI1LjA3NSIgeDI9Ii0yLjIxMSIgeTE9Ii0xLjQxNCIgeTI9IjIuMDA4Ii8+DQogICAgPGxpbmVhckdyYWRpZW50IGhyZWY9IiNjIiBpZD0iUiIgeDE9IjUuNzM2IiB4Mj0iLTEuNTUiIHkxPSItMi4xOTQiIHkyPSIxLjIyOCIvPg0KICAgIDxsaW5lYXJHcmFkaWVudCBocmVmPSIjYyIgaWQ9IlMiIHgxPSIyLjA4MSIgeDI9Ii0xLjc4MSIgeTE9Ii0uMDQ3IiB5Mj0iMS45Ii8+DQogICAgPGxpbmVhckdyYWRpZW50IGhyZWY9IiNjIiBpZD0iVCIgeDE9Ii43MjkiIHgyPSItMi4zNjEiIHkxPSIuMTM1IiB5Mj0iMS42OTIiLz4NCiAgICA8bGluZWFyR3JhZGllbnQgaHJlZj0iI2MiIGlkPSJVIiB4MT0iMi43MTciIHgyPSItMi40MzMiIHkxPSItLjg2OCIgeTI9IjEuNzI4Ii8+DQogICAgPGxpbmVhckdyYWRpZW50IGhyZWY9IiNjIiBpZD0iViIgeDE9IjEuNTE3IiB4Mj0iLTIuMzQ3IiB5MT0iLS4yNjIiIHkyPSIxLjY4NCIvPg0KICAgIDxsaW5lYXJHcmFkaWVudCBocmVmPSIjYyIgaWQ9IlciIHgxPSIzLjU0NCIgeDI9Ii0xLjYwNiIgeTE9Ii0xLjI4NCIgeTI9IjEuMzEyIi8+DQogICAgPGxpbmVhckdyYWRpZW50IGhyZWY9IiNjIiBpZD0iWCIgeDE9IjIuNjMxIiB4Mj0iLTEuMjMzIiB5MT0iLS4zMjQiIHkyPSIxLjYyMyIvPg0KICAgIDxsaW5lYXJHcmFkaWVudCBocmVmPSIjYyIgaWQ9IlkiIHgxPSIyLjAwMyIgeDI9Ii0xLjg2IiB5MT0iLS4wMDciIHkyPSIxLjk0Ii8+DQogICAgPGxpbmVhckdyYWRpZW50IGhyZWY9IiNjIiBpZD0iWiIgeDE9IjQuMTI1IiB4Mj0iLTEuMDI1IiB5MT0iLTEuMDc3IiB5Mj0iMS41MTgiLz4NCiAgICA8bGluZWFyR3JhZGllbnQgaHJlZj0iI2MiIGlkPSJhYSIgeDE9IjMuMDIyIiB4Mj0iLTIuMTI3IiB5MT0iLTEuMDIxIiB5Mj0iMS41NzQiLz4NCiAgICA8bGluZWFyR3JhZGllbnQgaHJlZj0iI2MiIGlkPSJhYiIgeDE9IjQuNjgxIiB4Mj0iLS40NjkiIHkxPSItMS44NTciIHkyPSIuNzM4Ii8+DQogIDwvZGVmcz4NCiAgPGcgdHJhbnNmb3JtPSJ0cmFuc2xhdGUoMy44IDEpIj4NCiAgPHBhdGggZmlsbD0iIzNjOSIgZD0ibTM2LjA0MSAyNi41My0xMS40NDggNi42MTF2MTMuMjJsMTEuNDQ4IDYuNjEyIDExLjQ0Ni02LjYwOFYzMy4xNDFaIi8+DQogIDxwYXRoIGZpbGw9InVybCgjYSkiIGQ9Ik03MS40NjQgMjAuOTF2Ny45MzJsLTYuODctMy45NjVaIi8+DQogIDxwYXRoIGZpbGw9InVybCgjZCkiIGQ9Ik02NC4yNDkgNTIuOTdsNi44NjkgMy45NjV2LTcuOTNaIi8+DQogIDxwYXRoIGZpbGw9InVybCgjZSkiIGQ9Im02OC4xIDQ2LjM1OSAtNi44NjkgMy45Njd2LTcuOTMyWiIvPg0KICA8cGF0aCBmaWxsPSJ1cmwoI2YpIiBkPSJNNzIuMzkyIDM1LjM3djcuOTMybC02Ljg2OSAtMy45NjVaIi8+DQogIDxwYXRoIGZpbGw9InVybCgjZykiIGQ9Ik01Ni42NTEgNTYuODQ3djcuOTMybC02Ljg2OSAtMy45NjVaIi8+DQogIDxwYXRoIGZpbGw9InVybCgjaCkiIGQ9Im01Ny43OTQgNTEuNjQzIC05LjE2IC01LjI4NiA5LjE2IC01LjI5WiIvPg0KICA8cGF0aCBmaWxsPSJ1cmwoI2kpIiBkPSJtNTcuNzk1IDUyLjk3IC05LjE2IDUuMjlWNDcuNjg0WiIvPg0KICA8cGF0aCBmaWxsPSJ1cmwoI2opIiBkPSJtNTcuNzkyIDM5Ljc0OSAtOS4xNTggNS4yODZ2LTEwLjU3MloiLz4NCiAgPHBhdGggZmlsbD0idXJsKCNrKSIgZD0ibTU4LjUgNzAuMzE4IC02Ljg2OCAzLjk2N3YtNy45MzJaIi8+DQogIDxwYXRoIGZpbGw9InVybCgjbCkiIGQ9Im00Ny40ODcgNDYuMzYxIC0xMS40NDYgLTYuNjEyIDExLjQ0NiAtNi42MTFaIi8+DQogIDxwYXRoIGZpbGw9InVybCgjbSkiIGQ9Im00Ni4zNDQgNjEuMDc3IC05LjE1OCA1LjI4NnYtMTAuNTcyWiIvPg0KICA8cGF0aCBmaWxsPSJ1cmwoI24pIiBkPSJtNDUuMTk5IDc0LjAzNSAtNi44NjggMy45NjV2LTcuOTMyWiIvPg0KICA8cGF0aCBmaWxsPSJ1cmwoI28pIiBkPSJtNzAuMDIxIDYxLjc3NSAtNi44NjkgMy45Njd2LTcuOTMyWiIvPg0KICA8cGF0aCBmaWxsPSJ1cmwoI3ApIiBkPSJtNjguMSAzMy4xNDIgLTYuODY5IDMuOTY3di03LjkzMloiLz4NCiAgPHBhdGggZmlsbD0idXJsKCNxKSIgZD0iTTU3Ljc5NCAyNy44NTJ2MTAuNTc2bC05LjE2IC01LjI5WiIvPg0KICA8cGF0aCBmaWxsPSJ1cmwoI3IpIiBkPSJNNDUuMjAyIDYyLjg5MXY3LjkzMmwtNi44NjkgLTMuOTY3WiIvPg0KICA8cGF0aCBmaWxsPSJ1cmwoI3MpIiBkPSJtNDYuMzQzIDU5Ljc1NiAtOS4xNTcgLTUuMjg2IDkuMTU3IC01LjI5WiIvPg0KICA8cGF0aCBmaWxsPSJ1cmwoI3QpIiBkPSJtMzYuMDQxIDM5Ljc1IDExLjQ0NiA2LjYxMiAtMTEuNDQ2IDYuNjA4WiIvPg0KICA8cGF0aCBmaWxsPSJ1cmwoI2IpIiBkPSJtNjkuMzM0IDE3LjAzMSAtNi44NjkgMy45NjV2LTcuOTNaIi8+DQogIDxwYXRoIGZpbGw9InVybCgjdSkiIGQ9Im01OC4wODIgNS40NiAtNi44NzEgMy45Njd2LTcuOTMyWiIvPg0KICA8cGF0aCBmaWxsPSJ1cmwoI3YpIiBkPSJtNTcuNzk2IDI2LjUyOSAtOS4xNjIgNS4yODZWMjEuMjQxWiIvPg0KICA8cGF0aCBmaWxsPSJ1cmwoI3cpIiBkPSJtNDUuMiAxNC41NDUgLTYuODY5IC0zLjk2NSA2Ljg2OSAtMy45NjdaIi8+DQogIDxwYXRoIGZpbGw9InVybCgjeCkiIGQ9Ik00Ni4zNDQgMTkuNzQ0VjMwLjMxOWwtOS4xNTggLTUuMjg2WiIvPg0KICA8cGF0aCBmaWxsPSJ1cmwoI3kpIiBkPSJNMzYuMDQxIDI2LjUzdjEzLjIyTDI0LjU5MyAzMy4xNDFaIi8+DQogIDxwYXRoIGZpbGw9InVybCgjeikiIGQ9Im0zNC44OTcgMjMuNzA5IC05LjE1OCAtNS4yODYgOS4xNTggLTUuMjlaIi8+DQogIDxwYXRoIGZpbGw9InVybCgjQSkiIGQ9Im0zMy43NSA3LjkzMiAtNi44NyAtMy45NjUgNi44NyAtMy45NjdaIi8+DQogIDxwYXRoIGZpbGw9InVybCgjQikiIGQ9Im0yMy40NDkgMzEuODE2IC05LjE1OCAtNS4yOSA5LjE1OCAtNS4yODVaIi8+DQogIDxwYXRoIGZpbGw9InVybCgjQykiIGQ9Ik0xOS43NiA2LjAzOXY3LjkzMmwtNi44NjkgLTMuOTY1WiIvPg0KICA8cGF0aCBmaWxsPSJ1cmwoI0QpIiBkPSJtNTYuNjQ3IDIyLjY1MSAtNi44NzEgLTMuOTY3IDYuODcxIC0zLjk2N1oiLz4NCiAgPHBhdGggZmlsbD0idXJsKCNFKSIgZD0ibTQ1LjIgMy45NjcgLTYuODY5IDMuOTY1di03LjkzMloiLz4NCiAgPHBhdGggZmlsbD0idXJsKCNGKSIgZD0ibTQ2LjM0NCAxOC40MTcgLTkuMTU4IDUuMjg2di0xMC41NjhaIi8+DQogIDxwYXRoIGZpbGw9InVybCgjRykiIGQ9Im00Ny40ODcgMzMuMTQxIC0xMS40NDYgNi42MTF2LTEzLjIyWiIvPg0KICA8cGF0aCBmaWxsPSJ1cmwoI0gpIiBkPSJtMzMuNzUzIDEyLjgxNCAtNi44NzEgMy45Njd2LTcuOTMyWiIvPg0KICA8cGF0aCBmaWxsPSJ1cmwoI0kpIiBkPSJtMzQuODk2IDI1LjAzMyAtOS4xNTggNS4yODZ2LTEwLjU3NVoiLz4NCiAgPHBhdGggZmlsbD0idXJsKCNKKSIgZD0ibTIyLjMgMTguNjg0IC02Ljg3IDMuOTY1di03LjkzWiIvPg0KICA8cGF0aCBmaWxsPSJ1cmwoI0spIiBkPSJtNy41NTYgMjQuNjM3IC02Ljg3IC0zLjk2NSA2Ljg3IC0zLjk2N1oiLz4NCiAgPHBhdGggZmlsbD0idXJsKCNjKSIgZD0ibTMzLjc1MSA3OC4wMDEgLTYuODcxIC0zLjk2NSA2Ljg3MSAtMy45NjdaIi8+DQogIDxwYXRoIGZpbGw9InVybCgjTCkiIGQ9Ik0zNi4wNDEgMzkuNzV2MTMuMjJsLTExLjQ0OCAtNi42MTJaIi8+DQogIDxwYXRoIGZpbGw9InVybCgjTSkiIGQ9Ik0yMi4zIDY2Ljc2M3Y3LjkzMmwtNi44NyAtMy45NjZaIi8+DQogIDxwYXRoIGZpbGw9InVybCgjTikiIGQ9Im0yMy40NDkgNDYuMzYyIC05LjE1OCA1LjI4NnYtMTAuNTc2WiIvPg0KICA8cGF0aCBmaWxsPSJ1cmwoI08pIiBkPSJtMjMuNDQ5IDMzLjE0MiAtOS4xNTggNS4yOXYtMTAuNThaIi8+DQogIDxwYXRoIGZpbGw9InVybCgjUCkiIGQ9Ik05LjYxNiA1OS40MDF2Ny45M2wtNi44NzEgLTMuOTY1WiIvPg0KICA8cGF0aCBmaWxsPSJ1cmwoI1EpIiBkPSJNMTAuODUxIDI4Ljg5OXY3LjkzMmwtNi44NzEgLTMuOTY1WiIvPg0KICA8cGF0aCBmaWxsPSJ1cmwoI1IpIiBkPSJtNi44NzEgNDAuMDkzIC02Ljg3MSAzLjk2NXYtNy45M1oiLz4NCiAgPHBhdGggZmlsbD0idXJsKCNTKSIgZD0ibTM0Ljg5NCA2Ni4zNjcgLTkuMTYgLTUuMjg2IDkuMTYgLTUuMjlaIi8+DQogIDxwYXRoIGZpbGw9InVybCgjVCkiIGQ9Im0zNi4wNDEgMzkuNzUgLTExLjQ0OCA2LjYwOHYtMTMuMjJaIi8+DQogIDxwYXRoIGZpbGw9InVybCgjVSkiIGQ9Im0zMy43NSA2Ny40MjUgLTYuODcxIDMuOTY3di03LjkzMloiLz4NCiAgPHBhdGggZmlsbD0idXJsKCNWKSIgZD0ibTM0Ljg5MiA1NC40NjcgLTkuMTU3IDUuMjl2LTEwLjU4MloiLz4NCiAgPHBhdGggZmlsbD0idXJsKCNXKSIgZD0ibTIyLjI5OSA2MC44MTQgLTYuODY5IDMuOTY1di03LjkzWiIvPg0KICA8cGF0aCBmaWxsPSJ1cmwoI1gpIiBkPSJNMjMuNDQ5IDQ3LjY4M3YxMC41NzNsLTkuMTU4IC01LjI4NloiLz4NCiAgPHBhdGggZmlsbD0idXJsKCNZKSIgZD0iTTIzLjQ0OSAzNC40NTl2MTAuNTczbC05LjE1OCAtNS4yODNaIi8+DQogIDxwYXRoIGZpbGw9InVybCgjWikiIGQ9Im0xMC44NSA1MC4zMjYgLTYuODcxIC0zLjk2NyA2Ljg3MSAtMy45NjVaIi8+DQogIDxwYXRoIGZpbGw9InVybCgjYWEpIiBkPSJtNy4xNDUgMjYuNTMxIC02Ljg2OSAzLjk2NXYtNy45MzJaIi8+DQogIDxwYXRoIGZpbGw9InVybCgjYWIpIiBkPSJtNy41NTYgNTMuNDUyIC02Ljg3MSAzLjk2NXYtNy45MzVaIi8+DQogIDwvZz4NCjwvc3ZnPg0K">
-
 </head>
 <body class="quarto-light">
   <div class="reveal">
     <div class="slides">
 
 <section id="title-slide" data-background-image="slides_template/assets/anim.svg" data-background-opacity="0.15" data-background-size="cover" class="quarto-title-block center">
-  <h1 class="title">HuggingFace for Computer Vision</h1>
-  <p class="subtitle">SAM · Embeddings · Vision LLMs</p>
+  <h1 class="title">مكتبة HuggingFace للرؤية الحاسوبية</h1>
+  <p class="subtitle">SAM · التضمينات · نماذج لغة الرؤية</p>
 
 <div class="quarto-title-authors">
 </div>
 
-  <p class="date">2026-04-14</p>
+  <p class="date">2026-05-03</p>
 </section>
-<section id="agenda" class="slide level2">
-<h2>Agenda</h2>
+<section id="الأجندة" class="slide level2 smaller">
+<h2>الأجندة</h2>
 <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 1.2rem; margin-top: 1.4rem;">
-  <div style="background:rgba(28,53,94,0.08); padding:1.4rem; border-radius:12px;">
-    <div style="font-size:2rem; text-align:center;">✂️</div>
-    <strong>SAM3</strong><br>
-    <small>Segment any object with text, boxes, or image exemplars</small>
+  <div style="background:linear-gradient(135deg, rgba(28,53,94,0.05), rgba(28,53,94,0.1)); padding:1.4rem; border-radius:16px; border: 1px solid rgba(28,53,94,0.1); box-shadow: 0 4px 12px rgba(0,0,0,0.05);">
+    <div style="font-size:2.4rem; text-align:center; margin-bottom: 0.5rem;">✂️</div>
+    <div style="font-size:1.1em; font-weight:bold; color:var(--sdaia-navy);">SAM3</div>
+    <div style="font-size:0.85em; color:var(--muted); line-height:1.4;">تجزئة أي كائن باستخدام النص، الصناديق، أو صور مرجعية</div>
   </div>
-  <div style="background:rgba(28,53,94,0.08); padding:1.4rem; border-radius:12px;">
-    <div style="font-size:2rem; text-align:center;">🔍</div>
-    <strong>Vision Embeddings</strong><br>
-    <small>Search and classify images by meaning with CLIP &amp; DINOv3</small>
+  <div style="background:linear-gradient(135deg, rgba(28,53,94,0.05), rgba(28,53,94,0.1)); padding:1.4rem; border-radius:16px; border: 1px solid rgba(28,53,94,0.1); box-shadow: 0 4px 12px rgba(0,0,0,0.05);">
+    <div style="font-size:2.4rem; text-align:center; margin-bottom: 0.5rem;">🔍</div>
+    <div style="font-size:1.1em; font-weight:bold; color:var(--sdaia-navy);">تضمينات الرؤية (Embeddings)</div>
+    <div style="font-size:0.85em; color:var(--muted); line-height:1.4;">البحث وتصنيف الصور حسب المعنى باستخدام CLIP و DINOv3</div>
   </div>
-  <div style="background:rgba(0,201,167,0.10); padding:1.4rem; border-radius:12px;">
-    <div style="font-size:2rem; text-align:center;">🧠</div>
-    <strong>Vision LLMs</strong><br>
-    <small>Ask any question about an image — Qwen3.5 &amp; Gemma4</small>
+  <div style="background:linear-gradient(135deg, rgba(0,201,167,0.05), rgba(0,201,167,0.1)); padding:1.4rem; border-radius:16px; border: 1px solid rgba(0,201,167,0.1); box-shadow: 0 4px 12px rgba(0,0,0,0.05);">
+    <div style="font-size:2.4rem; text-align:center; margin-bottom: 0.5rem;">🧠</div>
+    <div style="font-size:1.1em; font-weight:bold; color:var(--sdaia-navy);">نماذج لغة الرؤية (Vision LLMs)</div>
+    <div style="font-size:0.85em; color:var(--muted); line-height:1.4;">اطرح أي سؤال حول الصورة — Qwen3.5 و Gemma4</div>
   </div>
-  <div style="background:rgba(0,201,167,0.10); padding:1.4rem; border-radius:12px;">
-    <div style="font-size:2rem; text-align:center;">📄</div>
-    <strong>OCR &amp; Documents</strong><br>
-    <small>Read text, extract fields — all with one VLM</small>
+  <div style="background:linear-gradient(135deg, rgba(0,201,167,0.05), rgba(0,201,167,0.1)); padding:1.4rem; border-radius:16px; border: 1px solid rgba(0,201,167,0.1); box-shadow: 0 4px 12px rgba(0,0,0,0.05);">
+    <div style="font-size:2.4rem; text-align:center; margin-bottom: 0.5rem;">📄</div>
+    <div style="font-size:1.1em; font-weight:bold; color:var(--sdaia-navy);">OCR والمستندات</div>
+    <div style="font-size:0.85em; color:var(--muted); line-height:1.4;">قراءة النصوص واستخراج الحقول — كل ذلك بنموذج VLM واحد</div>
   </div>
-  <div style="background:rgba(255,140,0,0.12); padding:1.4rem; border-radius:12px; grid-column: span 2;">
-    <div style="font-size:2rem; text-align:center;">⚙️</div>
-    <strong>Fine-tuning &amp; Trainer API</strong><br>
-    <small>The standard way to train and adapt any HuggingFace model to your data</small>
+  <div style="background:linear-gradient(135deg, rgba(255,140,0,0.08), rgba(255,140,0,0.15)); padding:1.4rem; border-radius:16px; border: 1px solid rgba(255,140,0,0.15); box-shadow: 0 4px 12px rgba(0,0,0,0.05); grid-column: span 2;">
+    <div style="font-size:2.4rem; text-align:center; margin-bottom: 0.5rem;">⚙️</div>
+    <div style="font-size:1.1em; font-weight:bold; color:var(--sdaia-navy);">الضبط الدقيق وواجهة Trainer API</div>
+    <div style="font-size:0.85em; color:var(--muted); line-height:1.4;">الطريقة القياسية لتدريب وتكييف أي نموذج HuggingFace مع بياناتك</div>
   </div>
 </div>
 <div class="callout callout-tip no-icon callout-style-simple">
 <div class="callout-body">
 <div class="callout-content">
-<p>Prerequisites: Parts 1–4 complete. You know YOLO detect / segment / train / export.</p>
+<p>متطلبات سابقة: إكمال الأجزاء 1-4. أنت تعرف كيفية اكتشاف/تجزئة/تدريب/تصدير نماذج YOLO.</p>
 </div>
 </div>
 </div>
 </section>
-<section id="from-yolo-to-huggingface" class="slide level2">
-<h2>From YOLO to HuggingFace</h2>
+<section id="من-yolo-إلى-huggingface" class="slide level2 smaller">
+<h2>من YOLO إلى HuggingFace</h2>
 <div class="columns">
 <div class="column" style="width:50%;">
-<p><strong>What YOLO gives you</strong></p>
+<p><strong>ما تقدمه لك YOLO</strong></p>
 <div class="fragment fade-up">
 <ul>
-<li>Detect, segment, classify, track — fast</li>
+<li>اكتشاف، تجزئة، تصنيف، وتتبع — بسرعة فائقة.</li>
 </ul>
 </div>
 <div class="fragment fade-up">
 <ul>
-<li>Pre-trained on COCO (80 classes)</li>
+<li>مدربة مسبقاً على COCO (80 فئة).</li>
 </ul>
 </div>
 <div class="fragment fade-up">
 <ul>
-<li>Fine-tune on your own data</li>
+<li>إمكانية الضبط الدقيق على بياناتك الخاصة.</li>
 </ul>
 </div>
 <div class="fragment fade-up">
 <ul>
-<li>Export to ONNX / TensorRT for production</li>
+<li>التصدير إلى ONNX / TensorRT للإنتاج.</li>
 </ul>
 </div>
 </div><div class="column" style="width:50%;">
-<p><strong>What HuggingFace adds</strong></p>
+<p><strong>ما تضيفه HuggingFace</strong></p>
 <div class="fragment fade-up">
 <ul>
-<li>500k+ models across all AI tasks</li>
+<li>أكثر من 500 ألف نموذج لمختلف مهام الذكاء الاصطناعي.</li>
 </ul>
 </div>
 <div class="fragment fade-up">
 <ul>
-<li>Read text, understand documents</li>
+<li>قراءة النصوص وفهم المستندات.</li>
 </ul>
 </div>
 <div class="fragment fade-up">
 <ul>
-<li>Segment <strong>anything</strong> without training data</li>
+<li>تجزئة <strong>أي شيء</strong> بدون بيانات تدريب.</li>
 </ul>
 </div>
 <div class="fragment fade-up">
 <ul>
-<li>Answer natural language questions about images</li>
+<li>الإجابة على الأسئلة باللغة الطبيعية حول الصور.</li>
 </ul>
 </div>
-</div></div>
+</div>
+</div>
 <div class="fragment fade-up">
 <div class="callout callout-tip no-icon callout-style-simple">
 <div class="callout-body">
 <div class="callout-content">
-<p>HuggingFace is not a competitor to YOLO — it’s the rest of the toolkit.</p>
+<p>مكتبة HuggingFace ليست منافساً لـ YOLO — بل هي بقية حقيبة الأدوات التي تحتاجها.</p>
 </div>
 </div>
 </div>
 </div>
 </section>
 <section>
-<section id="the-huggingface-ecosystem" class="title-slide slide level1 sdaia-dark center" data-background-gradient="linear-gradient(135deg, #1C355E, #00C9A7)">
-<h1>1. The HuggingFace Ecosystem</h1>
+<section id="منظومة-huggingface" class="title-slide slide level1 sdaia-dark center" data-background-gradient="linear-gradient(135deg, #1C355E, #00C9A7)">
+<h1>1. منظومة HuggingFace</h1>
 <p>One hub. One API. Every model.</p>
 </section>
-<section id="what-is-huggingface" class="slide level2">
-<h2>What Is HuggingFace?</h2>
+<section id="ما-هي-huggingface" class="slide level2 smaller">
+<h2>ما هي HuggingFace؟</h2>
 <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; margin-top: 1.2rem;">
   <div style="text-align:center; background:rgba(28,53,94,0.08); padding:1.4rem; border-radius:12px;">
     <div style="font-size:2.2rem;">🗂️</div>
-    <strong>Hub</strong><br>
-    <small>500k+ models, 100k+ datasets — download any model in one line of Python</small>
+    <strong>المستودع (Hub)</strong><br>
+    <small>أكثر من 500 ألف نموذج، و100 ألف مجموعة بيانات — حمل أي نموذج بسطر واحد من Python</small>
   </div>
   <div style="text-align:center; background:rgba(28,53,94,0.08); padding:1.4rem; border-radius:12px;">
     <div style="font-size:2.2rem;">⚡</div>
     <strong><code>transformers</code></strong><br>
-    <small>One unified Python library for inference, fine-tuning, and deployment of any model</small>
+    <small>مكتبة Python موحدة للاستدلال، الضبط الدقيق، ونشر أي نموذج</small>
   </div>
   <div style="text-align:center; background:rgba(0,201,167,0.12); padding:1.4rem; border-radius:12px;">
     <div style="font-size:2.2rem;">🚀</div>
-    <strong>Spaces</strong><br>
-    <small>Deploy interactive Gradio apps in minutes — share your model with the world</small>
+    <strong>المساحات (Spaces)</strong><br>
+    <small>انشر تطبيقات Gradio تفاعلية في دقائق — شارك نموذجك مع العالم</small>
   </div>
-</div>
-<div id="2bff2d94" class="cell" data-execution_count="1">
-<div class="cell-output cell-output-display">
-<div class="quarto-figure quarto-figure-center">
-<figure>
-<p><img data-src="HuggingFace_CV_Part5_files/figure-revealjs/cell-2-output-1.png" class="quarto-figure quarto-figure-center" width="854" height="202"></p>
-</figure>
-</div>
-</div>
-</div>
-</section>
-<section id="the-pipeline-api" class="slide level2">
-<h2>The <code>pipeline()</code> API</h2>
-<div class="columns">
-<div class="column" style="width:50%;">
-<p><strong>Standardized interface for 40+ tasks</strong></p>
-<div style="background:rgba(0,174,141,0.05); border-left: 5px solid #00AE8D; padding: 1rem; border-radius: 0 12px 12px 0; margin: 1rem 0;">
-  <div style="font-family: monospace; font-size: 0.85em;">
-    <span style="color: #625D9C;">from</span> transformers <span style="color: #625D9C;">import</span> pipeline<br><br>
-    pipe = pipeline(<br>
-    &nbsp;&nbsp;<span style="color: #E96852;">"image-classification"</span>,<br>
-    &nbsp;&nbsp;model=<span style="color: #E96852;">"google/vit-base"</span><br>
-    )<br>
-    res &nbsp;= pipe(<span style="color: #E96852;">"cat.jpg"</span>)
-  </div>
-</div>
-<div class="callout callout-tip no-icon callout-style-simple">
-<div class="callout-body">
-<div class="callout-content">
-<p>One function to rule them all. No need to learn new code for every new model.</p>
-</div>
-</div>
-</div>
-</div><div class="column" style="width:50%;">
-<table class="caption-top">
-<thead>
-<tr class="header">
-<th>Feature</th>
-<th>YOLO</th>
-<th>HuggingFace</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td><strong>Load</strong></td>
-<td><code>YOLO(pt)</code></td>
-<td><code>pipeline(task)</code></td>
-</tr>
-<tr class="even">
-<td><strong>Run</strong></td>
-<td><code>.predict()</code></td>
-<td><code>pipe()</code></td>
-</tr>
-<tr class="odd">
-<td><strong>Storage</strong></td>
-<td>Local <code>.pt</code></td>
-<td><code>~/.cache/hf</code></td>
-</tr>
-<tr class="even">
-<td><strong>Scope</strong></td>
-<td>Core CV</td>
-<td><strong>Everything AI</strong></td>
-</tr>
-</tbody>
-</table>
-<p><br></p>
-<div style="text-align: center; background: #1C355E; color: white; padding: 0.8rem; border-radius: 12px; font-weight: bold; font-size: 0.9em;">
-  HF is the "App Store" for AI models.
-</div>
-</div></div>
-</section>
-<section id="the-automodel-pattern" class="slide level2">
-<h2>The <code>AutoModel</code> Pattern</h2>
-<div class="panel-tabset">
-<ul id="tabset-1" class="panel-tabset-tabby"><li><a data-tabby-default="" href="#tabset-1-1">Quick — <code>pipeline()</code></a></li><li><a href="#tabset-1-2">Full Control — <code>AutoModel</code></a></li></ul>
-<div class="tab-content">
-<div id="tabset-1-1">
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href=""></a><span class="im">from</span> transformers <span class="im">import</span> pipeline</span>
-<span id="cb1-2"><a href=""></a></span>
-<span id="cb1-3"><a href=""></a><span class="co"># Download + load + run in 3 lines</span></span>
-<span id="cb1-4"><a href=""></a>pipe <span class="op">=</span> pipeline(<span class="st">"image-to-text"</span>, model<span class="op">=</span><span class="st">"Qwen/Qwen3.5-27B"</span>)</span>
-<span id="cb1-5"><a href=""></a>result <span class="op">=</span> pipe(<span class="st">"invoice.png"</span>, text<span class="op">=</span><span class="st">"What text is in this image?"</span>)</span>
-<span id="cb1-6"><a href=""></a><span class="bu">print</span>(result)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-</div>
-<div id="tabset-1-2">
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href=""></a><span class="im">from</span> transformers <span class="im">import</span> AutoProcessor, AutoModelForCausalLM</span>
-<span id="cb2-2"><a href=""></a><span class="im">from</span> PIL <span class="im">import</span> Image</span>
-<span id="cb2-3"><a href=""></a><span class="im">import</span> torch</span>
-<span id="cb2-4"><a href=""></a></span>
-<span id="cb2-5"><a href=""></a><span class="co"># Load separately for fine-tuning, batching, or custom logic</span></span>
-<span id="cb2-6"><a href=""></a>processor <span class="op">=</span> AutoProcessor.from_pretrained(<span class="st">"Qwen/Qwen3.5-27B"</span>)</span>
-<span id="cb2-7"><a href=""></a>model     <span class="op">=</span> AutoModelForCausalLM.from_pretrained(</span>
-<span id="cb2-8"><a href=""></a>                <span class="st">"Qwen/Qwen3.5-27B"</span>, device_map<span class="op">=</span><span class="st">"auto"</span></span>
-<span id="cb2-9"><a href=""></a>            )</span>
-<span id="cb2-10"><a href=""></a></span>
-<span id="cb2-11"><a href=""></a>image   <span class="op">=</span> Image.<span class="bu">open</span>(<span class="st">"invoice.png"</span>).convert(<span class="st">"RGB"</span>)</span>
-<span id="cb2-12"><a href=""></a>inputs  <span class="op">=</span> processor(images<span class="op">=</span>image, text<span class="op">=</span><span class="st">"What text is in this image?"</span>,</span>
-<span id="cb2-13"><a href=""></a>                    return_tensors<span class="op">=</span><span class="st">"pt"</span>).to(model.device)</span>
-<span id="cb2-14"><a href=""></a>outputs <span class="op">=</span> model.generate(<span class="op">**</span>inputs, max_new_tokens<span class="op">=</span><span class="dv">256</span>)</span>
-<span id="cb2-15"><a href=""></a><span class="bu">print</span>(processor.decode(outputs[<span class="dv">0</span>], skip_special_tokens<span class="op">=</span><span class="va">True</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-</div>
-</div>
-</div>
-<div class="callout callout-tip no-icon callout-style-simple">
-<div class="callout-body">
-<div class="callout-content">
-<p>Use <code>pipeline()</code> for exploration. Use <code>AutoModel</code> when you need batching, fine-tuning, or integration into a training loop.</p>
-</div>
-</div>
-</div>
-</section>
-<section id="the-trainer-api-how-to-fine-tune" class="slide level2">
-<h2>The Trainer API: How to Fine-tune</h2>
-<div class="columns">
-<div class="column" style="width:50%;">
-<p><strong>The standard way to adapt any model</strong></p>
-<ul>
-<li>Handles training loops, evaluation, and logging automatically.</li>
-<li>Checkpointing and model saving built-in.</li>
-<li>Multi-GPU support via <code>accelerate</code>.</li>
-</ul>
-<div class="callout callout-tip no-icon callout-style-simple">
-<div class="callout-body">
-<div class="callout-content">
-<p>One script to train almost any model on the Hub.</p>
-</div>
-</div>
-</div>
-</div><div class="column" style="width:50%;">
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href=""></a><span class="im">from</span> transformers <span class="im">import</span> TrainingArguments, Trainer</span>
-<span id="cb3-2"><a href=""></a></span>
-<span id="cb3-3"><a href=""></a><span class="co"># 1. Configure the training setup</span></span>
-<span id="cb3-4"><a href=""></a>args <span class="op">=</span> TrainingArguments(</span>
-<span id="cb3-5"><a href=""></a>    output_dir<span class="op">=</span><span class="st">"my_model"</span>,</span>
-<span id="cb3-6"><a href=""></a>    per_device_train_batch_size<span class="op">=</span><span class="dv">8</span>,</span>
-<span id="cb3-7"><a href=""></a>    num_train_epochs<span class="op">=</span><span class="dv">3</span>,</span>
-<span id="cb3-8"><a href=""></a>    evaluation_strategy<span class="op">=</span><span class="st">"epoch"</span>,</span>
-<span id="cb3-9"><a href=""></a>    logging_steps<span class="op">=</span><span class="dv">10</span></span>
-<span id="cb3-10"><a href=""></a>)</span>
-<span id="cb3-11"><a href=""></a></span>
-<span id="cb3-12"><a href=""></a><span class="co"># 2. Initialize and run</span></span>
-<span id="cb3-13"><a href=""></a>trainer <span class="op">=</span> Trainer(</span>
-<span id="cb3-14"><a href=""></a>    model<span class="op">=</span>model, </span>
-<span id="cb3-15"><a href=""></a>    args<span class="op">=</span>args, </span>
-<span id="cb3-16"><a href=""></a>    train_dataset<span class="op">=</span>train_data,</span>
-<span id="cb3-17"><a href=""></a>    eval_dataset<span class="op">=</span>val_data</span>
-<span id="cb3-18"><a href=""></a>)</span>
-<span id="cb3-19"><a href=""></a></span>
-<span id="cb3-20"><a href=""></a>trainer.train()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-</div></div>
-</section></section>
-<section>
-<section id="sam3-segment-anything" class="title-slide slide level1 sdaia-dark center" data-background-gradient="linear-gradient(135deg, #1C355E, #00C9A7)">
-<h1>2. SAM3 — Segment Anything</h1>
-<p>Zero-shot segmentation. Any object. No labels needed.</p>
-</section>
-<section id="youve-already-met-sam" class="slide level2">
-<h2>You’ve Already Met SAM</h2>
-<div class="columns">
-<div class="column" style="width:50%;">
-<h3 id="part-3-labeling"><strong>Part 3: Labeling</strong></h3>
-<p><em>SAM as a data assistant</em></p>
-<ul>
-<li><strong>Input:</strong> Concept or Example</li>
-<li><strong>Output:</strong> Training Labels</li>
-<li><strong>Goal:</strong> Faster YOLO Datasets</li>
-</ul>
-<h3 id="today-inference"><strong>Today: Inference</strong></h3>
-<p><em>SAM3 as a standalone engine</em></p>
-<ul>
-<li><strong>Zero-Shot:</strong> No training needed</li>
-<li><strong>PCS:</strong> Promptable segmentation</li>
-<li><strong>Goal:</strong> Direct production use</li>
-</ul>
-</div><div class="column" style="width:50%;">
-<div id="34fba5bd" class="cell" data-execution_count="2">
-<div class="cell-output cell-output-display">
-<div class="quarto-figure quarto-figure-center">
-<figure>
-<p><img data-src="HuggingFace_CV_Part5_files/figure-revealjs/cell-3-output-1.png" class="quarto-figure quarto-figure-center" width="391" height="389"></p>
-</figure>
-</div>
-</div>
-</div>
-</div></div>
-</section>
-<section id="the-prompting-idea" class="slide level2">
-<h2>The Prompting Idea</h2>
-<div id="23029c6a" class="cell" data-execution_count="3">
-<div class="cell-output cell-output-display">
-<div class="quarto-figure quarto-figure-center">
-<figure>
-<p><img data-src="HuggingFace_CV_Part5_files/figure-revealjs/cell-4-output-1.png" class="quarto-figure quarto-figure-center" width="950" height="244"></p>
-</figure>
-</div>
-</div>
-</div>
-<div class="callout callout-tip no-icon callout-style-simple">
-<div class="callout-body">
-<div class="callout-content">
-<p>SAM does not need manual class labels. Give it a description (text) or a visual template (box/image) — it figures out the boundary.</p>
-</div>
-</div>
-</div>
-</section>
-<section id="sam3-text-only-prompt" class="slide level2">
-<h2>SAM3: Text-Only Prompt</h2>
-<div class="callout callout-note no-icon callout-style-simple">
-<div class="callout-body">
-<div class="callout-content">
-<p>New in SAM 3: <strong>Promptable Concept Segmentation</strong>. You can now segment by name!</p>
-<p><a href="https://huggingface.co/docs/transformers/model_doc/sam3">Hugging Face Docs</a> | <a href="https://docs.ultralytics.com/models/sam-3/">Ultralytics Docs</a></p>
-</div>
-</div>
-</div>
-<div class="callout callout-important no-icon callout-style-simple">
-<div class="callout-body">
-<div class="callout-content">
-<p><strong>Gated Model:</strong> SAM 3 requires users to accept the license on Hugging Face before downloading. Ensure you are logged in using <code>huggingface-cli login</code>.</p>
-</div>
-</div>
-</div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb4"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href=""></a><span class="im">from</span> transformers <span class="im">import</span> Sam3Model, Sam3Processor</span>
-<span id="cb4-2"><a href=""></a><span class="im">from</span> PIL <span class="im">import</span> Image</span>
-<span id="cb4-3"><a href=""></a><span class="im">import</span> torch</span>
-<span id="cb4-4"><a href=""></a></span>
-<span id="cb4-5"><a href=""></a>model     <span class="op">=</span> Sam3Model.from_pretrained(<span class="st">"facebook/sam3"</span>)</span>
-<span id="cb4-6"><a href=""></a>processor <span class="op">=</span> Sam3Processor.from_pretrained(<span class="st">"facebook/sam3"</span>)</span>
-<span id="cb4-7"><a href=""></a></span>
-<span id="cb4-8"><a href=""></a>image <span class="op">=</span> Image.<span class="bu">open</span>(<span class="st">"highway.jpg"</span>).convert(<span class="st">"RGB"</span>)</span>
-<span id="cb4-9"><a href=""></a></span>
-<span id="cb4-10"><a href=""></a><span class="co"># Segment by concept name</span></span>
-<span id="cb4-11"><a href=""></a>inputs <span class="op">=</span> processor(images<span class="op">=</span>image, text<span class="op">=</span><span class="st">"yellow school bus"</span>, return_tensors<span class="op">=</span><span class="st">"pt"</span>)</span>
-<span id="cb4-12"><a href=""></a></span>
-<span id="cb4-13"><a href=""></a><span class="cf">with</span> torch.no_grad():</span>
-<span id="cb4-14"><a href=""></a>    outputs <span class="op">=</span> model(<span class="op">**</span>inputs)</span>
-<span id="cb4-15"><a href=""></a></span>
-<span id="cb4-16"><a href=""></a><span class="co"># Post-process to get binary masks and confidence scores</span></span>
-<span id="cb4-17"><a href=""></a>results <span class="op">=</span> processor.post_process_instance_segmentation(</span>
-<span id="cb4-18"><a href=""></a>    outputs, </span>
-<span id="cb4-19"><a href=""></a>    threshold<span class="op">=</span><span class="fl">0.5</span>,</span>
-<span id="cb4-20"><a href=""></a>    target_sizes<span class="op">=</span>inputs.get(<span class="st">"original_sizes"</span>).tolist()</span>
-<span id="cb4-21"><a href=""></a>)[<span class="dv">0</span>]</span>
-<span id="cb4-22"><a href=""></a></span>
-<span id="cb4-23"><a href=""></a><span class="bu">print</span>(<span class="ss">f"Detected </span><span class="sc">{</span><span class="bu">len</span>(results[<span class="st">'masks'</span>])<span class="sc">}</span><span class="ss"> buses"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-</section>
-<section id="sam3-negative-box-refinement" class="slide level2">
-<h2>SAM3: Negative Box Refinement</h2>
-<div class="callout callout-tip no-icon callout-style-simple">
-<div class="callout-body">
-<div class="callout-content">
-<p>SAM3 uses <strong>Concepts</strong> (text or templates). If a text prompt is too broad, use <strong>negative boxes</strong> to exclude specific areas.</p>
-</div>
-</div>
-</div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb5"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href=""></a><span class="co"># Segment "handle" but exclude the oven handle using a negative box</span></span>
-<span id="cb5-2"><a href=""></a>text <span class="op">=</span> <span class="st">"handle"</span></span>
-<span id="cb5-3"><a href=""></a><span class="co"># Box in [x1, y1, x2, y2] format</span></span>
-<span id="cb5-4"><a href=""></a>oven_handle_box <span class="op">=</span> [<span class="dv">40</span>, <span class="dv">183</span>, <span class="dv">318</span>, <span class="dv">204</span>]</span>
-<span id="cb5-5"><a href=""></a></span>
-<span id="cb5-6"><a href=""></a>inputs <span class="op">=</span> processor(</span>
-<span id="cb5-7"><a href=""></a>    images<span class="op">=</span>image, </span>
-<span id="cb5-8"><a href=""></a>    text<span class="op">=</span>text, </span>
-<span id="cb5-9"><a href=""></a>    input_boxes<span class="op">=</span>[[oven_handle_box]], </span>
-<span id="cb5-10"><a href=""></a>    input_boxes_labels<span class="op">=</span>[[<span class="dv">0</span>]], <span class="co"># 0 = negative (exclude this region)</span></span>
-<span id="cb5-11"><a href=""></a>    return_tensors<span class="op">=</span><span class="st">"pt"</span></span>
-<span id="cb5-12"><a href=""></a>).to(device)</span>
-<span id="cb5-13"><a href=""></a></span>
-<span id="cb5-14"><a href=""></a><span class="cf">with</span> torch.no_grad():</span>
-<span id="cb5-15"><a href=""></a>    outputs <span class="op">=</span> model(<span class="op">**</span>inputs)</span>
-<span id="cb5-16"><a href=""></a></span>
-<span id="cb5-17"><a href=""></a>results <span class="op">=</span> processor.post_process_instance_segmentation(</span>
-<span id="cb5-18"><a href=""></a>    outputs, threshold<span class="op">=</span><span class="fl">0.5</span>, target_sizes<span class="op">=</span>inputs.get(<span class="st">"original_sizes"</span>).tolist()</span>
-<span id="cb5-19"><a href=""></a>)[<span class="dv">0</span>]</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="callout callout-tip no-icon callout-style-simple">
-<div class="callout-body">
-<div class="callout-content">
-<p>Label conventions: <strong>1 = Positive</strong> (include), <strong>0 = Negative</strong> (exclude).</p>
-</div>
-</div>
-</div>
-</section>
-<section id="sam3-use-cases" class="slide level2">
-<h2>SAM3 Use Cases</h2>
-<div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 1.2rem; margin-top: 1.4rem;">
-  <div style="background:rgba(28,53,94,0.08); padding:1.2rem; border-radius:12px;">
-    <div style="font-size:2rem; text-align:center;">🏗️</div>
-    <strong>Construction Monitoring</strong><br>
-    <small>Segment excavation zones, equipment, and safety areas from drone or aerial imagery</small>
-  </div>
-  <div style="background:rgba(28,53,94,0.08); padding:1.2rem; border-radius:12px;">
-    <div style="font-size:2rem; text-align:center;">🌴</div>
-    <strong>Crop &amp; Land Analysis</strong><br>
-    <small>Segment individual date palm trees from satellite imagery for yield estimation</small>
-  </div>
-  <div style="background:rgba(0,201,167,0.10); padding:1.2rem; border-radius:12px;">
-    <div style="font-size:2rem; text-align:center;">🏥</div>
-    <strong>Medical Imaging</strong><br>
-    <small>Segment organs or lesions in MRI/CT scans — zero labeled training images required</small>
-  </div>
-  <div style="background:rgba(0,201,167,0.10); padding:1.2rem; border-radius:12px;">
-    <div style="font-size:2rem; text-align:center;">🛒</div>
-    <strong>Retail Product Cutouts</strong><br>
-    <small>Isolate products from shelf images for catalog photography without manual editing</small>
-  </div>
-</div>
-</section></section>
-<section>
-<section id="vision-embeddings" class="title-slide slide level1 sdaia-dark center" data-background-gradient="linear-gradient(135deg, #1C355E, #00C9A7)">
-<h1>3. Vision Embeddings</h1>
-<p>Teaching images to live in meaning-space.</p>
-</section>
-<section id="what-is-an-embedding" class="slide level2">
-<h2>What Is an Embedding?</h2>
-<div class="columns">
-<div class="column" style="width:45%;">
-<p><strong>Pixels</strong> tell you what color is at <code>x, y</code>. <strong>Embeddings</strong> tell you what the image <strong>means</strong>.</p>
-<ul>
-<li>Dense vector (e.g., 768 numbers)</li>
-<li><strong>Close together</strong> = similar concepts</li>
-<li><strong>Far apart</strong> = different meanings</li>
-</ul>
-<div class="callout callout-tip no-icon callout-style-simple">
-<div class="callout-body">
-<div class="callout-content">
-<p>It’s a “mental map” for AI. It doesn’t see lines; it sees identity.</p>
-</div>
-</div>
-</div>
-</div><div class="column" style="width:55%;">
-<div id="cc14ae7f" class="cell" data-execution_count="4">
-<div class="cell-output cell-output-display">
-<div class="quarto-figure quarto-figure-center">
-<figure>
-<p><img data-src="HuggingFace_CV_Part5_files/figure-revealjs/cell-5-output-1.png" class="quarto-figure quarto-figure-center" width="513" height="451"></p>
-</figure>
-</div>
-</div>
-</div>
-</div></div>
-</section>
-<section id="clip-logic-over-pixels" class="slide level2">
-<h2>CLIP: Logic Over Pixels</h2>
-<div class="columns">
-<div class="column" style="width:45%;">
-<p><strong>CLIP</strong> (OpenAI) connects words to images by watching 400M pairs.</p>
-<ul>
-<li><strong>Contrastive Learning</strong>: Makes images and text describe each other.</li>
-<li>Shared “Meaning Space”.</li>
-</ul>
-<div class="callout callout-important no-icon callout-style-simple">
-<div class="callout-body">
-<div class="callout-content">
-<p>With CLIP, you don’t “label” a model. You “describe” what you want to find.</p>
-</div>
-</div>
-</div>
-</div><div class="column" style="width:55%;">
-<div id="a928bfa9" class="cell" data-execution_count="5">
-<div class="cell-output cell-output-display">
-<div class="quarto-figure quarto-figure-center">
-<figure>
-<p><img data-src="HuggingFace_CV_Part5_files/figure-revealjs/cell-6-output-1.png" class="quarto-figure quarto-figure-center" width="466" height="389"></p>
-</figure>
-</div>
-</div>
-</div>
-</div></div>
-</section>
-<section id="clip-zero-shot-classification" class="slide level2">
-<h2>CLIP: Zero-Shot Classification</h2>
-<h3 id="classify-anything-you-can-describe">Classify anything you can describe</h3>
-<p>CLIP scores labels against images without needing labeled training data.</p>
-<ul>
-<li><strong>Any Class</strong>: “overexposed”, “foggy”, “night-time”</li>
-<li><strong>Rare Objects</strong>: Concepts YOLO wasn’t trained on</li>
-<li><strong>Domain Specific</strong>: Complex terminology (medical, satellite)</li>
-</ul>
-<div class="callout callout-note no-icon callout-style-simple">
-<div class="callout-body">
-<div class="callout-content">
-<p><a href="https://huggingface.co/docs/transformers/model_doc/clip">Hugging Face CLIP Documentation</a></p>
-</div>
-</div>
-</div>
-<div class="callout callout-tip no-icon callout-style-simple">
-<div class="callout-body">
-<div class="callout-content">
-<p>Think of it as <strong>“Visual Entailment”</strong> — how well does this text describe this image?</p>
-</div>
-</div>
-</div>
-</section>
-<section id="clip-zero-shot-implementation" class="slide level2">
-<h2>CLIP: Zero-Shot Implementation</h2>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb6"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href=""></a>model     <span class="op">=</span> CLIPModel.from_pretrained(<span class="st">"openai/clip-vit-base-patch32"</span>)</span>
-<span id="cb6-2"><a href=""></a>processor <span class="op">=</span> CLIPProcessor.from_pretrained(<span class="st">"openai/clip-vit-base-patch32"</span>)</span>
-<span id="cb6-3"><a href=""></a></span>
-<span id="cb6-4"><a href=""></a>image  <span class="op">=</span> Image.<span class="bu">open</span>(<span class="st">"scene.jpg"</span>)</span>
-<span id="cb6-5"><a href=""></a>labels <span class="op">=</span> [<span class="st">"construction site"</span>, <span class="st">"street market"</span>, <span class="st">"desert"</span>, <span class="st">"office"</span>]</span>
-<span id="cb6-6"><a href=""></a></span>
-<span id="cb6-7"><a href=""></a>inputs <span class="op">=</span> processor(text<span class="op">=</span>labels, images<span class="op">=</span>image, return_tensors<span class="op">=</span><span class="st">"pt"</span>, padding<span class="op">=</span><span class="va">True</span>)</span>
-<span id="cb6-8"><a href=""></a>output <span class="op">=</span> model(<span class="op">**</span>inputs)</span>
-<span id="cb6-9"><a href=""></a>probs  <span class="op">=</span> output.logits_per_image.softmax(dim<span class="op">=</span><span class="dv">1</span>)</span>
-<span id="cb6-10"><a href=""></a></span>
-<span id="cb6-11"><a href=""></a><span class="cf">for</span> label, prob <span class="kw">in</span> <span class="bu">zip</span>(labels, probs[<span class="dv">0</span>]):</span>
-<span id="cb6-12"><a href=""></a>    <span class="bu">print</span>(<span class="ss">f"</span><span class="sc">{</span>label<span class="sc">}</span><span class="ss">: </span><span class="sc">{</span>prob<span class="sc">.</span>item()<span class="sc">:.3f}</span><span class="ss">"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-</section>
-<section id="clip-image-similarity-search" class="slide level2">
-<h2>CLIP: Image Similarity Search</h2>
-<h3 id="search-by-visual-meaning">Search by Visual “Meaning”</h3>
-<p>Find images that <em>look</em> like the query image without manual keywords.</p>
-<ol type="1">
-<li><strong>Embed</strong>: Pre-convert your image library into vectors.</li>
-<li><strong>Query</strong>: Convert the user’s target image to a vector.</li>
-<li><strong>Match</strong>: Use cosine similarity to find the nearest neighbors.</li>
-</ol>
-<div class="callout callout-note no-icon callout-style-simple">
-<div class="callout-body">
-<div class="callout-content">
-<p>For millions of images, use a vector DB like <strong>FAISS</strong> or <strong>Qdrant</strong> for sub-millisecond search.</p>
-</div>
-</div>
-</div>
-<p><strong>Common Use Cases:</strong></p>
-<ul>
-<li>E-commerce recommendations (“Shop the Look”)</li>
-<li>Quality control (finding matching defects)</li>
-<li>Dataset deduplication</li>
-</ul>
-</section>
-<section id="clip-similarity-implementation" class="slide level2">
-<h2>CLIP: Similarity Implementation</h2>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb7"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href=""></a><span class="kw">def</span> embed(path):</span>
-<span id="cb7-2"><a href=""></a>    img    <span class="op">=</span> Image.<span class="bu">open</span>(path).convert(<span class="st">"RGB"</span>)</span>
-<span id="cb7-3"><a href=""></a>    inputs <span class="op">=</span> processor(images<span class="op">=</span>img, return_tensors<span class="op">=</span><span class="st">"pt"</span>)</span>
-<span id="cb7-4"><a href=""></a>    <span class="cf">with</span> torch.no_grad():</span>
-<span id="cb7-5"><a href=""></a>        feat <span class="op">=</span> model.get_image_features(<span class="op">**</span>inputs)</span>
-<span id="cb7-6"><a href=""></a>    <span class="cf">return</span> F.normalize(feat, dim<span class="op">=-</span><span class="dv">1</span>)</span>
-<span id="cb7-7"><a href=""></a></span>
-<span id="cb7-8"><a href=""></a><span class="co"># 1. Build index</span></span>
-<span id="cb7-9"><a href=""></a>image_paths <span class="op">=</span> [<span class="st">"img1.jpg"</span>, <span class="st">"img2.jpg"</span>, ...]</span>
-<span id="cb7-10"><a href=""></a>index <span class="op">=</span> torch.cat([embed(p) <span class="cf">for</span> p <span class="kw">in</span> image_paths])</span>
-<span id="cb7-11"><a href=""></a></span>
-<span id="cb7-12"><a href=""></a><span class="co"># 2. Query</span></span>
-<span id="cb7-13"><a href=""></a>query  <span class="op">=</span> embed(<span class="st">"query.jpg"</span>)</span>
-<span id="cb7-14"><a href=""></a>scores <span class="op">=</span> (query <span class="op">@</span> index.T).squeeze()</span>
-<span id="cb7-15"><a href=""></a>top5   <span class="op">=</span> scores.topk(<span class="dv">5</span>).indices</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-</section>
-<section id="dinov3-the-vision-backbone" class="slide level2">
-<h2>DINOv3: The Vision Backbone</h2>
-<h3 id="self-supervised-excellence">Self-Supervised Excellence</h3>
-<p>DINO (Self-Distillation with No Labels) learns from images alone.</p>
-<ul>
-<li><strong>Universal</strong>: Works for any domain (X-ray, Satellite, Microscopic).</li>
-<li><strong>Spatial Precision</strong>: Excellent for segmentation and depth tasks.</li>
-<li><strong>Robustness</strong>: Deep understanding of object geometry.</li>
-</ul>
-<div class="callout callout-note no-icon callout-style-simple">
-<div class="callout-body">
-<div class="callout-content">
-<p><a href="https://huggingface.co/docs/transformers/model_doc/dinov3">Hugging Face DINOv3 Documentation</a></p>
-</div>
-</div>
-</div>
-<div class="callout callout-important no-icon callout-style-simple">
-<div class="callout-body">
-<div class="callout-content">
-<p><strong>Gated Model:</strong> Like SAM 3, DINOv3 requires you to request access on the Hugging Face model page before it can be downloaded.</p>
-</div>
-</div>
-</div>
-<div class="callout callout-tip no-icon callout-style-simple">
-<div class="callout-body">
-<div class="callout-content">
-<p><strong>CLIP</strong> is for text-to-image. <strong>DINO</strong> is for pure vision (pixel detail).</p>
-</div>
-</div>
-</div>
-</section>
-<section id="dinov3-feature-extraction" class="slide level2">
-<h2>DINOv3: Feature Extraction</h2>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb8"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href=""></a>MODEL <span class="op">=</span> <span class="st">"facebook/dinov3-vitb16-pretrain-lvd1689m"</span></span>
-<span id="cb8-2"><a href=""></a>model <span class="op">=</span> AutoModel.from_pretrained(MODEL, device_map<span class="op">=</span><span class="st">"auto"</span>)</span>
-<span id="cb8-3"><a href=""></a>proc  <span class="op">=</span> AutoImageProcessor.from_pretrained(MODEL)</span>
-<span id="cb8-4"><a href=""></a></span>
-<span id="cb8-5"><a href=""></a>image  <span class="op">=</span> load_image(<span class="st">"satellite_crop.jpg"</span>)</span>
-<span id="cb8-6"><a href=""></a>inputs <span class="op">=</span> proc(images<span class="op">=</span>image, return_tensors<span class="op">=</span><span class="st">"pt"</span>).to(model.device)</span>
-<span id="cb8-7"><a href=""></a></span>
-<span id="cb8-8"><a href=""></a><span class="cf">with</span> torch.inference_mode():</span>
-<span id="cb8-9"><a href=""></a>    out <span class="op">=</span> model(<span class="op">**</span>inputs)</span>
-<span id="cb8-10"><a href=""></a></span>
-<span id="cb8-11"><a href=""></a><span class="co"># Global embedding (image-level)</span></span>
-<span id="cb8-12"><a href=""></a>global_feat <span class="op">=</span> out.pooler_output</span>
-<span id="cb8-13"><a href=""></a></span>
-<span id="cb8-14"><a href=""></a><span class="co"># Patch-level features (pixel-level detail)</span></span>
-<span id="cb8-15"><a href=""></a>patch_feats <span class="op">=</span> out.last_hidden_state</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-</section>
-<section id="clip-vs-dinov3" class="slide level2">
-<h2>CLIP vs DINOv3</h2>
-<table class="caption-top" style="width:92%; margin: 1.6rem auto; border-collapse: separate; border-spacing: 8px; font-size: 0.95em; text-align: center;">
-<tbody>
-<tr class="odd">
-<td style="width: 22%"></td>
-<th data-quarto-table-cell-role="th" style="padding: 0.6rem; color: #1C355E">CLIP</th>
-<th data-quarto-table-cell-role="th" style="padding: 0.6rem; color: #1C355E">DINOv3</th>
-</tr>
-<tr class="even">
-<th data-quarto-table-cell-role="th" style="text-align: right; color: #1C355E; padding-right: 0.8rem;">Training data</th>
-<td style="background: #d4edda; padding: 0.75rem; border-radius: 8px">Image + text pairs</td>
-<td style="background: #d4edda; padding: 0.75rem; border-radius: 8px">Images only (self-supervised)</td>
-</tr>
-<tr class="odd">
-<th data-quarto-table-cell-role="th" style="text-align: right; color: #1C355E; padding-right: 0.8rem;">Zero-shot via text</th>
-<td style="background: #d4edda; padding: 0.75rem; border-radius: 8px">✅ Yes</td>
-<td style="background: #fff3cd; padding: 0.75rem; border-radius: 8px">❌ Image-only search</td>
-</tr>
-<tr class="even">
-<th data-quarto-table-cell-role="th" style="text-align: right; color: #1C355E; padding-right: 0.8rem;">Spatial detail</th>
-<td style="background: #fff3cd; padding: 0.75rem; border-radius: 8px">Moderate (global)</td>
-<td style="background: #d4edda; padding: 0.75rem; border-radius: 8px">Excellent (patch-level)</td>
-</tr>
-<tr class="odd">
-<th data-quarto-table-cell-role="th" style="text-align: right; color: #1C355E; padding-right: 0.8rem;">Best for</th>
-<td style="background: rgba(0,201,167,0.12); padding: 0.75rem; border-radius: 8px">Text-guided search, zero-shot classify</td>
-<td style="background: rgba(0,201,167,0.12); padding: 0.75rem; border-radius: 8px">Image-only retrieval, fine-grained tasks</td>
-</tr>
-</tbody>
-</table>
-<div class="callout callout-tip no-icon callout-style-simple">
-<div class="callout-body">
-<div class="callout-content">
-<p><strong>Rule of thumb:</strong> if you can describe what you’re looking for in words, use CLIP. If you have an example image, DINOv3 gives richer features.</p>
-</div>
-</div>
-</div>
-</section>
-<section id="embedding-use-cases" class="slide level2">
-<h2>Embedding Use Cases</h2>
-<div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 1.2rem; margin-top: 1.4rem;">
-  <div style="background:rgba(28,53,94,0.08); padding:1.2rem; border-radius:12px; text-align:center;">
-    <div style="font-size:2rem;">🛒</div>
-    <strong>E-Commerce Search</strong><br>
-    <small>Customers upload a photo → find visually matching products in your catalog</small>
-  </div>
-  <div style="background:rgba(28,53,94,0.08); padding:1.2rem; border-radius:12px; text-align:center;">
-    <div style="font-size:2rem;">🏥</div>
-    <strong>Medical Retrieval</strong><br>
-    <small>Find historical scans similar to a patient's current imaging — no labels needed</small>
-  </div>
-  <div style="background:rgba(0,201,167,0.10); padding:1.2rem; border-radius:12px; text-align:center;">
-    <div style="font-size:2rem;">🛰️</div>
-    <strong>Satellite &amp; Geospatial</strong><br>
-    <small>Query large-scale image archives by visual similarity — land cover, change detection</small>
-  </div>
-  <div style="background:rgba(0,201,167,0.10); padding:1.2rem; border-radius:12px; text-align:center;">
-    <div style="font-size:2rem;">🔬</div>
-    <strong>Dataset Curation</strong><br>
-    <small>Find near-duplicate images or cluster unlabeled data before training</small>
-  </div>
-</div>
-</section></section>
-<section>
-<section id="vision-language-models" class="title-slide slide level1 sdaia-dark center" data-background-gradient="linear-gradient(135deg, #1C355E, #00C9A7)">
-<h1>4. Vision Language Models</h1>
-<p>Models that see, reason, and answer in language.</p>
-</section>
-<section id="the-vision-intelligence-ladder" class="slide level2">
-<h2>The Vision Intelligence Ladder</h2>
-<div id="7e2a5099" class="cell" data-execution_count="6">
-<div class="cell-output cell-output-display">
-<div class="quarto-figure quarto-figure-center">
-<figure>
-<p><img data-src="HuggingFace_CV_Part5_files/figure-revealjs/cell-7-output-1.png" class="quarto-figure quarto-figure-center" width="950" height="298"></p>
-</figure>
-</div>
-</div>
-</div>
-<div class="callout callout-tip no-icon callout-style-simple">
-<div class="callout-body">
-<div class="callout-content">
-<p>You’ve now learned every level of this ladder across Parts 1–6.</p>
-</div>
-</div>
-</div>
-</section>
-<section id="what-is-a-vision-llm" class="slide level2">
-<h2>What Is a Vision LLM?</h2>
-<div style="margin-top: 1.5rem; text-align: center; font-size: 1.1em; line-height: 2.2;">
-  <span style="background:rgba(28,53,94,0.10); padding:0.4rem 0.9rem; border-radius:8px;">🖼  Image</span>
-  &nbsp;+&nbsp;
-  <span style="background:rgba(28,53,94,0.10); padding:0.4rem 0.9rem; border-radius:8px;">💬 "How many people are wearing helmets?"</span>
-  &nbsp;→&nbsp;
-  <span style="background:rgba(0,201,167,0.18); padding:0.4rem 0.9rem; border-radius:8px; color:#006655; font-weight:bold;">Model</span>
-  &nbsp;→&nbsp;
-  <span style="background:rgba(255,140,0,0.15); padding:0.4rem 0.9rem; border-radius:8px; color:#a05000; font-weight:bold;">"3 out of 5 workers are wearing helmets."</span>
-</div>
-<p><br></p>
-<div class="fragment fade-up">
-<p>Three things the model does:</p>
-<ol type="1">
-<li><strong>Sees</strong> the image — encodes it into visual tokens (similar to how CLIP or DINOv3 works)</li>
-<li><strong>Reads</strong> your question — processes it as text tokens</li>
-<li><strong>Generates</strong> an answer — attends to both image and text together</li>
-</ol>
-</div>
-<div class="fragment fade-up">
-<div class="callout callout-tip no-icon callout-style-simple">
-<div class="callout-body">
-<div class="callout-content">
-<p>No class list. No bounding boxes. Just ask your question in plain language.</p>
-</div>
-</div>
-</div>
-</div>
-</section>
-<section id="qwen3.5-multilingual-visual-reasoning" class="slide level2">
-<h2>Qwen3.5: Multilingual Visual Reasoning</h2>
-<p><strong><a href="https://huggingface.co/collections/Qwen/qwen35">Qwen 3.5 collection</a></strong> <strong><a href="https://huggingface.co/Qwen/Qwen3.5-27B">Qwen/Qwen3.5-27B</a></strong></p>
-<ul>
-<li>Vision + video + text — unified multimodal</li>
-<li>262K token context window</li>
-<li>Strong Arabic and multilingual support</li>
-<li>Apache 2.0 license</li>
-<li>Thinking mode by default (generates reasoning before answering)</li>
-</ul>
-</section>
-<section id="gemma4-lightweight-on-device-vision" class="slide level2">
-<h2>Gemma4: Lightweight On-Device Vision</h2>
-<p><strong><code>google/gemma-4-E2B-it</code></strong></p>
-<ul>
-<li><strong>2.3B effective parameters</strong> — fast and practical</li>
-<li>True multimodal: image + text + audio inputs</li>
-</ul>
-<div class="callout callout-note no-icon callout-style-simple">
-<div class="callout-body">
-<div class="callout-content">
-<p><a href="https://huggingface.co/docs/transformers/model_doc/gemma4">Hugging Face Gemma 4 Documentation</a></p>
-</div>
-</div>
-</div>
-<ul>
-<li>Open weights, Apache 2.0 license</li>
-<li>Runs on a single consumer GPU</li>
-</ul>
-</section>
-<section id="ocr-as-a-vlm-use-case" class="slide level2">
-<h2>OCR as a VLM Use Case</h2>
-<p><strong>Why use a VLM for OCR?</strong></p>
-<ul>
-<li>Handles Arabic, handwriting, curved text, and mixed scripts without special models</li>
-<li>Understands <strong>context</strong> — not just characters, but what the text means</li>
-<li>Works on full documents, not just single-line crops</li>
-<li>One model for everything</li>
-</ul>
-<div class="fragment fade-up">
-<div class="callout callout-tip no-icon callout-style-simple">
-<div class="callout-body">
-<div class="callout-content">
-<p>No TrOCR. No LayoutLM. No separate OCR pipeline — just ask the model.</p>
-</div>
-</div>
-</div>
-</div>
-</section>
-<section id="a-moving-target-benchmarks" class="slide level2">
-<h2>A Moving Target: Benchmarks</h2>
-<div class="callout callout-important no-icon callout-style-simple">
-<div class="callout-body">
-<div class="callout-content">
-<p>The field moves fast. New models are released weekly — always check if a better tool has emerged for your use case.</p>
-</div>
-</div>
-</div>
-<p><strong>How to find the best model for your task:</strong></p>
-<ul>
-<li><a href="https://artificialanalysis.ai/">Artificial Analysis</a> — Comparison of performance, speed, and cost.</li>
-<li><a href="https://benchmarks.ksaa.gov.sa/b/balsam/leaderboard/">Balsam Leaderboard</a> — Specialized benchmarks for Arabic AI by KSAA.</li>
-<li><a href="https://silma.ai/arabic-llm-leaderboard">Arabic LLM Leaderboard</a> — Silma.ai’s ranking of Arabic language models.</li>
-<li><a href="https://huggingface.co/OALL">Open Arabic LLM Leaderboard (OALL)</a> — The community hub for Arabic model evaluation.</li>
-</ul>
-<div class="callout callout-tip no-icon callout-style-simple">
-<div class="callout-body">
-<div class="callout-content">
-<p><strong>Pro-tip:</strong> Don’t just look at global scores. Look at benchmarks that match your specific domain (e.g., Arabic, medical, or drone imagery).</p>
-</div>
-</div>
-</div>
-</section>
-<section id="when-to-use-what" class="slide level2">
-<h2>When to Use What</h2>
-<div id="129d39ec" class="cell" data-execution_count="7">
-<div class="cell-output cell-output-display">
-<div class="quarto-figure quarto-figure-center">
-<figure>
-<p><img data-src="HuggingFace_CV_Part5_files/figure-revealjs/cell-8-output-1.png" class="quarto-figure quarto-figure-center" width="1046" height="470"></p>
-</figure>
-</div>
-</div>
-</div>
-</section></section>
-<section>
-<section id="conclusion" class="title-slide slide level1 sdaia-dark center" data-background-gradient="linear-gradient(135deg, #1C355E, #00C9A7)">
-<h1>Conclusion</h1>
-<p>Your expanded Computer Vision toolkit.</p>
-</section>
-<section id="your-complete-toolkit" class="slide level2">
-<h2>Your Complete Toolkit</h2>
-<div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 1.2rem; margin-top: 1.4rem;">
-  <div style="text-align:center; background:rgba(28,53,94,0.08); padding:1.4rem; border-radius:12px;">
-    <div style="font-size:2.2rem;">🎯</div>
-    <strong>YOLO (Ultralytics)</strong><br>
-    <small>Detect · Segment · Pose · Track — fast, production-ready, exportable</small>
-  </div>
-  <div style="text-align:center; background:rgba(28,53,94,0.08); padding:1.4rem; border-radius:12px;">
-    <div style="font-size:2.2rem;">✂️</div>
-    <strong>SAM3</strong><br>
-    <small>Zero-shot segmentation — any object, any domain, point or box prompt</small>
-  </div>
-  <div style="text-align:center; background:rgba(0,201,167,0.12); padding:1.4rem; border-radius:12px;">
-    <div style="font-size:2.2rem;">🔍</div>
-    <strong>CLIP + DINOv3</strong><br>
-    <small>Semantic image search — by text description or visual similarity</small>
-  </div>
-  <div style="text-align:center; background:rgba(0,201,167,0.12); padding:1.4rem; border-radius:12px;">
-    <div style="font-size:2.2rem;">🧠</div>
-    <strong>Qwen3.5 + Gemma4</strong><br>
-    <small>Visual reasoning, OCR, document understanding — ask anything in any language</small>
-  </div>
-</div>
-</section>
-<section id="qa" class="slide level2 sdaia-dark" data-background-color="#1C355E">
-<h2>Q&amp;A</h2>
-<div class="r-fit-text">
-<p><strong>Thank You!</strong></p>
-<p>Any questions?</p>
 </div>
 
-</section></section>
+<img data-src="HuggingFace_CV_Part5_files/figure-revealjs/cell-3-output-1.svg" class="r-stretch"></section></section>
+<section>
+<section id="خاتمة" class="title-slide slide level1 sdaia-dark center" data-background-gradient="linear-gradient(135deg, #1C355E, #00C9A7)">
+<h1>خاتمة</h1>
+<p>حقيبة أدوات الرؤية الحاسوبية الموسعة الخاصة بك.</p>
+</section>
+<section id="حقيبتك-الكاملة" class="slide level2" style="font-size: 0.85em;">
+<h2>حقيبتك الكاملة</h2>
+<div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 1rem; margin-top: 1rem;">
+  <div style="text-align:center; background:rgba(28,53,94,0.06); padding:1rem; border-radius:10px; border: 1px solid rgba(28,53,94,0.1);">
+    <div style="font-size:1.8rem;">🎯</div>
+    <strong style="font-size: 0.95rem;">YOLO (Ultralytics)</strong><br>
+    <small style="font-size: 0.8rem;">اكتشاف · تجزئة · وضعيات · تتبع — سريع، جاهز للإنتاج، وقابل للتصدير</small>
+  </div>
+  <div style="text-align:center; background:rgba(28,53,94,0.06); padding:1rem; border-radius:10px; border: 1px solid rgba(28,53,94,0.1);">
+    <div style="font-size:1.8rem;">✂️</div>
+    <strong style="font-size: 0.95rem;">SAM3</strong><br>
+    <small style="font-size: 0.8rem;">تجزئة فورية (Zero-shot) — أي كائن، في أي مجال، عبر التوجيه بنقطة أو صندوق</small>
+  </div>
+  <div style="text-align:center; background:rgba(0,201,167,0.08); padding:1rem; border-radius:10px; border: 1px solid rgba(0,201,167,0.15);">
+    <div style="font-size:1.8rem;">🔍</div>
+    <strong style="font-size: 0.95rem;">CLIP + DINOv3</strong><br>
+    <small style="font-size: 0.8rem;">بحث دلالي في الصور — عبر الوصف النصي أو التشابه البصري</small>
+  </div>
+  <div style="text-align:center; background:rgba(0,201,167,0.08); padding:1rem; border-radius:10px; border: 1px solid rgba(0,201,167,0.15);">
+    <div style="font-size:1.8rem;">🧠</div>
+    <strong style="font-size: 0.95rem;">Qwen3.5 + Gemma4</strong><br>
+    <small style="font-size: 0.8rem;">تفكير بصري، OCR، وفهم المستندات — اسأل أي شيء وبأي لغة</small>
+  </div>
+</div>
+</section>
+<section id="تحدي-وصل-القوة" class="slide level2" data-background-color="#f8f9fa">
+<h2>تحدي: وصل القوة! 🎮</h2>
+<div style="text-align: center; margin-bottom: 2rem;">
+<p><span style="font-size: 1.2rem; color: #1C355E; opacity: 0.8;">اختبر معلوماتك: قم بتوصيل النموذج بالمهمة الصحيحة</span></p>
+</div>
+<div id="game-container" style="display: flex; justify-content: space-around; align-items: stretch; gap: 2rem; min-height: 300px; padding: 1rem; font-family: 'Inter', sans-serif;">
+  
+  <!-- Models Column -->
+  <div style="display: flex; flex-direction: column; gap: 1rem; width: 45%;">
+    <div class="game-card model-card" data-match="segment" onclick="selectCard(this, 'model')" style="background: white; border: 2px solid #1C355E; padding: 1rem; border-radius: 12px; cursor: pointer; transition: 0.3s; text-align: center;">
+      <div style="font-size: 1.5rem;">✂️</div>
+      <strong>SAM 3.1</strong>
     </div>
-  <div class="quarto-auto-generated-content" style="display: none;">
+    <div class="game-card model-card" data-match="search" onclick="selectCard(this, 'model')" style="background: white; border: 2px solid #1C355E; padding: 1rem; border-radius: 12px; cursor: pointer; transition: 0.3s; text-align: center;">
+      <div style="font-size: 1.5rem;">🔍</div>
+      <strong>CLIP / DINO</strong>
+    </div>
+    <div class="game-card model-card" data-match="vlm" onclick="selectCard(this, 'model')" style="background: white; border: 2px solid #1C355E; padding: 1rem; border-radius: 12px; cursor: pointer; transition: 0.3s; text-align: center;">
+      <div style="font-size: 1.5rem;">🧠</div>
+      <strong>Qwen VLM</strong>
+    </div>
+  </div>
+
+  <!-- Tasks Column -->
+  <div style="display: flex; flex-direction: column; gap: 1rem; width: 45%;">
+    <div class="game-card task-card" data-match="search" onclick="selectCard(this, 'task')" style="background: white; border: 2px solid #00C9A7; padding: 1rem; border-radius: 12px; cursor: pointer; transition: 0.3s; text-align: center; height: 100%; display: flex; align-items: center; justify-content: center;">
+      <span>البحث في الصور عبر النصوص</span>
+    </div>
+    <div class="game-card task-card" data-match="vlm" onclick="selectCard(this, 'task')" style="background: white; border: 2px solid #00C9A7; padding: 1rem; border-radius: 12px; cursor: pointer; transition: 0.3s; text-align: center; height: 100%; display: flex; align-items: center; justify-content: center;">
+      <span>فهم محتوى المستندات والإجابة عليها</span>
+    </div>
+    <div class="game-card task-card" data-match="segment" onclick="selectCard(this, 'task')" style="background: white; border: 2px solid #00C9A7; padding: 1rem; border-radius: 12px; cursor: pointer; transition: 0.3s; text-align: center; height: 100%; display: flex; align-items: center; justify-content: center;">
+      <span>تحديد وعزل أي كائن بدقة</span>
+    </div>
+  </div>
+</div>
+
+<div id="game-feedback" style="text-align: center; margin-top: 1.5rem; font-weight: bold; min-height: 1.5rem;"></div>
+
+<script>
+let selectedModel = null;
+let selectedTask = null;
+let matches = 0;
+
+function selectCard(card, type) {
+  if (card.classList.contains('matched')) return;
+
+  // Deselect others of same type
+  document.querySelectorAll('.' + type + '-card').forEach(c => {
+    if (!c.classList.contains('matched')) c.style.transform = 'scale(1)';
+    if (!c.classList.contains('matched')) c.style.boxShadow = 'none';
+  });
+
+  card.style.transform = 'scale(1.05)';
+  card.style.boxShadow = '0 5px 15px rgba(0,0,0,0.1)';
+
+  if (type === 'model') selectedModel = card;
+  else selectedTask = card;
+
+  if (selectedModel && selectedTask) {
+    checkMatch();
+  }
+}
+
+function checkMatch() {
+  const feedback = document.getElementById('game-feedback');
+  
+  if (selectedModel.dataset.match === selectedTask.dataset.match) {
+    // Success
+    selectedModel.classList.add('matched');
+    selectedTask.classList.add('matched');
+    
+    selectedModel.style.background = '#d4edda';
+    selectedModel.style.borderColor = '#28a745';
+    selectedTask.style.background = '#d4edda';
+    selectedTask.style.borderColor = '#28a745';
+    
+    feedback.innerHTML = '<span style="color: #28a745;">إجابة صحيحة! 🎉</span>';
+    matches++;
+    
+    if (matches === 3) {
+      feedback.innerHTML = '<span style="color: #28a745; font-size: 1.5rem;">ممتاز! لقد أتقنت منظومة HuggingFace 🏆</span>';
+    }
+  } else {
+    // Fail
+    const m = selectedModel;
+    const t = selectedTask;
+    m.style.background = '#f8d7da';
+    t.style.background = '#f8d7da';
+    feedback.innerHTML = '<span style="color: #dc3545;">حاول مرة أخرى ❌</span>';
+    
+    setTimeout(() => {
+      if (!m.classList.contains('matched')) {
+        m.style.background = 'white';
+        m.style.transform = 'scale(1)';
+      }
+      if (!t.classList.contains('matched')) {
+        t.style.background = 'white';
+        t.style.transform = 'scale(1)';
+      }
+    }, 500);
+  }
+  
+  selectedModel = null;
+  selectedTask = null;
+}
+</script>
+
+<style>
+.game-card:hover {
+  background: #f0f0f0 !important;
+}
+.matched {
+  cursor: default !important;
+  opacity: 0.6;
+}
+</style>
+<aside class="notes">
+<p>نشاط تفاعلي لترسيخ المفاهيم: - SAM3 مخصص للتقطيع (Segmentation). - CLIP/DINO للبحث والتشابه (Search). - VLMs للفهم والاستدلال (Reasoning).</p>
+<style type="text/css">
+        span.MJX_Assistive_MathML {
+          position:absolute!important;
+          clip: rect(1px, 1px, 1px, 1px);
+          padding: 1px 0 0 0!important;
+          border: 0!important;
+          height: 1px!important;
+          width: 1px!important;
+          overflow: hidden!important;
+          display:block!important;
+      }</style></aside>
+</section>
+<section id="شكرا-لكم" class="slide level2" data-background-color="#1C355E" data-background-image="slides_template/assets/anim.svg" data-background-size="cover" data-background-opacity="0.2">
+<h2>شكراً لكم!</h2>
+<div style="text-align: center; margin-top: 5rem;">
+<p><span style="font-size: 3.5rem; font-weight: bold; color: #00C9A7; display: block; margin-bottom: 1rem;">شكراً جزيلاً لاهتمامكم</span></p>
+<p><span style="font-size: 2rem; color: white; opacity: 0.9;">هل لديكم أي أسئلة؟</span></p>
+<div style="margin-top: 4rem; display: flex; justify-content: center; gap: 2rem;">
+<p><img data-src="slides_template/assets/sdaia.svg" width="150"></p>
+</div>
+</div>
+<div class="quarto-auto-generated-content">
 <p><img src="slides_template/assets/sdaia.svg" class="slide-logo"></p>
 <div class="footer footer-default">
 
 </div>
-</div></div>
+</div>
+</section></section>
+    </div>
+  </div>
 
   <script>window.backupDefine = window.define; window.define = undefined;</script>
   <script src="HuggingFace_CV_Part5_files/libs/revealjs/dist/reveal.js"></script>
@@ -1098,8 +667,7 @@
 'autoAnimateEasing': "ease",
 'autoAnimateDuration': 1,
 'autoAnimateUnmatched': true,
-'jumpToSlide': true,
-'menu': {"side":"left","useTextContentForMissingTitles":true,"markers":false,"loadIcons":false,"custom":[{"title":"Tools","icon":"<i class=\"fas fa-gear\"></i>","content":"<ul class=\"slide-menu-items\">\n<li class=\"slide-tool-item active\" data-item=\"0\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.fullscreen(event)\"><kbd>f</kbd> Fullscreen</a></li>\n<li class=\"slide-tool-item\" data-item=\"1\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.speakerMode(event)\"><kbd>s</kbd> Speaker View</a></li>\n<li class=\"slide-tool-item\" data-item=\"2\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.overview(event)\"><kbd>o</kbd> Slide Overview</a></li>\n<li class=\"slide-tool-item\" data-item=\"3\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.togglePdfExport(event)\"><kbd>e</kbd> PDF Export Mode</a></li>\n<li class=\"slide-tool-item\" data-item=\"4\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.toggleScrollView(event)\"><kbd>r</kbd> Scroll View Mode</a></li>\n<li class=\"slide-tool-item\" data-item=\"5\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.toggleChalkboard(event)\"><kbd>b</kbd> Toggle Chalkboard</a></li>\n<li class=\"slide-tool-item\" data-item=\"6\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.toggleNotesCanvas(event)\"><kbd>c</kbd> Toggle Notes Canvas</a></li>\n<li class=\"slide-tool-item\" data-item=\"7\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.downloadDrawings(event)\"><kbd>d</kbd> Download Drawings</a></li>\n<li class=\"slide-tool-item\" data-item=\"8\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.keyboardHelp(event)\"><kbd>?</kbd> Keyboard Help</a></li>\n</ul>"},{"title":"Index","icon":"<svg width='1.8rem' viewBox='0 0 24 24'><path d='M5 7h14M5 12h14M5 17h7' stroke='white' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/></svg>","src":"../../index.html"}],"openButton":true},
+'menu': {"side":"left","useTextContentForMissingTitles":true,"markers":false,"loadIcons":false,"custom":[{"title":"Tools","icon":"<i class=\"fas fa-gear\"></i>","content":"<ul class=\"slide-menu-items\">\n<li class=\"slide-tool-item active\" data-item=\"0\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.fullscreen(event)\"><kbd>f</kbd> Fullscreen</a></li>\n<li class=\"slide-tool-item\" data-item=\"1\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.speakerMode(event)\"><kbd>s</kbd> Speaker View</a></li>\n<li class=\"slide-tool-item\" data-item=\"2\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.overview(event)\"><kbd>o</kbd> Slide Overview</a></li>\n<li class=\"slide-tool-item\" data-item=\"3\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.togglePdfExport(event)\"><kbd>e</kbd> PDF Export Mode</a></li>\n<li class=\"slide-tool-item\" data-item=\"4\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.toggleChalkboard(event)\"><kbd>b</kbd> Toggle Chalkboard</a></li>\n<li class=\"slide-tool-item\" data-item=\"5\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.toggleNotesCanvas(event)\"><kbd>c</kbd> Toggle Notes Canvas</a></li>\n<li class=\"slide-tool-item\" data-item=\"6\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.downloadDrawings(event)\"><kbd>d</kbd> Download Drawings</a></li>\n<li class=\"slide-tool-item\" data-item=\"7\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.keyboardHelp(event)\"><kbd>?</kbd> Keyboard Help</a></li>\n</ul>"},{"title":"Index","icon":"<svg width='1.8rem' viewBox='0 0 24 24'><path d='M5 7h14M5 12h14M5 17h7' stroke='white' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/></svg>","src":"../../index.html"}],"openButton":true},
 'chalkboard': {"buttons":true},
 'smaller': false,
  
@@ -1137,7 +705,7 @@
         respondToHashChanges: true,
 
         // Push each slide change to the browser history
-        history: false,
+        history: true,
 
         // Enable keyboard shortcuts for navigation
         keyboard: true,
@@ -1254,7 +822,7 @@
         margin: 0.1,
 
         math: {
-          mathjax: 'https://cdn.jsdelivr.net/npm/mathjax@2.7.9/MathJax.js',
+          mathjax: 'https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js',
           config: 'TeX-AMS_HTML-full',
           tex2jax: {
             inlineMath: [['\\(','\\)']],
@@ -1281,55 +849,40 @@
       });
     </script>
     <script id="quarto-html-after-body" type="application/javascript">
-      window.document.addEventListener("DOMContentLoaded", function (event) {
-        const tabsets =  window.document.querySelectorAll(".panel-tabset-tabby")
-        tabsets.forEach(function(tabset) {
-          const tabby = new Tabby('#' + tabset.id);
-        });
-        const isCodeAnnotation = (el) => {
-          for (const clz of el.classList) {
-            if (clz.startsWith('code-annotation-')) {                     
-              return true;
-            }
-          }
-          return false;
+    window.document.addEventListener("DOMContentLoaded", function (event) {
+      const toggleBodyColorMode = (bsSheetEl) => {
+        const mode = bsSheetEl.getAttribute("data-mode");
+        const bodyEl = window.document.querySelector("body");
+        if (mode === "dark") {
+          bodyEl.classList.add("quarto-dark");
+          bodyEl.classList.remove("quarto-light");
+        } else {
+          bodyEl.classList.add("quarto-light");
+          bodyEl.classList.remove("quarto-dark");
         }
-        const onCopySuccess = function(e) {
-          // button target
-          const button = e.trigger;
-          // don't keep focus
-          button.blur();
-          // flash "checked"
-          button.classList.add('code-copy-button-checked');
-          var currentTitle = button.getAttribute("title");
-          button.setAttribute("title", "Copied!");
-          let tooltip;
-          if (window.bootstrap) {
-            button.setAttribute("data-bs-toggle", "tooltip");
-            button.setAttribute("data-bs-placement", "left");
-            button.setAttribute("data-bs-title", "Copied!");
-            tooltip = new bootstrap.Tooltip(button, 
-              { trigger: "manual", 
-                customClass: "code-copy-button-tooltip",
-                offset: [0, -8]});
-            tooltip.show();    
-          }
-          setTimeout(function() {
-            if (tooltip) {
-              tooltip.hide();
-              button.removeAttribute("data-bs-title");
-              button.removeAttribute("data-bs-toggle");
-              button.removeAttribute("data-bs-placement");
-            }
-            button.setAttribute("title", currentTitle);
-            button.classList.remove('code-copy-button-checked');
-          }, 1000);
-          // clear code selection
-          e.clearSelection();
+      }
+      const toggleBodyColorPrimary = () => {
+        const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+        if (bsSheetEl) {
+          toggleBodyColorMode(bsSheetEl);
         }
-        const getTextToCopy = function(trigger) {
-          const outerScaffold = trigger.parentElement.cloneNode(true);
-          const codeEl = outerScaffold.querySelector('code');
+      }
+      toggleBodyColorPrimary();  
+      const tabsets =  window.document.querySelectorAll(".panel-tabset-tabby")
+      tabsets.forEach(function(tabset) {
+        const tabby = new Tabby('#' + tabset.id);
+      });
+      const isCodeAnnotation = (el) => {
+        for (const clz of el.classList) {
+          if (clz.startsWith('code-annotation-')) {                     
+            return true;
+          }
+        }
+        return false;
+      }
+      const clipboard = new window.ClipboardJS('.code-copy-button', {
+        text: function(trigger) {
+          const codeEl = trigger.previousElementSibling.cloneNode(true);
           for (const childEl of codeEl.children) {
             if (isCodeAnnotation(childEl)) {
               childEl.remove();
@@ -1337,117 +890,140 @@
           }
           return codeEl.innerText;
         }
-        const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
-          text: getTextToCopy
-        });
-        clipboard.on('success', onCopySuccess);
-        if (window.document.getElementById('quarto-embedded-source-code-modal')) {
-          const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
-            text: getTextToCopy,
-            container: window.document.getElementById('quarto-embedded-source-code-modal')
-          });
-          clipboardModal.on('success', onCopySuccess);
-        }
-          var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
-          var mailtoRegex = new RegExp(/^mailto:/);
-            var filterRegex = new RegExp('/' + window.location.host + '/');
-          var isInternal = (href) => {
-              return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
-          }
-          // Inspect non-navigation links and adorn them if external
-         var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
-          for (var i=0; i<links.length; i++) {
-            const link = links[i];
-            if (!isInternal(link.href)) {
-              // undo the damage that might have been done by quarto-nav.js in the case of
-              // links that we want to consider external
-              if (link.dataset.originalHref !== undefined) {
-                link.href = link.dataset.originalHref;
-              }
-            }
-          }
-        function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
-          const config = {
-            allowHTML: true,
-            maxWidth: 500,
-            delay: 100,
-            arrow: false,
-            appendTo: function(el) {
-                return el.closest('section.slide') || el.parentElement;
-            },
-            interactive: true,
-            interactiveBorder: 10,
-            theme: 'light-border',
-            placement: 'bottom-start',
-          };
-          if (contentFn) {
-            config.content = contentFn;
-          }
-          if (onTriggerFn) {
-            config.onTrigger = onTriggerFn;
-          }
-          if (onUntriggerFn) {
-            config.onUntrigger = onUntriggerFn;
-          }
-            config['offset'] = [0,0];
-            config['maxWidth'] = 700;
-          window.tippy(el, config); 
-        }
-        const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
-        for (var i=0; i<noterefs.length; i++) {
-          const ref = noterefs[i];
-          tippyHover(ref, function() {
-            // use id or data attribute instead here
-            let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
-            try { href = new URL(href).hash; } catch {}
-            const id = href.replace(/^#\/?/, "");
-            const note = window.document.getElementById(id);
-            if (note) {
-              return note.innerHTML;
-            } else {
-              return "";
-            }
-          });
-        }
-        const findCites = (el) => {
-          const parentEl = el.parentElement;
-          if (parentEl) {
-            const cites = parentEl.dataset.cites;
-            if (cites) {
-              return {
-                el,
-                cites: cites.split(' ')
-              };
-            } else {
-              return findCites(el.parentElement)
-            }
-          } else {
-            return undefined;
-          }
-        };
-        var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
-        for (var i=0; i<bibliorefs.length; i++) {
-          const ref = bibliorefs[i];
-          const citeInfo = findCites(ref);
-          if (citeInfo) {
-            tippyHover(citeInfo.el, function() {
-              var popup = window.document.createElement('div');
-              citeInfo.cites.forEach(function(cite) {
-                var citeDiv = window.document.createElement('div');
-                citeDiv.classList.add('hanging-indent');
-                citeDiv.classList.add('csl-entry');
-                var biblioDiv = window.document.getElementById('ref-' + cite);
-                if (biblioDiv) {
-                  citeDiv.innerHTML = biblioDiv.innerHTML;
-                }
-                popup.appendChild(citeDiv);
-              });
-              return popup.innerHTML;
-            });
-          }
-        }
       });
-      </script>
+      clipboard.on('success', function(e) {
+        // button target
+        const button = e.trigger;
+        // don't keep focus
+        button.blur();
+        // flash "checked"
+        button.classList.add('code-copy-button-checked');
+        var currentTitle = button.getAttribute("title");
+        button.setAttribute("title", "Copied!");
+        let tooltip;
+        if (window.bootstrap) {
+          button.setAttribute("data-bs-toggle", "tooltip");
+          button.setAttribute("data-bs-placement", "left");
+          button.setAttribute("data-bs-title", "Copied!");
+          tooltip = new bootstrap.Tooltip(button, 
+            { trigger: "manual", 
+              customClass: "code-copy-button-tooltip",
+              offset: [0, -8]});
+          tooltip.show();    
+        }
+        setTimeout(function() {
+          if (tooltip) {
+            tooltip.hide();
+            button.removeAttribute("data-bs-title");
+            button.removeAttribute("data-bs-toggle");
+            button.removeAttribute("data-bs-placement");
+          }
+          button.setAttribute("title", currentTitle);
+          button.classList.remove('code-copy-button-checked');
+        }, 1000);
+        // clear code selection
+        e.clearSelection();
+      });
+        var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+        var mailtoRegex = new RegExp(/^mailto:/);
+          var filterRegex = new RegExp('/' + window.location.host + '/');
+        var isInternal = (href) => {
+            return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+        }
+        // Inspect non-navigation links and adorn them if external
+     	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool)');
+        for (var i=0; i<links.length; i++) {
+          const link = links[i];
+          if (!isInternal(link.href)) {
+            // undo the damage that might have been done by quarto-nav.js in the case of
+            // links that we want to consider external
+            if (link.dataset.originalHref !== undefined) {
+              link.href = link.dataset.originalHref;
+            }
+          }
+        }
+      function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+        const config = {
+          allowHTML: true,
+          maxWidth: 500,
+          delay: 100,
+          arrow: false,
+          appendTo: function(el) {
+              return el.closest('section.slide') || el.parentElement;
+          },
+          interactive: true,
+          interactiveBorder: 10,
+          theme: 'light-border',
+          placement: 'bottom-start',
+        };
+        if (contentFn) {
+          config.content = contentFn;
+        }
+        if (onTriggerFn) {
+          config.onTrigger = onTriggerFn;
+        }
+        if (onUntriggerFn) {
+          config.onUntrigger = onUntriggerFn;
+        }
+          config['offset'] = [0,0];
+          config['maxWidth'] = 700;
+        window.tippy(el, config); 
+      }
+      const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+      for (var i=0; i<noterefs.length; i++) {
+        const ref = noterefs[i];
+        tippyHover(ref, function() {
+          // use id or data attribute instead here
+          let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+          try { href = new URL(href).hash; } catch {}
+          const id = href.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note) {
+            return note.innerHTML;
+          } else {
+            return "";
+          }
+        });
+      }
+      const findCites = (el) => {
+        const parentEl = el.parentElement;
+        if (parentEl) {
+          const cites = parentEl.dataset.cites;
+          if (cites) {
+            return {
+              el,
+              cites: cites.split(' ')
+            };
+          } else {
+            return findCites(el.parentElement)
+          }
+        } else {
+          return undefined;
+        }
+      };
+      var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+      for (var i=0; i<bibliorefs.length; i++) {
+        const ref = bibliorefs[i];
+        const citeInfo = findCites(ref);
+        if (citeInfo) {
+          tippyHover(citeInfo.el, function() {
+            var popup = window.document.createElement('div');
+            citeInfo.cites.forEach(function(cite) {
+              var citeDiv = window.document.createElement('div');
+              citeDiv.classList.add('hanging-indent');
+              citeDiv.classList.add('csl-entry');
+              var biblioDiv = window.document.getElementById('ref-' + cite);
+              if (biblioDiv) {
+                citeDiv.innerHTML = biblioDiv.innerHTML;
+              }
+              popup.appendChild(citeDiv);
+            });
+            return popup.innerHTML;
+          });
+        }
+      }
+    });
+    </script>
     
 
 </body></html>

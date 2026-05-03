@@ -1,7 +1,9 @@
 ---
-title: "Ultralytics YOLO Foundations: Part 4"
-subtitle: "Evaluation & Deployment"
+title: "أساسيات Ultralytics YOLO: الجزء الرابع"
+subtitle: "التقييم والنشر (Evaluation & Deployment)"
 date: today
+lang: ar
+dir: rtl
 format:
   revealjs:
     theme: [default, slides_template/assets/sdaia.scss]
@@ -11,112 +13,172 @@ format:
     slide-number: true
     controls: true
     progress: true
+    
     center-title-slide: true
     title-slide-attributes:
       data-background-image: "slides_template/assets/anim.svg"
       data-background-opacity: "0.15"
+      
 resources:
   - "assets/**"
 ---
-# 7. Model Evaluation {.sdaia-dark background-gradient="linear-gradient(135deg, #1C355E, #00C9A7)"}
+```{python}
+#| echo: false
+#| output: false
+import matplotlib.pyplot as plt
+try:
+    import matplotlib_inline.backend_inline
+    matplotlib_inline.backend_inline.set_matplotlib_formats('svg')
+except:
+    pass
+plt.rcParams['svg.fonttype'] = 'none'
 
-How good is your model?
+def fix_ar(text):
+    return text
+```
 
-## Binary Classification Basics
 
-Every prediction falls into one of four categories. Example: detecting a **"Car"**
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+# 7. تقييم النموذج {.sdaia-dark data-background-gradient="linear-gradient(135deg, #1C355E, #00C9A7)"}
+
+ما مدى جودة نموذجك فعلياً؟
+
+## أساسيات التصنيف الثنائي {.smaller}
+
+كل توقع يخرج من النموذج يقع في واحدة من أربع فئات. مثال: اكتشاف **"سيارة"**
 
 ```{=html}
-<table style="width:90%; margin: 1.5rem auto; border-collapse: separate; border-spacing: 8px; font-size: 1em; text-align: center;">
+<table style="width:90%; margin: 1.5rem auto; border-collapse: separate; border-spacing: 8px; font-size: 1em; text-align: center;" dir="rtl">
   <tr>
     <td style="width:20%"></td>
-    <th style="padding:0.6rem; color:#1C355E;">Predicted: Car</th>
-    <th style="padding:0.6rem; color:#1C355E;">Predicted: Not Car</th>
+    <th style="padding:0.6rem; color:#1C355E;">Prediction: سيارة</th>
+    <th style="padding:0.6rem; color:#1C355E;">Prediction: ليست سيارة</th>
   </tr>
   <tr>
-    <th style="color:#1C355E; text-align:right; padding-right:0.8rem;">Actual: Car</th>
-    <td style="background:#d4edda; padding:1rem; border-radius:8px;">✅ <strong>True Positive</strong><br><small>Correct detection</small></td>
-    <td style="background:#f8d7da; padding:1rem; border-radius:8px;">❌ <strong>False Negative</strong><br><small>Missed car</small></td>
+    <th style="color:#1C355E; text-align:right; padding-right:0.8rem;">الحقيقة: سيارة</th>
+    <td style="background:#d4edda; padding:1rem; border-radius:8px;">✅ <strong>إيجابي صحيح (TP)</strong><br><small>اكتشاف صحيح</small></td>
+    <td style="background:#f8d7da; padding:1rem; border-radius:8px;">❌ <strong>سلبي خاطئ (FN)</strong><br><small>سيارة تم تفويتها</small></td>
   </tr>
   <tr>
-    <th style="color:#1C355E; text-align:right; padding-right:0.8rem;">Actual: Not Car</th>
-    <td style="background:#fff3cd; padding:1rem; border-radius:8px;">⚠️ <strong>False Positive</strong><br><small>False alarm</small></td>
-    <td style="background:#d4edda; padding:1rem; border-radius:8px;">✅ <strong>True Negative</strong><br><small>Correct rejection</small></td>
+    <th style="color:#1C355E; text-align:right; padding-right:0.8rem;">الحقيقة: ليست سيارة</th>
+    <td style="background:#fff3cd; padding:1rem; border-radius:8px;">⚠️ <strong>إيجابي خاطئ (FP)</strong><br><small>إنذار خاطئ</small></td>
+    <td style="background:#d4edda; padding:1rem; border-radius:8px;">✅ <strong>سلبي صحيح (TN)</strong><br><small>رفض صحيح (بقعة فارغة)</small></td>
   </tr>
 </table>
 ```
 
-## Scenario: Smart Parking Camera
+## سيناريو: كاميرا المواقف الذكية {.smaller}
 
 ::: {style="font-size: 0.9em;"}
-A camera at a parking entrance classifies each frame as **Car Present** or **Not**: 
+كاميرا عند مدخل موقف سيارات تصنف كل إطار كـ **سيارة موجودة** أو **لا يوجد شيء**: 
 :::
 
-![](assets/slides/parking_camera_scenario_cropped.png){fig-align="center"}
+![](assets/slides/parking_camera_scenario_cropped.png){fig-align="center" width="80%"}
 
-**Dataset:** 24 hours, 10,000 frames (~9s interval)
+**بيانات الاختبار:** 24 ساعة، 10,000 إطار (إطار كل 9 ثوانٍ تقريباً)
 
-| | Count | % |
+| الحالة | العدد | النسبة |
 |---|---|---|
-| Car Present | 500 | 5% |
-| Empty Spot | 9,500 | 95% |
+| سيارة موجودة | 500 | 5% |
+| بقعة فارغة | 9,500 | 95% |
 
-Most of the time, the spot is empty.
+في معظم الأوقات، الموقف يكون فارغاً.
 
 
-## The Problem with Accuracy
+## مشكلة "الدقة" (Accuracy) {.smaller}
 
-A "lazy" model that **always predicts "Empty"**:
+تخيل نموذجاً "كسولاً" **يتوقع دائماً "فارغ"** مهما رأى:
 
 ::: {.fragment .fade-up}
-- Finds **0 cars**
-- Gets all 9,500 empty spots correct
+- يجد **0 سيارات** (فشل في كل السيارات)
+- يصيب في كل الـ 9,500 بقعة فارغة
 :::
 
 ::: {.fragment .fade-up}
-$$Accuracy = \frac{9{,}500}{10{,}000} = 95\%$$
+$$Accuracy (الدقة) = \frac{9{,}500}{10{,}000} = 95\%$$
 :::
 
 ::: {.fragment .fade-up}
-**95% Accuracy** — yet it never detects a single car. This is the **Class Imbalance Problem**.
+**95% دقة!** — ومع ذلك لم يكتشف سيارة واحدة. هذه هي **مشكلة اختلال توازن البيانات (Class Imbalance)**.
 :::
 
 
-## Balanced Accuracy: A Quick Fix
+## لغة التقييم: كيف يرى النموذج العالم؟ {.smaller}
 
-Instead of overall accuracy, we average the per-class accuracies so each class counts equally.
+لفهم دقة النموذج، نستخدم أربعة مصطلحات أساسية تصف "إصابته" أو "خطأه":
 
-::: {.fragment .fade-up}
-**Applied to our "Lazy" Model:**
+| المصطلح | المعنى البسيط | مثال كاميرا الأمان (لص) | النتيجة |
+| :--- | :--- | :--- | :--- |
+| **True Positive (TP)** | **صيد صحيح** | الكاميرا رصدت شخصاً، وطلع فعلاً "لص". | **نجاح! ✅** |
+| **False Positive (FP)** | **إنذار خاطئ** | الكاميرا دقت جرس الإنذار، لكن طلع "قطة". | **إزعاج 📣** |
+| **False Negative (FN)** | **صيد ضائع** | اللص دخل البيت، والكاميرا لم ترسل أي تنبيه. | **خطر! 🙈** |
+| **True Negative (TN)** | **تجاهل صحيح** | لم يمر أحد، والكاميرا بقيت هادئة. | **أمان 💤** |
 
-- **Car Accuracy:** 0 / 500 = **0%**
-- **Empty Accuracy:** 9,500 / 9,500 = **100%**
-- **Balanced Accuracy:** $(0\% + 100\%) / 2 = \mathbf{50\%}$
+---
+
+## مصفوفة الحيرة (Confusion Matrix) {.smaller}
+
+هي مجرد "جدول" يجمع كل الحالات السابقة لنعرف أين يقع الخلل الأكبر في النموذج.
+
+::: {.columns}
+::: {.column width="50%"}
+**لماذا نهتم؟**
+- في **السيارات ذاتية القيادة**: الـ **FN** (عدم رؤية سيارة أمامك) أخطر بكثير من الـ **FP**.
+- في **فلترة الرسائل المزعجة (Spam)**: الـ **FP** (حذف إيميل مهم) أسوأ من الـ **FN**.
 :::
 
-::: {.fragment .fade-up}
-Balanced Accuracy correctly flags the lazy model as a failure, even though its "standard" accuracy was 95%!
+::: {.column width="50%"}
+| | الواقع: إيجابي (لص) | الواقع: سلبي (فارغ) |
+| :--- | :--- | :--- |
+| **توقع: إيجابي** | **TP** (صيد صحيح) | **FP** (إنذار كاذب) |
+| **توقع: سلبي** | **FN** (صيد ضائع) | **TN** (تجاهل صحيح) |
+:::
+:::
+
+::: notes
+- الـ True تعني أن النموذج "أصاب" في حكمه.
+- الـ False تعني أن النموذج "أخطأ" في حكمه.
+- الـ Positive تعني أن النموذج "توقع وجود" الشيء.
+- الـ Negative تعني أن النموذج "توقع عدم وجود" الشيء.
 :::
 
 
-## Balanced Accuracy: The Hidden Problem
+## Balanced Accuracy: المشكلة المخفية {.smaller}
 
-**What if our model catches every car, but is "trigger-happy"?**
+**ماذا لو كان النموذج يكتشف كل سيارة، ولكنه "مفرط الحساسية" (يرى أشباحاً)؟**
 
 :::: {.columns}
 
 ::: {.column width="55%"}
 ```{python}
+import matplotlib.pyplot as plt
+
+
 #| echo: false
 #| fig-align: center
 import matplotlib.pyplot as plt
 import numpy as np
 
+
 fig, ax = plt.subplots(figsize=(5, 3.5))
 fig.patch.set_alpha(0.0)
 ax.patch.set_alpha(0.0)
 
-categories = ['True Positives\n(Cars caught)', 'False Positives\n(Empty → "Car")', 'False Negatives\n(Cars missed)', 'True Negatives\n(Correct Rejection)']
+# Arabic labels
+categories = ['إيجابيات صحيحة\n(تم صيد السيارات)', 'إيجابيات خاطئة\n(فارغ ← "سيارة"', 'سلبيات خاطئة\n(سيارات ضاعت)', 'سلبيات صحيحة\n(رفض صحيح)']
 values = [500, 1900, 0, 7600]
 colors = ['#28a745', '#dc3545', '#ffc107', '#17a2b8']
 
@@ -131,7 +193,7 @@ ax.spines['right'].set_visible(False)
 ax.spines['bottom'].set_color('#1C355E')
 ax.spines['left'].set_visible(False)
 ax.tick_params(left=False, colors='#1C355E', labelsize=9)
-ax.set_title('Trigger-Happy Model Results', fontsize=13, fontweight='bold', color='#1C355E')
+ax.set_title('نتائج النموذج مفرط الحساسية', fontsize=13, fontweight='bold', color='#1C355E')
 plt.tight_layout()
 plt.show()
 ```
@@ -140,21 +202,21 @@ plt.show()
 ::: {.column width="45%"}
 ::: {style="font-size: 0.85em;"}
 ::: {.fragment .fade-up}
-- **Car Accuracy:** 100%
-- **Empty Accuracy:** 80%
+- **دقة فئة السيارات:** 100%
+- **دقة فئة الفارغ:** 80%
 
 $$\frac{100\% + 80\%}{2} = \mathbf{90\%}$$
 :::
 
 ::: {.fragment .fade-up}
 ::: {.callout-warning appearance="minimal"}
-**90% looks great** — but that's **1,900 false alarms** hidden inside the score.
+**90% تبدو رائعة** — ولكنها تخفي **1,900 إنذار خاطئ** داخل الرقم.
 :::
 :::
 
 ::: {.fragment .fade-up}
 ::: {.callout-tip appearance="minimal"}
-**The TN "Trap":** The **7,600 True Negatives** (correctly ignoring empty spots) are what inflate the accuracy while the false alarms flood your system.
+**فخ الـ TN:** الـ **7,600 سلبي صحيح** (تجاهل البقع الفارغة بشكل صحيح) هي التي رفعت الدقة بشكل خادع بينما الإنذارات الخاطئة تغرق نظامك.
 :::
 :::
 :::
@@ -163,36 +225,37 @@ $$\frac{100\% + 80\%}{2} = \mathbf{90\%}$$
 ::::
 
 
-## Precision and Recall
+## Precision وRecall {.smaller}
 
-Two metrics that ignore True Negatives entirely (correctly classified Empty spot):
+مقياسان يتجاهلان "السلبيات الصحيحة" تماماً (البقع الفارغة التي تم تجاهلها بنجاح):
 
 ::: {.incremental}
-- **Precision:** When the model flags a "Car", is it actually a Car? *(Quality)*
+- **Precision:** عندما يقول النموذج "هذه سيارة"، ما مدى احتمال أن تكون سيارة فعلاً؟ *(الجودة)*
   $$Precision = \frac{TP}{TP + FP}$$
-- **Recall:** Out of all actual Cars, how many did the model find? *(Quantity)*
+- **Recall:** من بين كل السيارات الموجودة فعلاً، كم واحدة نجح النموذج في إيجادها؟ *(الكمية)*
   $$Recall = \frac{TP}{TP + FN}$$
 :::
 
 
-## Case Study: Two Models
+## دراسة حالة: نموذجان {.smaller}
 
-We have **500 actual cars**. How would these two models handle them?
+لدينا **500 سيارة حقيقية**. كيف سيتعامل معها هذان النموذجان؟
 
 ::: {.incremental}
-- **Model A:** "Over-Sensitive" (Flags everything)
-- **Model B:** "Cautious" (Flags only sure bets)
+- **النموذج (أ):** "مفرط الحساسية" (يصيح على كل شيء)
+- **النموذج (ب):** "حذر" (لا يتحدث إلا إذا كان متأكداً 100%)
 :::
 
 
-## Model A: "Over-Sensitive"
+## النموذج (أ): "مفرط الحساسية" {.smaller}
 
-*Flags everything — never misses a car*
+*يصيح على كل شيء — لا يفوت سيارة أبداً*
 
 ```{python}
 #| echo: false
 #| fig-align: center
 import matplotlib.pyplot as plt
+
 import numpy as np
 
 fig, ax = plt.subplots(figsize=(7, 4))
@@ -200,7 +263,7 @@ fig.patch.set_alpha(0.0)
 ax.patch.set_alpha(0.0)
 
 # Data for Model A
-categories = ['True Positives\n(Caught)', 'False Positives\n(False Alarms)', 'False Negatives\n(Missed)']
+categories = ['إيجابيات صحيحة\n(تم مسكها)', 'إيجابيات خاطئة\n(إنذارات كاذبة)', 'سلبيات خاطئة\n(تم تفويتها)']
 values = [500, 1900, 0]
 colors = ['#28a745', '#dc3545', '#ffc107']
 
@@ -208,7 +271,7 @@ bars = ax.barh(categories, values, color=colors, height=0.5, edgecolor='white', 
 
 # Add value labels
 for bar, val in zip(bars, values):
-    ax.text(bar.get_width() + 30, bar.get_y() + bar.get_height()/2, 
+    ax.text(bar.get_width() + 30, bar.get_y() + bar.get_height()/2,
             str(val), va='center', ha='left', fontsize=13, fontweight='bold', color='#1C355E')
 
 ax.set_xlim(0, 2400)
@@ -217,8 +280,8 @@ ax.spines['right'].set_visible(False)
 ax.spines['bottom'].set_color('#1C355E')
 ax.spines['left'].set_visible(False)
 ax.tick_params(left=False, colors='#1C355E', labelsize=11)
-ax.set_title('Model A: Predicted 2,400 "Cars"', fontsize=14, fontweight='bold', color='#1C355E')
-ax.set_xlabel('Count', fontsize=12, color='#1C355E')
+ax.set_title('النموذج أ: توقع 2,400 "سيارة"', fontsize=14, fontweight='bold', color='#1C355E')
+ax.set_xlabel('العدد', fontsize=12, color='#1C355E')
 
 plt.tight_layout()
 plt.show()
@@ -230,14 +293,15 @@ plt.show()
 :::
 
 
-## Model B: "Cautious"
+## النموذج (ب): "الحذر" {.smaller}
 
-*Only flags when very confident*
+*لا يتحدث إلا عندما يكون متأكداً جداً*
 
 ```{python}
 #| echo: false
 #| fig-align: center
 import matplotlib.pyplot as plt
+
 import numpy as np
 
 fig, ax = plt.subplots(figsize=(7, 4))
@@ -245,7 +309,7 @@ fig.patch.set_alpha(0.0)
 ax.patch.set_alpha(0.0)
 
 # Data for Model B
-categories = ['True Positives\n(Caught)', 'False Positives\n(False Alarms)', 'False Negatives\n(Missed)']
+categories = ['إيجابيات صحيحة\n(تم مسكها)', 'إيجابيات خاطئة\n(إنذارات كاذبة)', 'سلبيات خاطئة\n(تم تفويتها)']
 values = [350, 0, 150]
 colors = ['#28a745', '#dc3545', '#ffc107']
 
@@ -253,7 +317,7 @@ bars = ax.barh(categories, values, color=colors, height=0.5, edgecolor='white', 
 
 # Add value labels
 for bar, val in zip(bars, values):
-    ax.text(bar.get_width() + 20, bar.get_y() + bar.get_height()/2, 
+    ax.text(bar.get_width() + 20, bar.get_y() + bar.get_height()/2,
             str(val), va='center', ha='left', fontsize=13, fontweight='bold', color='#1C355E')
 
 ax.set_xlim(0, 550)
@@ -262,8 +326,8 @@ ax.spines['right'].set_visible(False)
 ax.spines['bottom'].set_color('#1C355E')
 ax.spines['left'].set_visible(False)
 ax.tick_params(left=False, colors='#1C355E', labelsize=11)
-ax.set_title('Model B: Predicted 350 "Cars"', fontsize=14, fontweight='bold', color='#1C355E')
-ax.set_xlabel('Count', fontsize=12, color='#1C355E')
+ax.set_title('النموذج ب: توقع 350 "سيارة"', fontsize=14, fontweight='bold', color='#1C355E')
+ax.set_xlabel('العدد', fontsize=12, color='#1C355E')
 
 plt.tight_layout()
 plt.show()
@@ -274,27 +338,107 @@ plt.show()
 - **Precision:** 350 / 350 = **100%**
 :::
 
+## 🎯 محاكي: موازنة الدقة والكمية {background-color="#f0f4f8" .smaller}
 
-## (Reminder) Model Output: Confidence $\neq$ Label
+::: {style="text-align: center; margin-bottom: 0.5rem; font-size: 0.9rem;"}
+حرك المنزلق وشاهد كيف يتأثر أداء النموذج بتغيير "عتبة الثقة"
+:::
+
+```{=html}
+<div style="background: white; padding: 0.8rem; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); max-width: 650px; margin: 0 auto; font-family: sans-serif; border: 1px solid #ddd;">
+    
+    <!-- Slider Section -->
+    <div style="margin-bottom: 1rem; background: #f8f9fa; padding: 0.8rem; border-radius: 8px;">
+        <div style="display: flex; justify-content: space-between; font-weight: bold; color: #1C355E; margin-bottom: 0.5rem; font-size: 0.8rem;">
+            <span>🔓 متساهل (صيد كثير)</span>
+            <span id="thresh-val" style="background: #1C355E; color: white; padding: 1px 6px; border-radius: 4px;">0.50</span>
+            <span>🔒 حذر (تأكد تام)</span>
+        </div>
+        <input type="range" id="threshold-slider" min="0" max="1" step="0.1" value="0.5" style="width: 100%; cursor: pointer; accent-color: #1C355E;">
+    </div>
+
+    <!-- Stats Grid -->
+    <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.5rem; text-align: center; margin-bottom: 1rem;">
+        <div style="background: #e7f5ee; padding: 0.5rem; border-radius: 8px;">
+            <div style="font-size: 0.7rem; color: #155724; font-weight: bold;">✅ صيد صحيح</div>
+            <div id="tp-count" style="font-size: 1.4rem; font-weight: bold; color: #28a745;">45</div>
+        </div>
+        <div style="background: #fff5f5; padding: 0.5rem; border-radius: 8px;">
+            <div style="font-size: 0.7rem; color: #721c24; font-weight: bold;">❌ إنذار خاطئ</div>
+            <div id="fp-count" style="font-size: 1.4rem; font-weight: bold; color: #dc3545;">10</div>
+        </div>
+        <div style="background: #fff9e6; padding: 0.5rem; border-radius: 8px;">
+            <div style="font-size: 0.7rem; color: #856404; font-weight: bold;">⚠️ صيد ضائع</div>
+            <div id="fn-count" style="font-size: 1.4rem; font-weight: bold; color: #ffc107;">5</div>
+        </div>
+    </div>
+
+    <!-- Simple Message -->
+    <div id="msg" style="text-align: center; font-size: 0.85rem; color: #1C355E; padding: 0.5rem; border-top: 1px solid #eee;">
+        هذا الوضع متوازن ومناسب لأغلب الحالات.
+    </div>
+</div>
+
+<script>
+(function() {
+    const slider = document.getElementById('threshold-slider');
+    const tVal = document.getElementById('thresh-val');
+    const tp = document.getElementById('tp-count');
+    const fp = document.getElementById('fp-count');
+    const fn = document.getElementById('fn-count');
+    const msg = document.getElementById('msg');
+
+    function update() {
+        const v = parseFloat(slider.value);
+        tVal.innerText = v.toFixed(1);
+        
+        // Dynamic logic
+        let tp_val = Math.round(50 * (1.1 - v));
+        let fp_val = Math.round(40 * (1 - v));
+        let fn_val = 50 - tp_val;
+        
+        tp.innerText = tp_val;
+        fp.innerText = fp_val;
+        fn.innerText = fn_val;
+        
+        if (v <= 0.3) {
+            msg.innerHTML = "🎯 <b>وضع هجومي:</b> نصطاد كل شيء، لكن نخطئ كثيراً (Recall عالي).";
+        } else if (v >= 0.7) {
+            msg.innerHTML = "🛡️ <b>وضع دفاعي:</b> لا نتوقع إلا عندما نتأكد تماماً (Precision عالي).";
+        } else {
+            msg.innerHTML = "⚖️ <b>وضع متوازن:</b> موازنة معقولة بين الدقة والكمية.";
+        }
+    }
+    slider.oninput = update;
+    update();
+})();
+</script>
+```
+
+::: notes
+شرح التفاعل:
+- عندما تكون العتبة (Threshold) منخفضة، النموذج "يخمن" كثيراً، مما يزيد الـ Recall ولكن يقلل الـ Precision.
+- عندما تكون العتبة عالية، النموذج "متحفظ"، مما يزيد الـ Precision ولكن يقلل الـ Recall.
+:::
 
 :::: {.columns}
 
 ::: {.column width="55%"}
 ```{=html}
-<div style="display:flex; flex-direction:column; align-items:center; gap:0.6rem; margin-top:1.2rem; font-size:0.9em;">
+<div style="display:flex; flex-direction:column; align-items:center; gap:0.6rem; margin-top:1.2rem; font-size:0.9em;" dir="rtl">
   <div style="background:rgba(28,53,94,0.10); border-radius:10px; padding:0.8rem 1.4rem; text-align:center; width:80%;">
-    🧠 <strong>Model</strong><br>
-    <span style="color:#1C355E;">Raw confidence scores</span>
+    🧠 <strong>النموذج</strong><br>
+    <span style="color:#1C355E;">درجات الثقة الخام (Confidence)</span>
   </div>
   <div style="font-size:1.4rem; color:#1C355E;">↓</div>
   <div style="background:rgba(255,140,0,0.12); border:2px dashed #FF8C00; border-radius:10px; padding:0.8rem 1.4rem; text-align:center; width:80%;">
-    ⚙️ <strong>Threshold Gate</strong><br>
-    <span style="color:#FF8C00;">Is score ≥ threshold?</span>
+    ⚙️ <strong>بوابة العتبة (Threshold)</strong><br>
+    <span style="color:#FF8C00;">هل Score ≥ العتبة؟</span>
   </div>
   <div style="font-size:1.4rem; color:#1C355E;">↓</div>
   <div style="background:rgba(0,201,167,0.12); border-radius:10px; padding:0.8rem 1.4rem; text-align:center; width:80%;">
-    🏷️ <strong>Label</strong><br>
-    <span style="color:#00C9A7;">"Car" / "Not Car"</span>
+    🏷️ <strong>التصنيف</strong><br>
+    <span style="color:#00C9A7;">"سيارة" / "ليست سيارة"</span>
   </div>
 </div>
 ```
@@ -302,75 +446,77 @@ plt.show()
 
 ::: {.column width="45%"}
 <br>
-**The Model** outputs scores, not decisions:
+**النموذج** يعطي درجات احتمالية، وليس قرارات نهائية:
 
-> "I am **72%** sure this is a car."
+> "أنا متأكد بنسبة **72%** أن هذه سيارة."
 
 ::: {.fragment .fade-up}
-**We** decide the label:
+**نحن** من نقرر التصنيف النهائي:
 
-- **Classification:** top score wins (`top1`)
-- **Detection:** only boxes above the confidence threshold are shown
+- **التصنيف:** أعلى درجة تفوز (`top1`)
+- **الاكتشاف:** تظهر الصناديق التي تتجاوز عتبة الثقة المحددة فقط.
 :::
 :::
 
 ::::
 
 
-## Interactive Demo: Threshold Trade-off
+## عرض تفاعلي: مقايضة العتبة (Threshold Trade-off) {.smaller}
 
 ```{=html}
 <iframe class="interactive-demo" src="demo_threshold.html" width="100%" height="90%" style="border:none; overflow:hidden;"></iframe>
 ```
 
 
-## The Trade-off: Precision vs. Recall
+## المقايضة: الضبط مقابل الاستدعاء {.smaller}
 
-Raising or lowering your confidence threshold shifts the balance:
+رفع أو خفض عتبة الثقة يغير التوازن:
 
 :::: {.columns}
 
 ::: {.column style="background: rgba(220,53,69,0.08)"}
-### 🎯 High Threshold (`0.80`)
-**Strict** — only "sure bets" pass
+### 🎯 عتبة عالية (`0.80`)
+**صارم** — لا يمر إلا "المتأكد منه"
 
-↑ **Precision** (fewer false alarms)
+↑ **ضبط (Precision)** عالي (إنذارات خاطئة أقل)
 
-↓ **Recall** (more misses)
+↓ **استدعاء (Recall)** منخفض (تفويت سيارات أكثر)
 :::
 
 ::: {.column style="background: rgba(0,201,167,0.08)"}
-### 🔍 Low Threshold (`0.20`)
-**Loose** — catch everything
+### 🔍 عتبة منخفضة (`0.20`)
+**متساهل** — يمسك كل شيء
 
-↑ **Recall** (fewer misses)
+↑ **استدعاء (Recall)** عالي (تفويت أقل)
 
-↓ **Precision** (more false alarms)
+↓ **ضبط (Precision)** منخفض (إنذارات خاطئة أكثر)
 :::
 
 ::::
 
 
-## F1 Score: Balancing Precision & Recall
+## F1 Score: موازنة الضبط والاستدعاء {.smaller}
 
-**Which single number combines both?**
+**ما هو الرقم الوحيد الذي يجمع الاثنين معاً؟**
 
 $$F_1 = 2 \times \frac{Precision \times Recall}{Precision + Recall}$$
 
 ::: {.callout-note appearance="minimal"}
-A **0** in either metric drags the whole score down — you can't hide behind one strong number.
+وجود **صفر** في أي من المقياسين يسحب Score الكلية للأسفل — لا يمكنك الاختباء وراء رقم واحد قوي.
 :::
 
 
-## F1 Score: Model Comparison
+## F1 Score: مقارنة النماذج {.smaller}
 
 ```{python}
 #| echo: false
 #| fig-align: center
 import matplotlib.pyplot as plt
+
 import numpy as np
 
-models = ['Model A\n(Over-Sensitive)', 'Model B\n(Cautious)']
+# Arabic labels for plot
+models = ['النموذج أ\n(مفرط الحساسية)', 'النموذج ب\n(الحذر)']
 precision_vals = [20.8, 100]
 recall_vals = [100, 70]
 f1_vals = [2 * p * r / (p + r) for p, r in zip(precision_vals, recall_vals)]
@@ -383,9 +529,9 @@ fig, ax = plt.subplots(figsize=(10, 5))
 fig.patch.set_alpha(0.0)
 ax.patch.set_alpha(0.0)
 
-bars1 = ax.bar(x - 1.5*width, precision_vals, width, label='Precision', color='#1C355E', alpha=0.85)
-bars2 = ax.bar(x - 0.5*width, recall_vals, width, label='Recall', color='#00C9A7', alpha=0.85)
-bars3 = ax.bar(x + 0.5*width, f1_vals, width, label='F1 Score', color='#FF8C00', alpha=0.9)
+bars1 = ax.bar(x - 1.5*width, precision_vals, width, label='الضبط', color='#1C355E', alpha=0.85)
+bars2 = ax.bar(x - 0.5*width, recall_vals, width, label='الاستدعاء', color='#00C9A7', alpha=0.85)
+bars3 = ax.bar(x + 0.5*width, f1_vals, width, label='مقياس F1', color='#FF8C00', alpha=0.9)
 bars4 = ax.bar(x + 1.5*width, balanced_accuracy_vals, width, label='Balanced Acc', color='#6f42c1', alpha=0.85)
 
 # Add value labels for F1 and Balanced Accuracy
@@ -399,11 +545,12 @@ for bar in bars4:
             f'{bar.get_height():.1f}%', ha='center', va='bottom',
             fontsize=10, fontweight='bold', color='#6f42c1')
 
-ax.set_ylabel('Score (%)', fontsize=12, color='#1C355E')
+ax.set_ylabel('الدرجة (%)', fontsize=12, color='#1C355E')
 ax.set_xticks(x)
 ax.set_xticklabels(models, fontsize=11, color='#1C355E')
 ax.set_ylim(0, 115)
-ax.legend(frameon=False, fontsize=10, loc='upper center', bbox_to_anchor=(0.5, 1.15), ncol=4)
+# Legend in Arabic if possible or keep English for clarity
+ax.legend(['الضبط', 'الاستدعاء', 'مقياس F1', 'الدقة المتوازنة'], frameon=False, fontsize=10, loc='upper center', bbox_to_anchor=(0.5, 1.15), ncol=4)
 ax.spines['top'].set_visible(False)
 ax.spines['right'].set_visible(False)
 ax.spines['bottom'].set_color('#1C355E')
@@ -415,17 +562,18 @@ plt.show()
 ```
 
 ::: {.callout-tip appearance="minimal"}
-F1 exposes Model A's flaw: 1,900 false alarms inflate Recall but tank Precision — F1 = **34.4%**.
+F1 Score كشف عيب النموذج (أ): الـ 1,900 إنذار خاطئ رفعت الاستدعاء ولكنها دمرت الضبط — F1 Score = **34.4%**.
 :::
 
 
-## Choosing the Right Threshold
+## اختيار العتبة المناسبة {.smaller}
 
 ```{python}
 #| echo: false
 #| fig-align: center
 import numpy as np
 import matplotlib.pyplot as plt
+
 
 conf = np.linspace(0.01, 0.99, 200)
 
@@ -447,19 +595,19 @@ fig.patch.set_alpha(0.0)
 ax.patch.set_alpha(0.0)
 
 ax.plot(conf, f1,        color='#FF8C00', linewidth=3,   label='F1')
-ax.plot(conf, precision, color='#1C355E', linewidth=2.5, linestyle='--', label='Precision')
-ax.plot(conf, recall,    color='#00C9A7', linewidth=2.5, linestyle='--', label='Recall')
+ax.plot(conf, precision, color='#1C355E', linewidth=2.5, linestyle='--', label='الضبط')
+ax.plot(conf, recall,    color='#00C9A7', linewidth=2.5, linestyle='--', label='الاستدعاء')
 
 ax.axvline(best_conf, color='#dc3545', linewidth=2, linestyle=':')
 ax.scatter([best_conf], [best_f1], color='#dc3545', zorder=5, s=80)
-ax.annotate(f'Best F1 @ conf={best_conf:.2f}',
+ax.annotate(f'Best F1 at conf={best_conf:.2f}',
             xy=(best_conf, best_f1),
             xytext=(best_conf + 0.08, best_f1 - 0.12),
             fontsize=10, color='#dc3545',
             arrowprops=dict(arrowstyle='->', color='#dc3545'))
 
-ax.set_xlabel('Confidence Threshold', fontsize=12, color='#1C355E')
-ax.set_ylabel('Score', fontsize=12, color='#1C355E')
+ax.set_xlabel('عتبة الثقة', fontsize=12, color='#1C355E')
+ax.set_ylabel('الدرجة', fontsize=12, color='#1C355E')
 ax.set_xlim(0, 1)
 ax.set_ylim(0, 1.05)
 ax.legend(frameon=False, fontsize=11, labelcolor='#1C355E')
@@ -473,141 +621,138 @@ plt.tight_layout()
 plt.show()
 ```
 
-
-
-
 ::: {.callout-tip appearance="minimal" .fragment .fade-up}
-Ultralytics saves `F1_curve.png` and `R_curve.png` in your training results automatically.
+تقوم Ultralytics بحفظ رسوم `F1_curve.png` و `R_curve.png` في نتائج التدريب تلقائياً.
 :::
 
 
 
-## Case Study: Translating Metrics to ROI
+## دراسة حالة: ترجمة المقاييس إلى عوائد (ROI) {.smaller}
 
-Accuracy and F1 are great for engineers, but management speaks one language: **Money.**
+المقاييس مثل الدقة و F1 رائعة للمهندسين، ولكن الإدارة تتحدث لغة واحدة: **المال.**
 
 ::: {style="font-size: 0.9em;"}
-**Scenario:** A Digital Factory produces high-end circuit boards. We deploy a YOLO model to detect "Defective Solders" before shipping. 
+**السيناريو:** مصنع رقمي ينتج لوحات دوائر إلكترونية متطورة. نقوم بنشر نموذج YOLO لاكتشاف "اللحام المعيب" قبل شحن اللوحات للعملاء. 
 :::
 
 ![](assets/pcb_solder_defect_yolo.png){fig-align="center" width="75%"}
 
 
-## Cost of Every Prediction
+## تكلفة كل توقع {.smaller}
 
-Every prediction in our Digital Factory has a tangible financial consequence:
+كل توقع في مصنعنا الرقمي له نتيجة مالية ملموسة:
 
 ::: {.incremental}
-- ✅ **True Positive (TP):** Defect caught, scrapped early. (Baseline)
-- ✅ **True Negative (TN):** Good board ships. (Baseline)
-- ❌ **False Negative (FN):** Defective board ships to a customer. **Cost: $500** *(Warranty, shipping, brand damage).*
-- ⚠️ **False Positive (FP):** Good board flagged as defective. Requires manual inspection. **Cost: $25** *(Labor).*
+- ✅ **إيجابي صحيح (TP):** تم اكتشاف العيب، وتم استبعاد اللوحة مبكراً. (لا خسارة إضافية).
+- ✅ **سلبي صحيح (TN):** اللوحة سليمة وتم شحنها للعميل. (لا خسارة).
+- ❌ **سلبي خاطئ (FN):** لوحة معيبة شُحنت للعميل بالخطأ. **التكلفة: 500$** *(ضمان، شحن، ضرر بالسمعة).*
+- ⚠️ **إيجابي خاطئ (FP):** لوحة سليمة تم وسمها كمعيبة. تحتاج فحصاً يدوياً. **التكلفة: 25$** *(عمالة).*
 :::
 
 
+## مصفوفة الارتباك المالية {.smaller}
 
-## The Financial Confusion Matrix
-
-If we test our model on a batch of **10,000 boards** (where 5% actually have defects):
+إذا اختبرنا نموذجنا على دفعة مكونة من **10,000 لوحة** (حيث 5% منها معيبة فعلاً):
 
 ```{=html}
-<table style="width:90%; margin: 1.5rem auto; border-collapse: separate; border-spacing: 8px; font-size: 1.1em; text-align: center;">
+<table style="width:90%; margin: 1.5rem auto; border-collapse: separate; border-spacing: 8px; font-size: 1.1em; text-align: center;" dir="rtl">
   <tr>
     <td style="width:20%"></td>
-    <th style="padding:0.6rem; color:#1C355E;">Predicted: Defect</th>
-    <th style="padding:0.6rem; color:#1C355E;">Predicted: Good</th>
+    <th style="padding:0.6rem; color:#1C355E;">Prediction: معيبة</th>
+    <th style="padding:0.6rem; color:#1C355E;">Prediction: سليمة</th>
   </tr>
   <tr>
-    <th style="color:#1C355E; text-align:right; padding-right:0.8rem;">Actual: Defect</th>
-    <td style="background:#d4edda; padding:1rem; border-radius:8px;">✅ <strong>TP</strong><br><small>Cost: $0</small></td>
-    <td style="background:#f8d7da; padding:1rem; border-radius:8px;">❌ <strong>FN (Missed)</strong><br><small style="color:#dc3545; font-weight:bold;">Cost: $500 each</small></td>
+    <th style="color:#1C355E; text-align:right; padding-right:0.8rem;">الحقيقة: معيبة</th>
+    <td style="background:#d4edda; padding:1rem; border-radius:8px;">✅ <strong>TP</strong><br><small>التكلفة: 0$</small></td>
+    <td style="background:#f8d7da; padding:1rem; border-radius:8px;">❌ <strong>FN (تفويت)</strong><br><small style="color:#dc3545; font-weight:bold;">التكلفة: 500$ لكل واحدة</small></td>
   </tr>
   <tr>
-    <th style="color:#1C355E; text-align:right; padding-right:0.8rem;">Actual: Good</th>
-    <td style="background:#fff3cd; padding:1rem; border-radius:8px;">⚠️ <strong>FP (False Alarm)</strong><br><small style="color:#FF8C00; font-weight:bold;">Cost: $25 each</small></td>
-    <td style="background:#d4edda; padding:1rem; border-radius:8px;">✅ <strong>TN</strong><br><small>Cost: $0</small></td>
+    <th style="color:#1C355E; text-align:right; padding-right:0.8rem;">الحقيقة: سليمة</th>
+    <td style="background:#fff3cd; padding:1rem; border-radius:8px;">⚠️ <strong>FP (إنذار كاذب)</strong><br><small style="color:#FF8C00; font-weight:bold;">التكلفة: 25$ لكل واحدة</small></td>
+    <td style="background:#d4edda; padding:1rem; border-radius:8px;">✅ <strong>TN</strong><br><small>التكلفة: 0$</small></td>
   </tr>
 </table>
 ```
 
 ::: {.fragment .fade-up style="text-align: center; margin-top: 1rem;"}
-**Total Financial Loss = $(FN \times \$500) + (FP \times \$25)$**
+**إجمالي الخسارة المالية = $(FN \times \$500) + (FP \times \$25)$**
 :::
 
 
-## Baselines: The Cost of "Dumb" Decisions
+## خطوط الأساس: تكلفة القرارات "الغبية" {.smaller}
 
-What if we didn't use AI at all? Let's look at the financial impact of the two simplest "Dummy" strategies:
+ماذا لو لم نستخدم الذكاء الاصطناعي أصلاً؟ لنلقِ نظرة على الأثر المالي لأبسط استراتيجيتين "تقليديتين":
 
 :::: {.columns}
 
 ::: {.column width="50%" .fragment}
-### 🚢 "Ship Everything"
-*Assume every board is Good*
+### 🚢 "اشحن كل شيء"
+*افترض أن كل اللوحات سليمة*
 
-- **False Negatives (FN):** 500
-- **Cost:** $500 \times 500$
-- **Total Loss:** [**$250,000**]{style="color:#dc3545; font-size:1.2em;"}
+- **السلبيات الخاطئة (FN):** 500
+- **التكلفة:** $500 \times 500$
+- **إجمالي الخسارة:** [**$250,000**]{style="color:#dc3545; font-size:1.2em;"}
 :::
 
 ::: {.column width="50%" .fragment}
-### ⚙️ "Scrap Everything"
-*Assume every board is Defective*
+### ⚙️ "استبعد كل شيء"
+*افترض أن كل اللوحات معيبة*
 
-- **False Positives (FP):** 9,500
-- **Cost:** $9,500 \times 25$
-- **Total Loss:** [**$237,500**]{style="color:#FF8C00; font-size:1.2em;"}
+- **الإيجابيات الخاطئة (FP):** 9,500
+- **التكلفة:** $9,500 \times 25$
+- **إجمالي الخسارة:** [**$237,500**]{style="color:#FF8C00; font-size:1.2em;"}
 :::
 
 ::::
 
 ::: {.fragment .fade-up style="text-align: center; margin-top: 1.5rem;"}
 ::: {.callout-tip appearance="minimal"}
-**The Conclusion:** Even a "basic" model saves the company hundreds of thousands of dollars per batch. Now let's see how much *more* we can save by optimizing.
+**الخلاصة:** حتى النموذج "البسيط" يوفر للشركة مئات الآلاف من الدولارات في كل دفعة. والآن دعونا نرى كم يمكننا توفيره أكثر عبر التحسين.
 :::
 :::
 
 
-## Optimizing for Profit, Not Just F1
+## التحسين من أجل الربح، وليس فقط F1 {.smaller}
 
-Remember how F1 balances Precision and Recall? When money is involved, the balance changes. A missed defect (FN) is 20x more expensive than a false alarm (FP).
+تذكر كيف يوازن F1 Score بين الضبط والاستدعاء؟ عندما يتعلق الأمر بالمال، يتغير الميزان. تفويت عيب واحد (FN) أغلى بـ 20 مرة من الإنذار الخاطئ (FP).
 
 :::: {.columns}
 
 ::: {.column width="50%" .fragment .fade-up}
-### Option A: Max F1 Score
-Balanced threshold (conf=0.35)
+### الخيار (أ): أعلى درجة F1
+عتبة متوازنة (conf=0.35)
 
-- **FN (Missed):** 81 boards $\times \$500$ = $\$40,500$
-- **FP (False Alarms):** 0 boards $\times \$25$ = $\$0$
-- **Total Loss:** <span style="color:#dc3545; font-weight:bold;">$40,500</span>
+- **لوحات معيبة تم تفويتها (FN):** 81 لوحة $\times \$500$ = $\$40,500$
+- **إنذارات كاذبة (FP):** 0 لوحة $\times \$25$ = $\$0$
+- **إجمالي الخسارة:** <span style="color:#dc3545; font-weight:bold;">$40,500</span>
 :::
 
 ::: {.column width="50%" .fragment .fade-up}
-### Option B: Max ROI
-Loose threshold (conf=0.20)
+### الخيار (ب): أعلى عائد (ROI)
+عتبة متساهلة (conf=0.20)
 
-- **FN (Missed):** 22 boards $\times \$500$ = $\$11,000$
-- **FP (False Alarms):** 2 boards $\times \$25$ = $\$50$
-- **Total Loss:** <span style="color:#00C9A7; font-weight:bold;">$11,050</span>
+- **لوحات معيبة تم تفويتها (FN):** 22 لوحة $\times \$500$ = $\$11,000$
+- **إنذارات كاذبة (FP):** 2 لوحة $\times \$25$ = $\$50$
+- **إجمالي الخسارة:** <span style="color:#00C9A7; font-weight:bold;">$11,050</span>
 :::
 
 ::::
 
 ::: {.callout-important appearance="minimal" .fragment .fade-up}
-By lowering our threshold and accepting a few False Positives, we saved the business nearly **$30,000** per batch. We optimized for the **business metric**, not the machine learning metric.
+عبر خفض العتبة وقبول القليل من الإنذارات الخاطئة، وفرنا للشركة قرابة **30,000$** إضافية في كل دفعة. لقد قمنا بالتحسين من أجل **مقياس العمل التجاري**، وليس مقياس تعلم الآلة فقط.
 :::
 
 
-## The Cost Curve
+## منحنى التكلفة (The Cost Curve) {.smaller}
 
-Just like we plotted the F1 curve, we can plot a **Cost Curve** to find the optimal threshold for deployment.
+تماماً كما رسمنا منحنى F1، يمكننا رسم **منحنى التكلفة** لإيجاد العتبة المثالية للنشر.
 
 ```{python}
 #| echo: false
 #| fig-align: center
 import numpy as np
 import matplotlib.pyplot as plt
+
 import matplotlib.ticker as ticker
 
 # Generate synthetic data
@@ -644,21 +789,21 @@ fig, ax = plt.subplots(figsize=(8, 4.5))
 fig.patch.set_alpha(0.0)
 ax.patch.set_alpha(0.0)
 
-ax.plot(thresholds, total_costs, color='#1C355E', linewidth=3, label='Total Financial Loss ($)')
+ax.plot(thresholds, total_costs, color='#1C355E', linewidth=3, label='إجمالي الخسارة المالية ($)')
 
 # Highlight minimum cost
 ax.axvline(best_conf, color='#00C9A7', linewidth=2, linestyle=':')
 ax.scatter([best_conf], [min_cost], color='#00C9A7', zorder=5, s=80)
-ax.annotate(f'Best ROI @ conf={best_conf:.2f}\nCost: ${min_cost:,.0f}',
+ax.annotate(f'أفضل ROI عند conf={best_conf:.2f}\nالتكلفة: ${min_cost:,.0f}',
             xy=(best_conf, min_cost),
             xytext=(best_conf + 0.05, min_cost + 20000),
             fontsize=11, fontweight='bold', color='#00C9A7',
             arrowprops=dict(arrowstyle='->', color='#00C9A7', lw=2))
 
 # Formatting
-ax.set_xlabel('Confidence Threshold', fontsize=12, color='#1C355E')
-ax.set_ylabel('Total Cost ($)', fontsize=12, color='#1C355E')
-ax.set_title('Financial Loss vs. Confidence Threshold', fontsize=14, fontweight='bold', color='#1C355E')
+ax.set_xlabel('عتبة الثقة', fontsize=12, color='#1C355E')
+ax.set_ylabel('إجمالي التكلفة ($)', fontsize=12, color='#1C355E')
+ax.set_title('الخسارة المالية مقابل عتبة الثقة', fontsize=14, fontweight='bold', color='#1C355E')
 ax.set_xlim(0, 1)
 
 # Clean up spines and match brand colors
@@ -682,52 +827,52 @@ plt.tight_layout()
 plt.show()
 ```
 
-## 🧪 Lab 4A: ROI-Driven Evaluation
+## 🧪 معمل 4أ: التقييم القائم على العائد (ROI) {.smaller}
 
-Now it's your turn to play the role of the Business Lead!
+الآن حان دورك لتلعب دور قائد الأعمال!
 
-1. Open `labs/04a_roi_evaluation.ipynb`
-2. Scroll to the **"ROI-Driven Evaluation"** section.
-3. Find the optimal threshold for the **Shoplifting Detection** case study in **Lab 4A**.
+1. افتح ملف المعمل `labs/04a_roi_evaluation.ipynb`
+2. انتقل إلى قسم **"ROI-Driven Evaluation"**.
+3. ابحث عن العتبة المثالية لدراسة حالة **"اكتشاف سرقة المتاجر"** في **المعمل 4أ**.
 
 ::: {.callout-tip appearance="minimal"}
-**Scenario Summary:**
+**ملخص السيناريو:**
 
-- **Goal:** Minimize Total Financial Loss.
-- **Costs:** Missed Shoplifter ($50) vs. Wrongful Accusal ($2,500).
+- **الهدف:** تقليل إجمالي الخسارة المالية.
+- **التكاليف:** تفويت سارق (50$) مقابل اتهام خاطئ لشخص بريء (2,500$).
 :::
 
 
-## The Threshold Dilemma
+## معضلة العتبة {.smaller}
 
-All metrics so far ($F1$, $ROI$, $Precision$) require us to **choose** a threshold first.
+كل المقاييس التي رأيناها حتى الآن ($F1$, $ROI$, $Precision$) تتطلب منا **اختيار** عتبة أولاً.
 
 :::: {.columns}
 
 ::: {.column width="50%"}
-### 🎯 The "Decision" View
-Useful for **deployment**.
-*"At 0.45 confidence, what is my profit?"*
+### 🎯 رؤية "القرار"
+مفيدة عند **النشر النهائي**.
+*"عند عتبة 0.45، كم سيكون ربحي؟"*
 
-- Pick one point on the curve.
-- Optimize for a specific business case.
-- Good for **operational decisions**.
+- اختيار نقطة واحدة على المنحنى.
+- التحسين لحالة عمل محددة.
+- مفيدة للقرارات **التشغيلية**.
 :::
 
 ::: {.column width="50%" .fragment .incremental}
-### 📊 The "Model" View
-Useful for **benchmarking**.
-*"Is this model fundamentally better than the last one?"*
+### 📊 رؤية "النموذج"
+مفيدة للمقارنة بين النماذج (**Benchmarking**).
+*"هل هذا النموذج أفضل جوهرياً من النموذج السابق؟"*
 
-- Evaluate over **all thresholds**.
-- Compare architectures fairly.
-- **This is where Average Precision (AP) comes in.**
+- التقييم عبر **جميع العتبات** الممكنة.
+- مقارنة معماريات النماذج بشكل عادل.
+- **هنا يأتي دور "متوسط الضبط" (Average Precision - AP).**
 :::
 
 ::::
 
 
-## The PR Curve & Average Precision (AP)
+## منحنى PR ومتوسط الضبط (AP) {.smaller}
 
 
 :::: {.columns}
@@ -736,22 +881,22 @@ Useful for **benchmarking**.
 <br>
 
 ::: {.fragment .fade-up}
-**Step 1: Gather**
-We take every "Car" prediction the model made across the whole test set.
+**الخطوة 1: الجمع**
+نأخذ كل توقع "سيارة" قام به النموذج عبر كامل مجموعة الاختبار.
 :::
 
 <br>
 
 ::: {.fragment .fade-up}
-**Step 2: Sort**
-We sort them from highest confidence (e.g., $0.99$) to lowest (e.g., $0.10$).
+**الخطوة 2: الفرز**
+نرتبها من أعلى درجة ثقة (مثلاً $0.99$) إلى أقل درجة (مثلاً $0.10$).
 :::
 
 <br>
 
 ::: {.fragment .fade-up}
-**Step 3: Calculate**
-We calculate Precision and Recall at every single step of that sorted list.
+**الخطوة 3: الحساب**
+نحسب الضبط والاستدعاء عند كل خطوة في تلك القائمة المرتبة.
 :::
 
 <br>
@@ -763,6 +908,7 @@ We calculate Precision and Recall at every single step of that sorted list.
 #| echo: false
 #| fig-align: center
 import matplotlib.pyplot as plt
+
 import numpy as np
 
 fig, ax = plt.subplots(figsize=(6, 5))
@@ -775,11 +921,11 @@ precision = 1 - recall**3 + 0.1 * np.random.rand(100)
 precision = np.clip(precision, 0, 1)
 precision = np.maximum.accumulate(precision[::-1])[::-1] # Make it monotonically decreasing
 
-ax.plot(recall, precision, color='#00C9A7', linewidth=4, label='PR Curve')
-ax.fill_between(recall, precision, alpha=0.3, color='#00C9A7', label='AP (Area)')
+ax.plot(recall, precision, color='#00C9A7', linewidth=4, label='منحنى PR')
+ax.fill_between(recall, precision, alpha=0.3, color='#00C9A7', label='AP (المساحة)')
 
-ax.set_xlabel('Recall', fontsize=14, fontweight='bold', color='#1C355E')
-ax.set_ylabel('Precision', fontsize=14, fontweight='bold', color='#1C355E')
+ax.set_xlabel('الاستدعاء', fontsize=14, fontweight='bold', color='#1C355E')
+ax.set_ylabel('الضبط', fontsize=14, fontweight='bold', color='#1C355E')
 ax.set_xlim(0, 1)
 ax.set_ylim(0, 1.05)
 
@@ -801,7 +947,7 @@ plt.show()
 
 ::: {.fragment .fade-up}
 ::: {.callout-note appearance="simple"}
-**Average Precision (AP)** is simply the area under this **Precision-Recall (PR) curve**!
+**متوسط الضبط (AP)** هو ببساطة المساحة الموجودة تحت منحنى **الضبط والاستدعاء (PR)**!
 :::
 :::
 
@@ -810,28 +956,28 @@ plt.show()
 ::::
 
 
-## But Does Location Matter?
+## ولكن هل المكان يهم؟ {.smaller}
 
-Precision and Recall measure **whether** a classification is correct.
-
-For object detection, the model must also get the **location** right.
+الضبط والاستدعاء يقيسان **ما إذا كان** التصنيف صحيحاً.
+أما في اكتشاف الكائنات، يجب على النموذج أيضاً تحديد **المكان** الصحيح.
 
 ::: {.fragment .fade-up}
-> A confident prediction placed in the wrong spot is still a wrong prediction.
+> Prediction الواثق الموضوع في المكان الخاطئ لا يزال توقعاً خاطئاً.
 :::
 
 ::: {.fragment .fade-up}
-That's where **Intersection over Union (IoU)** comes in.
+هنا يأتي دور **التقاطع فوق الاتحاد (Intersection over Union - IoU)**.
 :::
 
-## Intersection over Union (IoU)
+## التقاطع فوق الاتحاد (IoU) {.smaller}
 
-How perfectly does the predicted bounding box overlap the *ground truth* box?
+ما مدى دقة تداخل المربع المتوقع مع المربع *الحقيقي* (Ground Truth)؟
 
 ```{python}
 #| echo: false
 #| fig-align: center
 import matplotlib.pyplot as plt
+
 import matplotlib.patches as patches
 import numpy as np
 import sys; import os; sys.path.insert(0, os.path.abspath('.')); sys.path.insert(0, os.path.abspath('slides')); from plot_utils import draw_base_car
@@ -845,22 +991,22 @@ ax.patch.set_alpha(1.0)
 ax.set_facecolor('white')
 draw_base_car(ax)
 
-# Ground Truth box (green) — the annotated label
+# Ground Truth box (green)
 gt = patches.Rectangle((2.5, 3.0), 10, 9,
                         linewidth=3, edgecolor='#00ff00',
-                        facecolor='none', label='Ground Truth', zorder=3)
+                        facecolor='none', label='الحقيقة (GT)', zorder=3)
 ax.add_patch(gt)
 
-# Predicted box (red) — slightly offset to show imperfect overlap
+# Predicted box (red)
 pred = patches.Rectangle((4.0, 4.5), 9, 8,
                           linewidth=3, edgecolor='#ff3333',
-                          facecolor='none', label='Prediction', zorder=3)
+                          facecolor='none', label='التوقع', zorder=3)
 ax.add_patch(pred)
 
 # Intersection fill (yellow overlay)
 intersect = patches.Rectangle((4.0, 4.5), 8.5, 7.5,
                                linewidth=0, facecolor='#ffff00',
-                               alpha=0.35, label='Intersection', zorder=2)
+                               alpha=0.35, label='التقاطع', zorder=2)
 ax.add_patch(intersect)
 
 ax.set_xticks([])
@@ -869,29 +1015,29 @@ for sp in ax.spines.values():
     sp.set_visible(False)
 ax.legend(loc='lower center', bbox_to_anchor=(0.5, -0.18),
           ncol=3, fontsize=8, frameon=False)
-ax.set_title('Car: GT vs Prediction', fontsize=10, fontweight='bold')
+ax.set_title('السيارة: الحقيقة ضد Prediction', fontsize=10, fontweight='bold')
 
 # ---------- Right: IoU formula diagram ----------
 ax2 = axes[1]
 ax2.patch.set_alpha(1.0)
 ax2.set_facecolor('white')
 
-# Same GT box as the left plot — outline only
+# Same GT box
 gt2 = patches.Rectangle((2.5, 3.0), 10, 9,
                          linewidth=3, edgecolor='#00ff00',
-                         facecolor='none', label='Ground Truth', zorder=3)
+                         facecolor='none', label='الحقيقة (GT)', zorder=3)
 ax2.add_patch(gt2)
 
-# Same Predicted box as the left plot — outline only
+# Same Predicted box
 pred2 = patches.Rectangle((4.0, 4.5), 9, 8,
                            linewidth=3, edgecolor='#ff3333',
-                           facecolor='none', label='Prediction', zorder=3)
+                           facecolor='none', label='التوقع', zorder=3)
 ax2.add_patch(pred2)
 
-# Same Intersection fill as the left plot
+# Same Intersection fill
 intersect2 = patches.Rectangle((4.0, 4.5), 8.5, 7.5,
                                 linewidth=0, facecolor='#ffff00',
-                                alpha=0.35, label='Intersection', zorder=2)
+                                alpha=0.35, label='التقاطع', zorder=2)
 ax2.add_patch(intersect2)
 
 ax2.set_xlim(-0.5, 15.5)
@@ -903,17 +1049,17 @@ for sp in ax2.spines.values():
     sp.set_visible(False)
 ax2.legend(loc='lower center', bbox_to_anchor=(0.5, -0.18),
            ncol=3, fontsize=8, frameon=False)
-ax2.set_title("IoU = Intersection / Union", fontsize=10, fontweight='bold')
+ax2.set_title("IoU = التقاطع / الاتحاد", fontsize=10, fontweight='bold')
 
 plt.tight_layout()
 plt.show()
 ```
 
-**Rule of Thumb**: A prediction is typically considered a "True Positive" (correct) if the IoU is > 0.50.
+**قاعدة عامة**: يعتبر Prediction "إيجابياً صحيحاً" (TP) إذا كان الـ IoU أكبر من **0.50**.
 
-## The "Double Penalty" of IoU
+## "العقوبة المزدوجة" في IoU {.smaller}
 
-A prediction must be **accurate in location** ($IoU \ge 0.5$) to count as a **True Positive (TP)**.
+يجب أن يكون Prediction **دقيقاً في المكان** ($IoU \ge 0.5$) ليُحسب كـ **إيجابي صحيح (TP)**.
 
 :::: {.columns}
 
@@ -922,34 +1068,35 @@ A prediction must be **accurate in location** ($IoU \ge 0.5$) to count as a **Tr
 #| echo: false
 #| fig-align: center
 import matplotlib.pyplot as plt
+
 import matplotlib.patches as patches
 import sys; import os; sys.path.insert(0, os.path.abspath('.')); sys.path.insert(0, os.path.abspath('slides')); from plot_utils import draw_base_car
 
 fig, ax = plt.subplots(figsize=(5, 4))
 fig.patch.set_alpha(0.0)
 ax.patch.set_alpha(1.0)
-ax.set_facecolor('white')
+ax.set_facecolor('#1C355E')
 draw_base_car(ax)
 
 # Ground Truth (green)
 gt = patches.Rectangle((2.5, 3.0), 10, 9,
                         linewidth=3, edgecolor='#00ff00',
-                        facecolor='none', label='Ground Truth (GT)', zorder=3)
+                        facecolor='none', label='الحقيقة (GT)', zorder=3)
 ax.add_patch(gt)
 
-# Bad prediction — low IoU, shifted far away
+# Bad prediction
 pred = patches.Rectangle((8.0, 8.5), 6, 5,
                           linewidth=3, edgecolor='#ff3333',
                           facecolor='none', linestyle='--',
-                          label='Bad Prediction (IoU < 0.5)', zorder=4)
+                          label='توقع سيء (IoU < 0.5)', zorder=4)
 ax.add_patch(pred)
 
 ax.text(7.5, 2.0, 'GT', color='#00aa00', fontsize=9, ha='center', fontweight='bold')
-ax.text(11.0, 14.2, 'Prediction', color='#cc0000', fontsize=9, ha='center', fontweight='bold')
+ax.text(11.0, 14.2, 'التوقع', color='#cc0000', fontsize=9, ha='center', fontweight='bold')
 
 ax.set_xticks([]); ax.set_yticks([])
 for sp in ax.spines.values(): sp.set_visible(False)
-ax.set_title('Low IoU → Double Penalty', fontsize=11, fontweight='bold', color='#1C355E')
+ax.set_title('IoU منخفض ← عقوبة مزدوجة', fontsize=11, fontweight='bold', color='#1C355E')
 ax.legend(loc='lower center', bbox_to_anchor=(0.5, -0.15),
           ncol=1, fontsize=8, frameon=False)
 plt.tight_layout()
@@ -959,23 +1106,23 @@ plt.show()
 
 ::: {.column width="45%" .fragment}
 
-**What happens when $IoU < 0.5$?**
+**ماذا يحدث عندما يكون $IoU < 0.5$؟**
 
 ::: {.callout-important appearance="minimal"}
-**It hurts your score twice:**
+**يؤلم درجتك مرتين:**
 
-- **FP:** The bad box is a false alarm
-- **FN:** The real object is counted as missed
+- **FP:** الصندوق السيء يُحسب كإنذار خاطئ.
+- **FN:** الشيء الحقيقي يُحسب كأنه تم تفويته.
 :::
 
-One poor prediction = penalised as both an extra detection *and* a missed object.
+توقع واحد سيء المكان = يُعاقب النموذج كأنه اكتشاف إضافي خاطئ *و* كائن ضائع في نفس الوقت.
 :::
 
 ::::
 
-## Handling Multiple Detections
+## التعامل مع الاكتشافات المتعددة {.smaller}
 
-A common question is: *"What if the model predicts multiple boxes for the exact same object?"*
+سؤال شائع: *"ماذا لو توقع النموذج صناديق متعددة لنفس الشيء تماماً؟"*
 
 ::::: {.columns}
 
@@ -984,13 +1131,14 @@ A common question is: *"What if the model predicts multiple boxes for the exact 
 #| echo: false
 #| fig-align: center
 import matplotlib.pyplot as plt
+
 import matplotlib.patches as patches
 import sys; import os; sys.path.insert(0, os.path.abspath('.')); sys.path.insert(0, os.path.abspath('slides')); from plot_utils import draw_base_car
 
 fig, ax = plt.subplots(figsize=(4, 4))
 fig.patch.set_alpha(0.0)
 ax.patch.set_alpha(1.0)
-ax.set_facecolor('white')
+ax.set_facecolor('#1C355E')
 draw_base_car(ax)
 
 # Ground Truth box (green)
@@ -998,25 +1146,25 @@ gt = patches.Rectangle((2.5, 3.0), 10, 9,
                         linewidth=3, edgecolor='#00ff00',
                         facecolor='none', zorder=3)
 ax.add_patch(gt)
-ax.text(7.5, 2.3, 'Ground Truth', color='#00ff00',
+ax.text(7.5, 2.3, 'الحقيقة (GT)', color='#00ff00',
         fontsize=9, ha='center', fontweight='bold')
 
-# Prediction 1 - best IoU (solid red)
+# Prediction 1 - best IoU
 pred1 = patches.Rectangle((3.0, 3.5), 9.5, 8.5,
                            linewidth=3, edgecolor='#ff3333',
                            facecolor='none', zorder=4,
                            linestyle='-')
 ax.add_patch(pred1)
-ax.text(7.5, 12.4, 'Pred 1 (TP, conf=0.91)', color='#ff3333',
+ax.text(7.5, 12.4, 'توقع 1 (TP, ثقة=0.91)', color='#ff3333',
         fontsize=8, ha='center', fontweight='bold')
 
-# Prediction 2 - lower IoU (dashed orange)
+# Prediction 2 - lower IoU
 pred2 = patches.Rectangle((5.0, 5.0), 9, 8,
                            linewidth=2.5, edgecolor='#ff8c00',
                            facecolor='none', zorder=4,
                            linestyle='--')
 ax.add_patch(pred2)
-ax.text(13.3, 9.0, 'Pred 2\n(FP, conf=0.74)', color='#ff8c00',
+ax.text(13.3, 9.0, 'توقع 2\n(FP, ثقة=0.74)', color='#ff8c00',
         fontsize=7.5, ha='left', va='center')
 
 ax.set_xticks([])
@@ -1029,26 +1177,26 @@ plt.show()
 ::::
 
 :::: {.column width="50%" .incremental}
-**Rule: One Ground Truth = Only One TP**
+**القاعدة: حقيقة واحدة = TP واحد فقط**
 
-1. **The Winner:** **Highest IoU** (Pred 1) becomes the **True Positive (TP)**.
-2. **The Duplicate:** Extra boxes (Pred 2) become **False Positives (FP)**.
+1. **الفائز:** صاحب **أعلى IoU** (Prediction 1) يصبح هو **الإيجابي الصحيح (TP)**.
+2. **المكرر:** الصناديق الإضافية (Prediction 2) تصبح **إيجابيات خاطئة (FP)**.
 ::::
 
 :::::
 
-## Mean Average Precision (mAP)
+## متوسط متوسط الضبط (mAP) {.smaller}
 
-Once we have the AP for every class (Cars, Pedestrians, Trees, etc.), we simply take the arithmetic mean.
+بمجرد حصولنا على AP لكل فئة (سيارات، مشاة، أشجار، إلخ)، نأخذ ببساطة المتوسط الحسابي لها.
 
 $$mAP = \frac{AP_{cars} + AP_{pedestrians} + AP_{trees} + ...}{Total\ Number\ of\ Classes}$$
 
-- **mAP50:** Accuracy considering only "easy" detections (IoU > 0.50).
-- **mAP50-95:** The strict evaluation averaged across multiple IoU thresholds (from 0.50 to 0.95).
+- **mAP50:** الدقة عند اعتبار الاكتشافات "السهلة" فقط (IoU > 0.50).
+- **mAP50-95:** تقييم صارم يأخذ متوسط الدقة عبر عدة عتبات IoU (من 0.50 إلى 0.95).
 
-## Segmentation: Mask IoU (mIoU)
+## التجزئة: IoU للأقنعة (mIoU) {.smaller}
 
-For segmentation, we evaluate how well the **pixels** overlap, not just bounding boxes.
+في التجزئة (Segmentation)، نقوم بتقييم مدى تداخل **البكسلات**، وليس فقط مربعات الإحاطة.
 
 :::: {.columns}
 
@@ -1057,9 +1205,10 @@ For segmentation, we evaluate how well the **pixels** overlap, not just bounding
 #| echo: false
 #| fig-align: center
 import matplotlib.pyplot as plt
+
 import numpy as np
 
-# Create smooth irregular shapes for "organic" segmentation masks
+# Create smooth irregular shapes
 def get_blob(center, radius, seed=42):
     np.random.seed(seed)
     angles = np.linspace(0, 2*np.pi, 100)
@@ -1077,11 +1226,11 @@ gt_verts = get_blob((0.42, 0.5), 0.28, seed=10)
 pred_verts = get_blob((0.58, 0.5), 0.28, seed=20)
 
 ax.fill(gt_verts[:,0], gt_verts[:,1], color='#00C9A7', alpha=0.25)
-ax.plot(gt_verts[:,0], gt_verts[:,1], color='#00C9A7', linewidth=4, label='Ground Truth')
+ax.plot(gt_verts[:,0], gt_verts[:,1], color='#00C9A7', linewidth=4, label='الحقيقة (GT)')
 ax.fill(pred_verts[:,0], pred_verts[:,1], color='#FF5252', alpha=0.25)
-ax.plot(pred_verts[:,0], pred_verts[:,1], color='#FF5252', linewidth=4, label='Prediction')
+ax.plot(pred_verts[:,0], pred_verts[:,1], color='#FF5252', linewidth=4, label='التوقع')
 
-ax.annotate('Intersection\n(Overlap)', xy=(0.5, 0.5), xytext=(0.5, 0.85),
+ax.annotate('التقاطع\n(التداخل)', xy=(0.5, 0.5), xytext=(0.5, 0.85),
             ha='center', fontsize=10, fontweight='bold', color='#1C355E',
             arrowprops=dict(arrowstyle='->', color='#1C355E', lw=2, connectionstyle="arc3,rad=0.2"))
 
@@ -1092,27 +1241,26 @@ plt.show()
 :::
 
 ::: {.column width="50%"}
-#### mIoU (Jaccard Index)
+#### mIoU (مؤشر جاكارد)
 $$
 \begin{aligned}
-\text{mIoU} &= \frac{\text{Area of Overlap}}{\text{Area of Union}} \\[12pt]
+\text{mIoU} &= \frac{Area\ of\ Overlap}{Area\ of\ Union} \\[12pt]
 &= \mathbf{\frac{TP}{TP + FP + FN}}
 \end{aligned}
 $$
 
 
 ::: {.callout-note appearance="minimal"}
-In Ultralytics, **Mask mAP** is the primary metric for `yolo segment`, calculated using pixel-wise IoU thresholds.
+في Ultralytics، يعتبر **Mask mAP** هو المقياس الأساسي لمهام التجزئة، ويتم حسابه باستخدام عتبات IoU على مستوى البكسل.
 :::
 :::
 
 ::::
 
 
-## The Dice Coefficient (F1)
+## معامل دايس (Dice Coefficient / F1) {.smaller}
 
-
-The most common metric in **Medical AI**. It is mathematically identical to the **F1-score** at the pixel level.
+المقياس الأكثر شيوعاً في **الذكاء الاصطناعي الطبي**. وهو متطابق رياضياً مع **F1 Score** على مستوى البكسل.
 
 :::: {.columns}
 
@@ -1121,6 +1269,7 @@ The most common metric in **Medical AI**. It is mathematically identical to the 
 #| echo: false
 #| fig-align: center
 import matplotlib.pyplot as plt
+
 import numpy as np
 
 def get_blob(center, radius, seed=42):
@@ -1137,8 +1286,8 @@ ax.patch.set_alpha(0.0)
 gt = get_blob((0.45, 0.5), 0.3, seed=15)
 pred = get_blob((0.55, 0.5), 0.3, seed=25)
 
-ax.fill(gt[:,0], gt[:,1], color='#00C9A7', alpha=0.2, label='Ground Truth')
-ax.fill(pred[:,0], pred[:,1], color='#FF5252', alpha=0.2, label='Prediction')
+ax.fill(gt[:,0], gt[:,1], color='#00C9A7', alpha=0.2, label='الحقيقة (GT)')
+ax.fill(pred[:,0], pred[:,1], color='#FF5252', alpha=0.2, label='التوقع')
 ax.plot(gt[:,0], gt[:,1], color='#00C9A7', linewidth=2.5)
 ax.plot(pred[:,0], pred[:,1], color='#FF5252', linewidth=2.5)
 
@@ -1151,13 +1300,13 @@ plt.show()
 ::: {.column width="50%"}
 $$
 \begin{aligned}
-\text{Dice} &= \frac{2 \times \text{Area of Overlap}}{\text{Area of GT} + \text{Area of Pred}} \\[12pt]
+\text{Dice} &= \frac{2 \times Area\ of\ Overlap}{Area\ of\ GT + Area\ of\ Pred} \\[12pt]
 &= \mathbf{\frac{2TP}{2TP + FP + FN}}
 \end{aligned}
 $$
 
 ::: {.callout-note appearance="minimal"}
-**Why Dice?** Better for small objects (like tumors) and more balanced error penalization.
+**لماذا معامل دايس؟** لأنه أفضل للكائنات الصغيرة جداً (مثل الأورام في الصور الطبية) ويوفر عقوبة أكثر توازناً للأخطاء.
 :::
 :::
 
@@ -1166,9 +1315,9 @@ $$
 
 
 
-## Validating the Model (YOLO CLI/Python)
+## التحقق من النموذج (YOLO CLI/Python) {.smaller}
 
-We use the `val` mode to evaluate a trained model. YOLO automatically generates graphs (`confusion_matrix.png`, `PR_curve.png`) in your `runs/detect/val` folder.
+نستخدم وضع `val` لتقييم النموذج المدرب. تقوم YOLO تلقائياً بإنشاء رسوم بيانية مثل (`confusion_matrix.png`, `PR_curve.png`) في مجلد `runs/detect/val`.
 
 ::: {.panel-tabset}
 
@@ -1187,12 +1336,12 @@ metrics = model.val(data="data.yaml")
 
 :::
 
-*Docs Reference: [Model Evaluation Insights](https://docs.ultralytics.com/guides/model-evaluation-insights/)*
+*مرجع التوثيق: [رؤى تقييم النموذج](https://docs.ultralytics.com/guides/model-evaluation-insights/)*
 
 
-## Reading Your Results: Running `val()`
+## قراءة نتائجك: تشغيل `val()` {.smaller}
 
-When you run `model.val()`, you get a metrics object with all the key numbers:
+عند تشغيل `model.val()`، تحصل على كائن مقاييس يحتوي على جميع الأرقام الرئيسية:
 
 ```python
 from ultralytics import YOLO
@@ -1200,41 +1349,42 @@ from ultralytics import YOLO
 model = YOLO("best.pt")
 metrics = model.val(data="data.yaml")
 
-# Key metrics to access:
-print(f"mAP@0.5:   {metrics.box.map50}")    # Generous IoU threshold
-print(f"mAP@0.5-0.95: {metrics.box.map}")      # Strict across 10 IoU thresholds
-print(f"Precision: {metrics.box.mp}")       # Overall precision
-print(f"Recall:    {metrics.box.mr}")       # Overall recall
+# الوصول للمقاييس الرئيسية:
+print(f"mAP@0.5:   {metrics.box.map50}"    # عتبة IoU متساهلة
+print(f"mAP@0.5-0.95: {metrics.box.map}"      # متوسط صارم عبر 10 عتبات IoU
+print(f"Precision: {metrics.box.mp}"       # الضبط الإجمالي
+print(f"Recall:    {metrics.box.mr}"       # الاستدعاء الإجمالي
 ```
 
-*Docs Reference: [Validation Results](https://docs.ultralytics.com/modes/val/)*
+*مرجع التوثيق: [نتائج التحقق](https://docs.ultralytics.com/modes/val/)*
 
 
 
-## What If Your Metrics Reveal a Problem?
+## ماذا لو كشفت المقاييس عن مشكلة؟ {.smaller}
 
-You can now read your validation results — but what do you do when the numbers look bad?
+يمكنك الآن قراءة نتائج التحقق — ولكن ماذا تفعل عندما تبدو الأرقام سيئة؟
 
 ::: {.fragment .fade-up}
-The most common culprits are:
+الأسباب الأكثر شيوعاً هي:
 
-- **Class imbalance** — rare classes get ignored during training
-- **Overfitting or underfitting** — the model hasn't generalized
-- **Poor hyperparameters** — learning rate, weight decay, stopping too early or too late
+- **اختلال توازن الفئات (Class imbalance)** — تجاهل الفئات النادرة أثناء التدريب.
+- **الإفراط في التخصيص (Overfitting)** أو **عدم الكفاية (Underfitting)** — النموذج لم يعمم بشكل جيد.
+- **معلمات فائقة (Hyperparameters) ضعيفة** — معدل التعلم، توقف مبكر جداً أو متأخر جداً.
 :::
 
 ::: {.fragment .fade-up}
-Let's go through each one.
+دعونا نمر على كل واحدة منها.
 :::
 
-## Class Imbalance: Fixing the Bias
+## اختلال توازن الفئات: إصلاح الانحياز {.smaller}
 
-How do we stop the model from ignoring rare classes during training?
+كيف نمنع النموذج من تجاهل الفئات النادرة أثناء التدريب؟
 
 ```{python}
 #| echo: false
 #| fig-align: center
 import matplotlib.pyplot as plt
+
 import numpy as np
 
 fig, axes = plt.subplots(1, 2, figsize=(9, 3.5))
@@ -1244,7 +1394,8 @@ brand_dark = '#1C355E'
 brand_teal = '#00C9A7'
 brand_red  = '#dc3545'
 
-classes = ['Empty Spot', 'Car']
+# Arabic labels
+classes = ['مكان فارغ', 'سيارة']
 
 for ax in axes:
     ax.patch.set_alpha(0.0)
@@ -1258,8 +1409,8 @@ for ax in axes:
 counts_before = [9500, 500]
 colors_before = [brand_dark, brand_red]
 axes[0].bar(classes, counts_before, color=colors_before, alpha=0.85, width=0.5)
-axes[0].set_title('Before: Imbalanced', fontsize=13, fontweight='bold', color=brand_dark)
-axes[0].set_ylabel('Training samples', fontsize=11, color=brand_dark)
+axes[0].set_title('قبل: غير متوازن', fontsize=13, fontweight='bold', color=brand_dark)
+axes[0].set_ylabel('عينات التدريب', fontsize=11, color=brand_dark)
 for i, v in enumerate(counts_before):
     axes[0].text(i, v + 100, str(v), ha='center', fontsize=12, fontweight='bold', color=brand_dark)
 axes[0].set_ylim(0, 11000)
@@ -1268,7 +1419,7 @@ axes[0].set_ylim(0, 11000)
 counts_after = [9500, 9500]
 colors_after = [brand_teal, brand_teal]
 axes[1].bar(classes, counts_after, color=colors_after, alpha=0.85, width=0.5)
-axes[1].set_title('After: Weighted Sampling', fontsize=13, fontweight='bold', color=brand_dark)
+axes[1].set_title('بعد: عينات موزونة', fontsize=13, fontweight='bold', color=brand_dark)
 for i, v in enumerate(counts_after):
     axes[1].text(i, v + 100, str(v), ha='center', fontsize=12, fontweight='bold', color=brand_dark)
 axes[1].set_ylim(0, 11000)
@@ -1277,57 +1428,57 @@ plt.tight_layout()
 plt.show()
 ```
 
-Here we oversample (duplicating images) the minority class (car) to make it learnable.
+هنا نقوم بـ "زيادة العينات" (Oversampling) للفئة الأقلية (السيارة) لجعلها قابلة للتعلم.
 
 ::: {.fragment}
-*Technical Guide: [Class Balancing with YOLO](https://y-t-g.github.io/tutorials/yolo-class-balancing/)*
+*دليل تقني: [موازنة الفئات مع YOLO](https://y-t-g.github.io/tutorials/yolo-class-balancing/)*
 :::
 
 
-## The Training Spectrum
+## طيف التدريب {.smaller}
 
-*Every training run lands somewhere on this spectrum — knowing where is the first step to fixing it.*
+*كل جولة تدريب تقع في مكان ما على هذا الطيف — معرفة أين تقع هي الخطوة الأولى لإصلاحها.*
 
 :::: {.columns}
 
 ::: {.column width="33%"}
 
-::: {.callout-warning}
-### 🔴 Overfitting
-Model **memorizes** training data.
+::: {.callout-warning appearance="minimal"}
+### 🔴 الإفراط (Overfitting)
+النموذج **يحفظ** بيانات التدريب بدلاً من تعلم الأنماط العامة.
 
-- Train mAP >> Val mAP
-- Val loss starts rising
+- دقة التدريب (mAP) >> دقة التحقق (Val mAP).
+- خسارة التحقق تبدأ في الارتفاع.
 
-**Too much capacity for your data**
+**سعة النموذج أكبر بكثير من البيانات المتاحة.**
 :::
 
 :::
 
 ::: {.column width="34%"}
 
-::: {.callout-tip}
-### 🟢 Just Right
-Model **generalizes** to new data.
+::: {.callout-tip appearance="minimal"}
+### 🟢 التعميم (Just Right)
+النموذج **يعمم** الأنماط على البيانات الجديدة.
 
-- Train ≈ Val, both high
-- Both losses converge low
+- دقة التدريب $\approx$ دقة التحقق، وكلاهما مرتفع.
+- كلتا الخسارتين تتقاربان عند مستوى منخفض.
 
-**The goal — stay here**
+**هذا هو الهدف — ابقَ هنا.**
 :::
 
 :::
 
 ::: {.column width="33%"}
 
-::: {.callout-note}
-### 🟠 Underfitting
-Model **never learned** the patterns.
+::: {.callout-note appearance="minimal"}
+### 🟠 عدم الكفاية (Underfitting)
+النموذج **لم يتعلم** الأنماط أبداً.
 
-- Both Train and Val mAP low
-- Losses barely decrease
+- دقة التدريب والتحقق كلاهما منخفض.
+- الخسارة بالكاد تنخفض.
 
-**Too little capacity or training**
+**سعة النموذج قليلة جداً أو التدريب غير كافٍ.**
 :::
 
 :::
@@ -1335,19 +1486,19 @@ Model **never learned** the patterns.
 ::::
 
 
-## 🔴 Overfitting: The Symptom
+## 🔴 الإفراط (Overfitting): الأعراض {.smaller}
 
-> The model memorizes training data instead of learning general patterns.
+> يحفظ النموذج بيانات التدريب بدلاً من تعلم الأنماط العامة.
 
 :::: {.columns}
 
 ::: {.column width="42%"}
 
-**What you see:**
+**ماذا تلاحظ:**
 
-- Train loss ↓, Val loss ↑
-- Train mAP climbs, Val mAP stalls
-- Growing gap between the two curves
+- خسارة التدريب ↓، بينما خسارة التحقق ↑.
+- دقة التدريب (mAP) ترتفع، بينما دقة التحقق تتوقف.
+- فجوة متزايدة بين المنحنيين.
 
 :::
 
@@ -1357,6 +1508,7 @@ Model **never learned** the patterns.
 #| echo: false
 #| fig-align: center
 import matplotlib.pyplot as plt
+
 import numpy as np
 
 np.random.seed(7)
@@ -1369,16 +1521,16 @@ fig, ax = plt.subplots(figsize=(6, 4))
 fig.patch.set_alpha(0.0)
 ax.patch.set_alpha(0.0)
 
-ax.plot(epochs, train_loss, color='#1C355E', linewidth=3, label='Train Loss')
-ax.plot(epochs, val_loss, color='#00C9A7', linewidth=3, label='Val Loss')
+ax.plot(epochs, train_loss, color='#1C355E', linewidth=3, label='خسارة التدريب')
+ax.plot(epochs, val_loss, color='#00C9A7', linewidth=3, label='خسارة التحقق')
 ax.axvline(x=13, color='#dc3545', linewidth=1.5, linestyle='--', alpha=0.7)
-ax.annotate('Val loss starts rising', xy=(13, val_loss[12]), xytext=(16, 0.65),
+ax.annotate('خسارة التحقق تبدأ في الارتفاع', xy=(13, val_loss[12]), xytext=(16, 0.65),
             fontsize=9, color='#dc3545',
             arrowprops=dict(arrowstyle='->', color='#dc3545', lw=1.2))
 
-ax.set_xlabel('Epochs', fontsize=12, color='#1C355E')
-ax.set_ylabel('Loss', fontsize=12, color='#1C355E')
-ax.set_title('Overfitting: Diverging Losses', fontsize=14, fontweight='bold', color='#1C355E')
+ax.set_xlabel('العصور (Epochs)', fontsize=12, color='#1C355E')
+ax.set_ylabel('الخسارة', fontsize=12, color='#1C355E')
+ax.set_title('الإفراط: تباعد الخسائر', fontsize=14, fontweight='bold', color='#1C355E')
 ax.legend(frameon=False)
 ax.set_ylim(0, 1.0)
 ax.set_yticks(np.arange(0, 1.1, 0.1))
@@ -1397,35 +1549,35 @@ plt.show()
 ::::
 
 
-## 🔴 Overfitting: The Fixes
+## 🔴 الإفراط (Overfitting): الحلول {.smaller}
 
 :::: {.columns}
 
 ::: {.column width="50%"}
 
-**More Data Variety** *(best cure)*
+**تنوع أكبر في البيانات** *(أفضل علاج)*
 
-Varied scenes the model can't memorize.
+مشاهد متنوعة لا يستطيع النموذج حفظها بسهولة.
 
-**Augmentation**
+**التعزيز (Augmentation)**
 
-Flip, mosaic, color jitter — on by default in YOLO.
+Mosaic, flip, blur — مفعلة افتراضياً في YOLO.
 
-**Smaller Model**
+**نموذج أصغر**
 
-Small dataset? Start with `yolo11n` or `yolo11s`.
+مجموعة بيانات صغيرة؟ ابدأ بـ `yolo11n` أو `yolo11s`.
 
 :::
 
 ::: {.column width="50%"}
 
-**Increase `weight_decay`**
+**زيادة `weight_decay`**
 
 ```python
 model.train(data="data.yaml", weight_decay=0.001)
 ```
 
-**Early Stopping**
+**التوقف المبكر (Early Stopping)**
 
 ```python
 model.train(data="data.yaml", patience=20)
@@ -1435,23 +1587,23 @@ model.train(data="data.yaml", patience=20)
 
 ::::
 
-::: {.callout-tip}
-Start with **augmentation + patience**. If overfitting persists, raise `weight_decay`.
+::: {.callout-tip appearance="minimal"}
+ابدأ بـ **التعزيز + صبر (patience)**. إذا استمر الإفراط، ارفع قيمة `weight_decay`.
 :::
 
-## 🟠 Underfitting: The Symptom
+## 🟠 عدم الكفاية (Underfitting): الأعراض {.smaller}
 
-> The model hasn't learned the patterns — too simple, over-constrained, or undertrained.
+> لم يتعلم النموذج الأنماط — إما لأنه بسيط جداً، أو مقيد للغاية، أو لم يتم تدريبه كفاية.
 
 :::: {.columns}
 
 ::: {.column width="45%"}
 
-**What you see:**
+**ماذا تلاحظ:**
 
-- Both Train *and* Val mAP **low and flat**
-- Loss barely moves after the first epochs
-- Curves close together — but both stuck high
+- كل من دقة التدريب والتحقق (mAP) **منخفضة ومسطحة**.
+- الخسارة بالكاد تتحرك بعد العصور الأولى.
+- المنحنيان قريبان من بعضهما — لكنهما عالقان عند مستوى "فشل" مرتفع.
 
 :::
 
@@ -1461,6 +1613,7 @@ Start with **augmentation + patience**. If overfitting persists, raise `weight_d
 #| echo: false
 #| fig-align: center
 import matplotlib.pyplot as plt
+
 import numpy as np
 
 np.random.seed(3)
@@ -1472,15 +1625,15 @@ fig, ax = plt.subplots(figsize=(6, 4))
 fig.patch.set_alpha(0.0)
 ax.patch.set_alpha(0.0)
 
-ax.plot(epochs, train_loss, color='#1C355E', linewidth=3, label='Train Loss')
-ax.plot(epochs, val_loss, color='#00C9A7', linewidth=3, label='Val Loss')
-ax.annotate('Both stuck — barely dropping', xy=(20, train_loss[19]),
+ax.plot(epochs, train_loss, color='#1C355E', linewidth=3, label='خسارة التدريب')
+ax.plot(epochs, val_loss, color='#00C9A7', linewidth=3, label='خسارة التحقق')
+ax.annotate('كلاهما عالق — بالكاد ينخفضان', xy=(20, train_loss[19]),
             xytext=(12, 0.75), fontsize=9, color='#E07B39',
             arrowprops=dict(arrowstyle='->', color='#E07B39', lw=1.2))
 
-ax.set_xlabel('Epochs', fontsize=12, color='#1C355E')
-ax.set_ylabel('Loss', fontsize=12, color='#1C355E')
-ax.set_title('Underfitting: High Plateau', fontsize=14, fontweight='bold', color='#1C355E')
+ax.set_xlabel('العصور (Epochs)', fontsize=12, color='#1C355E')
+ax.set_ylabel('الخسارة', fontsize=12, color='#1C355E')
+ax.set_title('عدم الكفاية: هضبة مرتفعة', fontsize=14, fontweight='bold', color='#1C355E')
 ax.legend(frameon=False)
 ax.set_ylim(0, 1.0)
 ax.set_yticks(np.arange(0, 1.1, 0.1))
@@ -1499,55 +1652,55 @@ plt.show()
 ::::
 
 
-## 🟠 Underfitting: The Fixes
+## 🟠 عدم الكفاية (Underfitting): الحلول {.smaller}
 
 :::: {.columns}
 
 ::: {.column width="50%"}
 
-**Bigger Model**
+**نموذج أكبر**
 
-Try `yolo11m` or `yolo11l`.
+جرب `yolo11m` أو `yolo11l`.
 
-**Train Longer**
+**تدريب لفترة أطول**
 
-Increase `epochs`.
+زد عدد الـ `epochs`.
 
-**Higher Learning Rate**
+**معدل تعلم أعلى**
 
-Try `lr0=0.02` (default `0.01`).
+جرب `lr0=0.02` (الافتراضي `0.01`).
 
 :::
 
 ::: {.column width="50%"}
 
-**Less Regularization**
+**تقليل التنظيم (Regularization)**
 
 ```python
 model.train(data="data.yaml", weight_decay=0.0001)
 ```
 
-**Check Your Labels**
+**راجع تسمياتك (Labels)**
 
-Mislabeled data is impossible to learn from — audit before tuning.
+البيانات المصنفة خطأ تجعل التعلم مستحيلاً — تأكد من جودة البيانات قبل الضبط.
 
 :::
 
 ::::
 
 
-## 🟢 Healthy Training: "Generalizing"
+## 🟢 التدريب الصحي: "التعميم" {.smaller}
 
 :::: {.columns}
 
 ::: {.column width="45%"}
 <br>
 
-**The Ideal State:**
+**الحالة المثالية:**
 
-- Train and val metrics **rise together**
-- Both losses **decrease steadily** and plateau low
-- Model generalizes — performs well on unseen data
+- مقاييس التدريب والتحقق **ترتفع معاً**.
+- كلتا الخسارتين **تنخفضان بثبات** وتستقران عند مستوى منخفض.
+- النموذج يعمم — يعمل جيداً على بيانات لم يرها من قبل.
 
 :::
 
@@ -1557,10 +1710,11 @@ Mislabeled data is impossible to learn from — audit before tuning.
 #| echo: false
 #| fig-align: center
 import matplotlib.pyplot as plt
+
 import numpy as np
 
 epochs = np.arange(1, 31)
-# Simulate healthy training: losses converge low
+# Simulate healthy training
 train_loss = 0.6 * np.exp(-epochs/8) + 0.05 * np.random.rand(30)
 val_loss = 0.65 * np.exp(-epochs/8) + 0.05 * np.random.rand(30)
 
@@ -1568,12 +1722,12 @@ fig, ax = plt.subplots(figsize=(6, 4))
 fig.patch.set_alpha(0.0)
 ax.patch.set_alpha(0.0)
 
-ax.plot(epochs, train_loss, color='#1C355E', linewidth=3, label='Train Loss')
-ax.plot(epochs, val_loss, color='#00C9A7', linewidth=3, label='Val Loss')
+ax.plot(epochs, train_loss, color='#1C355E', linewidth=3, label='خسارة التدريب')
+ax.plot(epochs, val_loss, color='#00C9A7', linewidth=3, label='خسارة التحقق')
 
-ax.set_xlabel('Epochs', fontsize=12, color='#1C355E')
-ax.set_ylabel('Loss', fontsize=12, color='#1C355E')
-ax.set_title('Healthy: Convergence', fontsize=14, fontweight='bold', color='#1C355E')
+ax.set_xlabel('العصور (Epochs)', fontsize=12, color='#1C355E')
+ax.set_ylabel('الخسارة', fontsize=12, color='#1C355E')
+ax.set_title('صحي: تقارب الخسائر', fontsize=14, fontweight='bold', color='#1C355E')
 ax.legend(frameon=False)
 ax.set_ylim(0, 1.0)
 ax.set_yticks(np.arange(0, 1.1, 0.1))
@@ -1591,54 +1745,55 @@ plt.show()
 ::::
 
 
-## Diagnosing Your Training Run
+## تشخيص جولة التدريب {.smaller}
 
-*Use this as a reference when reading your own loss curves.*
+*استخدم هذا كمرجع عند قراءة منحنيات الخسارة الخاصة بك.*
 
-| What you see | Problem | Actions |
+| ما تراه | المشكلة | الإجراءات |
 |:---|:---:|:---|
-| Train mAP >> Val mAP, Val loss rising | 🔴 **Overfitting** | Add augmentation · increase `weight_decay` · set `patience` |
-| Both mAP low and flat, loss barely moves | 🟠 **Underfitting** | Bigger model · more `epochs` · raise `lr0` · lower `weight_decay` |
-| Both losses converging, mAP climbing | 🟢 **Healthy** | Continue training or deploy |
+| دقة التدريب >> دقة التحقق، خسارة التحقق ترتفع | 🔴 **إفراط (Overfitting)** | أضف تعزيزاً · زد `weight_decay` · اضبط `patience` |
+| كلتا الدقتين منخفضة ومسطحة، الخسارة بالكاد تتحرك | 🟠 **عدم كفاية (Underfitting)** | نموذج أكبر · زيادة `epochs` · ارفع `lr0` · قلل `weight_decay` |
+| كلتا الخسارتين تتقاربان، الدقة ترتفع | 🟢 **صحي (Healthy)** | استمر في التدريب أو ابدأ النشر |
 
-::: {.callout-tip}
-**Always watch both curves.** 99% train accuracy means nothing if val is failing.
+::: {.callout-tip appearance="minimal"}
+**راقب كلا المنحنيين دائماً.** دقة تدريب 99% لا تعني شيئاً إذا كان أداء التحقق فاشلاً.
 :::
 
 
 
 
 
-## Your Toolkit for Better Training
+## أدواتك لتحسين التدريب {.smaller}
 
-You can diagnose the problem — now here are the levers to fix it.
+يمكنك الآن تشخيص المشكلة — إليك الأدوات (الروافع) لإصلاحها.
 
 ::: {.fragment .fade-up}
-| Tool | Fixes |
+| الأداة | ما تعالجه |
 |:---|:---|
-| **Data Augmentation** | Overfitting, small datasets, domain shift |
-| **Learning Rate** | Unstable or stalled training |
-| **Weight Decay** | Overfitting (model memorizing) |
-| **Early Stopping** | Wasted compute, overfitting |
+| **تعزيز البيانات (Data Augmentation)** | الإفراط، مجموعات البيانات الصغيرة، اختلاف ظروف التصوير |
+| **معدل التعلم (Learning Rate)** | التدريب غير المستقر أو المتوقف |
+| **اضمحلال الوزن (Weight Decay)** | الإفراط (منع النموذج من الحفظ) |
+| **التوقف المبكر (Early Stopping)** | إهدار الموارد الحاسوبية، الإفراط |
 :::
 
-## What Data Augmentation Does
+## ماذا يفعل تعزيز البيانات (Data Augmentation) {.smaller}
 
-**Concept:** Artificially increase training data variety by applying transformations to existing images.
+**المفهوم:** زيادة تنوع بيانات التدريب اصطناعياً عبر تطبيق تحويلات على الصور الموجودة.
 
 ```{python}
 #| echo: false
 #| fig-align: center
 import matplotlib.pyplot as plt
+
 import numpy as np
 from PIL import Image
 from scipy.ndimage import gaussian_filter, rotate
 import os
 
-# Load a real image for more meaningful augmentation display
-img_path = 'assets/slides/rainy_car.jpg'
+# Load a real image
+img_path = 'slides/assets/slides/rainy_car.jpg'
 if not os.path.exists(img_path):
-    img_path = 'slides/assets/slides/rainy_car.jpg'
+    img_path = 'assets/slides/rainy_car.jpg'
     
 img = np.array(Image.open(img_path).convert('RGB')) / 255.0
 
@@ -1652,44 +1807,41 @@ def setup_ax(ax, title):
 
 # 1. Original
 axes[0].imshow(img)
-setup_ax(axes[0], 'Original')
+setup_ax(axes[0], 'الأصلية')
 
 # 2. Horizontal Flip
 axes[1].imshow(np.fliplr(img))
-setup_ax(axes[1], 'Flip')
+setup_ax(axes[1], 'انعكاس')
 
 # 3. Brightness
-# Scale pixels and clip to keep within [0, 1]
 bright_img = np.clip(img * 1.6, 0, 1)
 axes[2].imshow(bright_img)
-setup_ax(axes[2], 'Brightness')
+setup_ax(axes[2], 'السطوع')
 
 # 4. Blur
-# Apply sigma only to spatial dimensions
 blur_img = gaussian_filter(img, sigma=(4, 4, 0))
 axes[3].imshow(blur_img)
-setup_ax(axes[3], 'Blur')
+setup_ax(axes[3], 'تمويه')
 
 # 5. Rotation
-# rotate image without changing shape
 rot_img = rotate(img, angle=15, reshape=False, mode='nearest')
 axes[4].imshow(rot_img)
-setup_ax(axes[4], 'Rotation')
+setup_ax(axes[4], 'تدوير')
 
 plt.tight_layout()
 plt.show()
 ```
 
-**When it helps:**
+**متى يساعد:**
 
-- Overfitting (model needs more variety)
-- Small datasets
-- Domain shift (different lighting/angles in production)
+- الإفراط (النموذج يحتاج تنوعاً أكبر).
+- مجموعات البيانات الصغيرة.
+- اختلاف ظروف التصوير (إضاءة/زوايا مختلفة في الواقع).
 
 
-## Data Augmentation (Python) {.smaller}
+## تعزيز البيانات (Python) {.smaller}
 
-YOLO natively supports **Albumentations** to improve model robustness:
+YOLO تدعم مكتبة **Albumentations** بشكل طبيعي لتحسين قوة النموذج:
 
 ```bash
 pip install albumentations ultralytics
@@ -1701,7 +1853,7 @@ from ultralytics import YOLO
 
 model = YOLO("yolo26n.pt")
 
-# Define custom Albumentations transforms
+# تعريف تحويلات Albumentations مخصصة
 custom_transforms = [
     A.Blur(blur_limit=7, p=0.5),
     A.RandomCrop(width=256, height=256),
@@ -1709,18 +1861,18 @@ custom_transforms = [
     A.RandomBrightnessContrast(brightness_limit=0.2, contrast_limit=0.2, p=0.5),
 ]
 
-# Train the model with custom transforms
+# تدريب النموذج مع التحويلات المخصصة
 model.train(data="data.yaml", epochs=100, augmentations=custom_transforms)
 ```
 
-*Docs Reference: [Albumentations Integration](https://docs.ultralytics.com/integrations/albumentations/)*
+*مرجع التوثيق: [تكامل Albumentations](https://docs.ultralytics.com/integrations/albumentations/)*
 
 
-## Hyperparameters: Learning Rate (lr0)
+## المعلمات الفائقة: معدل التعلم (lr0) {.smaller}
 
 :::: {.columns .fragment .fade-up style="margin-bottom: -15px;"}
 ::: {.column width="45%"}
-🔴 **Too High**: Spikes/noise. Model "jumps" over the optimal solution.
+🔴 **مرتفع جداً**: قفزات/ضجيج. النموذج "يقفز" فوق الحل الأمثل.
 :::
 ::: {.column width="55%"}
 ```{python}
@@ -1728,6 +1880,7 @@ model.train(data="data.yaml", epochs=100, augmentations=custom_transforms)
 #| fig-align: center
 #| fig-height: 1.6
 import matplotlib.pyplot as plt
+
 import numpy as np
 epochs = np.arange(1, 51)
 brand_dark = '#1C355E'
@@ -1739,7 +1892,7 @@ fig, ax = plt.subplots(figsize=(6, 1.8))
 fig.patch.set_alpha(0.0)
 ax.patch.set_alpha(0.0)
 ax.plot(epochs, high_lr_loss, color='#FF5252', linewidth=3)
-ax.set_title('TOO HIGH: Diverging / Spiking', fontsize=10, fontweight='bold', color=brand_dark)
+ax.set_title('مرتفع جداً: تباعد / قفزات', fontsize=10, fontweight='bold', color=brand_dark)
 ax.set_ylim(0, 5)
 ax.spines['top'].set_visible(False); ax.spines['right'].set_visible(False)
 ax.spines['bottom'].set_color(brand_dark); ax.spines['left'].set_color(brand_dark)
@@ -1753,7 +1906,7 @@ plt.show()
 
 :::: {.columns .fragment .fade-up style="margin-bottom: -15px;"}
 ::: {.column width="45%"}
-🔵 **Too Small**: Flat line. Model is too "timid" to learn.
+🔵 **منخفض جداً**: خط مسطح. النموذج "خجول" جداً لدرجة لا تسمح له بالتعلم.
 :::
 ::: {.column width="55%"}
 ```{python}
@@ -1761,6 +1914,7 @@ plt.show()
 #| fig-align: center
 #| fig-height: 1.6
 import matplotlib.pyplot as plt
+
 import numpy as np
 epochs = np.arange(1, 51)
 brand_dark = '#1C355E'
@@ -1771,7 +1925,7 @@ fig, ax = plt.subplots(figsize=(6, 1.8))
 fig.patch.set_alpha(0.0)
 ax.patch.set_alpha(0.0)
 ax.plot(epochs, low_lr_loss, color='#78909C', linewidth=3)
-ax.set_title('TOO LOW: Glacial Progress', fontsize=10, fontweight='bold', color=brand_dark)
+ax.set_title('منخفض جداً: تقدم بطيء للغاية', fontsize=10, fontweight='bold', color=brand_dark)
 ax.set_ylim(0, 1)
 ax.spines['top'].set_visible(False); ax.spines['right'].set_visible(False)
 ax.spines['bottom'].set_color(brand_dark); ax.spines['left'].set_color(brand_dark)
@@ -1785,7 +1939,7 @@ plt.show()
 
 :::: {.columns .fragment .fade-up style="margin-bottom: -15px;"}
 ::: {.column width="45%"}
-🟢 **Just Right**: Smooth, rapid decay to a low plateau.
+🟢 **مناسب تماماً**: انخفاض سلس وسريع نحو مستوى منخفض.
 :::
 ::: {.column width="55%"}
 ```{python}
@@ -1793,6 +1947,7 @@ plt.show()
 #| fig-align: center
 #| fig-height: 1.6
 import matplotlib.pyplot as plt
+
 import numpy as np
 epochs = np.arange(1, 51)
 brand_dark = '#1C355E'
@@ -1804,7 +1959,7 @@ fig, ax = plt.subplots(figsize=(6, 1.8))
 fig.patch.set_alpha(0.0)
 ax.patch.set_alpha(0.0)
 ax.plot(epochs, good_lr_loss, color=brand_teal, linewidth=3)
-ax.set_title('JUST RIGHT: Fast & Healthy', fontsize=10, fontweight='bold', color=brand_dark)
+ax.set_title('مناسب تماماً: سريع وصحي', fontsize=10, fontweight='bold', color=brand_dark)
 ax.set_ylim(0, 1)
 ax.spines['top'].set_visible(False); ax.spines['right'].set_visible(False)
 ax.spines['bottom'].set_color(brand_dark); ax.spines['left'].set_color(brand_dark)
@@ -1818,7 +1973,7 @@ plt.show()
 
 
 
-## Hyperparameters: Weight Decay
+## المعلمات الفائقة: اضمحلال الوزن (Weight Decay) {.smaller}
 
 :::: {.columns}
 
@@ -1827,6 +1982,7 @@ plt.show()
 #| echo: false
 #| fig-align: center
 import matplotlib.pyplot as plt
+
 import numpy as np
 
 brand_dark = '#1C355E'
@@ -1843,13 +1999,13 @@ fig, ax = plt.subplots(figsize=(5, 3.5))
 fig.patch.set_alpha(0.0)
 ax.patch.set_alpha(0.0)
 
-ax.plot(epochs, train_loss, color=brand_dark, linewidth=2.5, alpha=0.6, label='Train Loss')
-ax.plot(epochs, val_no_wd, color='#dc3545', linewidth=2.5, linestyle='--', label='Val (no decay) — overfits')
-ax.plot(epochs, val_wd, color=brand_teal, linewidth=2.5, label='Val (with decay) — stable')
+ax.plot(epochs, train_loss, color=brand_dark, linewidth=2.5, alpha=0.6, label='خسارة التدريب')
+ax.plot(epochs, val_no_wd, color='#dc3545', linewidth=2.5, linestyle='--', label='التحقق (بدون WD) — إفراط')
+ax.plot(epochs, val_wd, color=brand_teal, linewidth=2.5, label='التحقق (مع WD) — مستقر')
 
-ax.set_xlabel('Epochs', fontsize=11, color=brand_dark)
-ax.set_ylabel('Loss', fontsize=11, color=brand_dark)
-ax.set_title('Weight Decay Keeps Val Loss Stable', fontsize=12, fontweight='bold', color=brand_dark)
+ax.set_xlabel('العصور (Epochs)', fontsize=11, color=brand_dark)
+ax.set_ylabel('الخسارة', fontsize=11, color=brand_dark)
+ax.set_title('Weight Decay يحافظ على استقرار خسارة التحقق', fontsize=12, fontweight='bold', color=brand_dark)
 ax.legend(frameon=False, fontsize=9)
 ax.spines['top'].set_visible(False)
 ax.spines['right'].set_visible(False)
@@ -1864,10 +2020,10 @@ plt.show()
 
 ::: {.column width="45%"}
 
-| Setting | Effect |
+| الإعداد | التأثير |
 |:---|:---|
-| Too low | Memorization → 🔴 Overfitting |
-| Too high | Over-constrained → 🟠 Underfitting |
+| منخفض جداً | حفظ البيانات ← 🔴 إفراط (Overfitting) |
+| مرتفع جداً | قيود زائدة ← 🟠 عدم كفاية (Underfitting) |
 
 :::
 
@@ -1875,21 +2031,21 @@ plt.show()
 
 
 
-## Hyperparameters: Early Stopping
+## المعلمات الفائقة: التوقف المبكر (Early Stopping) {.smaller}
 
 :::: {.columns}
 
 ::: {.column width="45%"}
 
-- **The Concept:** Stop training if validation metrics haven't improved for $N$ epochs.
+- **المفهوم:** إيقاف التدريب إذا لم تتحسن مقاييس التحقق لعدد $N$ من العصور.
 
-**`patience`** (Default: 50)
+**`patience`** (الافتراضي: 50)
 
 ```python
 from ultralytics import YOLO
 
 model = YOLO("yolo26n.pt")
-# Stop if no improvement for 10 epochs
+# التوقف إذا لم يحدث تحسن لـ 10 عصور
 model.train(data="data.yaml", 
             epochs=100, 
             patience=10)
@@ -1903,6 +2059,7 @@ model.train(data="data.yaml",
 #| echo: false
 #| fig-align: center
 import matplotlib.pyplot as plt
+
 import numpy as np
 
 fig, ax = plt.subplots(figsize=(6, 5))
@@ -1922,13 +2079,13 @@ stop_epoch = best_epoch + patience
 
 val_loss[best_epoch:] = val_loss[best_epoch:] + 0.005 * np.arange(100 - best_epoch)
 
-ax.plot(epochs[:stop_epoch], train_loss[:stop_epoch], color=brand_dark, linewidth=3, label='Train Loss')
-ax.plot(epochs[:stop_epoch], val_loss[:stop_epoch], color=brand_teal, linewidth=3, label='Val Loss')
+ax.plot(epochs[:stop_epoch], train_loss[:stop_epoch], color=brand_dark, linewidth=3, label='خسارة التدريب')
+ax.plot(epochs[:stop_epoch], val_loss[:stop_epoch], color=brand_teal, linewidth=3, label='خسارة التحقق')
 
 # Highlights
-ax.axvline(x=best_epoch, linestyle='--', color=brand_orange, alpha=0.8, linewidth=2, label='Best Checkpoint')
-ax.axvspan(best_epoch, stop_epoch, alpha=0.15, color=brand_dark, label=f'Patience Window')
-ax.scatter(stop_epoch, val_loss[stop_epoch-1], color='red', marker='x', s=150, linewidth=3, zorder=5, label='Stop Training')
+ax.axvline(x=best_epoch, linestyle='--', color=brand_orange, alpha=0.8, linewidth=2, label='أفضل نقطة (Checkpoint)')
+ax.axvspan(best_epoch, stop_epoch, alpha=0.15, color=brand_dark, label=f'نافذة الصبر (Patience)')
+ax.scatter(stop_epoch, val_loss[stop_epoch-1], color='red', marker='x', s=150, linewidth=3, zorder=5, label='إيقاف التدريب')
 
 # Styling
 ax.spines['top'].set_visible(False)
@@ -1938,9 +2095,9 @@ ax.spines['left'].set_color(brand_dark)
 ax.tick_params(colors=brand_dark, labelsize=10)
 ax.grid(True, linestyle='--', alpha=0.2, color=brand_dark)
 
-ax.set_xlabel('Epochs', fontsize=12, fontweight='bold', color=brand_dark)
-ax.set_ylabel('Loss', fontsize=12, fontweight='bold', color=brand_dark)
-ax.set_title('Early Stopping in Action', fontsize=14, fontweight='bold', color=brand_dark)
+ax.set_xlabel('العصور (Epochs)', fontsize=12, fontweight='bold', color=brand_dark)
+ax.set_ylabel('الخسارة', fontsize=12, fontweight='bold', color=brand_dark)
+ax.set_title('التوقف المبكر قيد العمل', fontsize=14, fontweight='bold', color=brand_dark)
 ax.legend(frameon=False, fontsize=10, loc='upper right')
 
 plt.tight_layout()
@@ -1954,48 +2111,50 @@ plt.show()
 
 
 
-## Evaluation: Key Takeaways
+## التقييم: أهم النقاط المستفادة {.smaller}
 
 ::: {.incremental}
-- **Metrics:** Use mAP50 for a quick sanity check, mAP50-95 for a strict production-ready evaluation
-- **Diagnose your curves:** overfitting, underfitting, and healthy training each have a clear, distinct signature
-- **Fix deliberately:** augmentation, weight decay, and early stopping cover the majority of training problems
+- **المقاييس:** استخدم mAP50 للتحقق السريع من صحة النموذج، و mAP50-95 لتقييم صارم جاهز للإنتاج.
+- **شخص منحنياتك:** الإفراط، عدم الكفاية، والتدريب الصحي لكل منها بصمة واضحة ومميزة.
+- **أصلح بذكاء:** التعزيز (Augmentation)، اضمحلال الوزن (Weight Decay)، والتوقف المبكر تغطي غالبية مشاكل التدريب.
 :::
 
-## 🧪 Lab 4B: Technical Performance & Diagnosis
+## 🧪 معمل 4ب: الأداء الفني والتشخيص {.smaller}
 
-Now that you know how to read the curves, let's fix a model!
+الآن بعد أن عرفت كيفية قراءة المنحنيات، فلنصلح نموذجاً!
 
-1. Open `labs/04b_evaluation_technical.ipynb`
-2. **Compare** different YOLO model sizes (nano vs small).
-3. **Verify** Intersection over Union (IoU) math.
-4. **Identify** signs of overfitting in a training run.
+1. افتح ملف المعمل `labs/04b_evaluation_technical.ipynb`
+2. **قارن** بين أحجام نماذج YOLO المختلفة (nano ضد small).
+3. **تحقق** من حسابات التقاطع فوق الاتحاد (IoU).
+4. **حدد** علامات الإفراط (Overfitting) في جولة تدريبية.
 
 ::: {.callout-tip appearance="minimal"}
-**Goal:** Learn to distinguish between a model that "memorizes" and one that "generalizes."
+**الهدف:** تعلم التمييز بين النموذج الذي "يحفظ" والنموذج الذي "يعمم".
 :::
 
 ::: {.callout-tip appearance="minimal" .fragment}
-When your model's validation metrics are solid, it's ready for the next step — getting it into production.
+عندما تكون مقاييس التحقق لنموذجك قوية، فهذا يعني أنه جاهز للخطوة التالية — نقله إلى الإنتاج.
 :::
 
-# 8. Deployment {.sdaia-dark background-gradient="linear-gradient(135deg, #1C355E, #00C9A7)"}
+::: {style="display: flex; flex-direction: column; align-items: flex-start; padding-right: 3rem;"}
+# [8. النشر (Deployment)]{style="font-size: 2rem; border-bottom: 2px solid #00C9A7; padding-bottom: 0.5rem;"} {.sdaia-dark data-background-gradient="linear-gradient(135deg, #1C355E, #00C9A7)"}
 
-Taking it to production.
+[نقل النموذج إلى مرحلة الإنتاج.]{style="font-size: 1.3rem; opacity: 0.9; margin-top: 1rem;"}
+:::
 
-## Exporting Models
+## تصدير النماذج (Exporting) {.smaller}
 
-A PyTorch `.pt` file is great for research, but slow in production.
-Convert to optimized formats using the `export` mode!
+ملف PyTorch `.pt` ممتاز للبحث، لكنه بطيء في الإنتاج.
+حول نموذجك إلى صيغ محسنة باستخدام وضع `export`!
 
 ::: {.panel-tabset}
 
 ### CLI
 ```bash
-# Export to ONNX (Great for CPU)
+# التصدير إلى ONNX (ممتاز للمعالجات المركزية CPU)
 yolo export model=best.pt format=onnx
 
-# Export to OpenVINO (Intel) or TensorRT (Nvidia GPUs)
+# التصدير إلى OpenVINO (لأجهزة Intel) أو TensorRT (للبطاقات الرسومية Nvidia)
 yolo export model=best.pt format=openvino
 ```
 
@@ -2010,11 +2169,11 @@ model.export(format="openvino")
 
 :::
 
-*Docs Reference: [Export](https://docs.ultralytics.com/modes/export/)*
+*مرجع التوثيق: [التصدير](https://docs.ultralytics.com/modes/export/)*
 
-## Inference with Exported Models
+## الاستدلال مع النماذج المصدرة {.smaller}
 
-You don't need complex deployment code to use your exported models. The Ultralytics API loads them just like a standard PyTorch `.pt` file!
+لا تحتاج إلى كود نشر معقد لاستخدام نماذجك المصدرة. تقوم واجهة Ultralytics البرمجية بتحميلها تماماً مثل ملف PyTorch `.pt` العادي!
 
 ::: {.panel-tabset}
 
@@ -2034,75 +2193,81 @@ print(results[0].boxes)
 
 :::
 
-*Docs Reference: [Predict with Exported Models](https://docs.ultralytics.com/modes/predict/)*
+*مرجع التوثيق: [Prediction بالنماذج المصدرة](https://docs.ultralytics.com/modes/predict/)*
 
 
-# Conclusion {.sdaia-dark background-gradient="linear-gradient(135deg, #1C355E, #00C9A7)"}
+::: {style="display: flex; flex-direction: column; align-items: flex-start; padding-right: 3rem;"}
+# [خاتمة]{style="font-size: 2rem; border-bottom: 2px solid #00C9A7; padding-bottom: 0.5rem;"} {.sdaia-dark data-background-gradient="linear-gradient(135deg, #1C355E, #00C9A7)"}
 
-Course Wrap-up
+[ملخص الدورة]{style="font-size: 1.3rem; opacity: 0.9; margin-top: 1rem;"}
+:::
 
-## The Ultralytics Ecosystem
+## منظومة Ultralytics {style="font-size: 0.85em;"}
 
 ```{=html}
-<div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; margin-top: 1.2rem;">
-  <div style="text-align:center; background:rgba(28,53,94,0.08); padding:1.2rem; border-radius:12px;">
-    <div style="font-size:2rem;">🎯</div>
-    <strong>Tasks</strong><br><small>Detect · Segment · Pose · OBB</small>
+<div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.8rem; margin-top: 1rem;">
+  <div style="text-align:center; background:rgba(28,53,94,0.06); padding:0.8rem; border-radius:10px; border: 1px solid rgba(28,53,94,0.1);">
+    <div style="font-size:1.5rem;">🎯</div>
+    <strong style="font-size: 0.9rem;">المهام</strong><br><small style="font-size: 0.75rem;">Detect · Segment · Pose · OBB</small>
   </div>
-  <div style="text-align:center; background:rgba(28,53,94,0.08); padding:1.2rem; border-radius:12px;">
-    <div style="font-size:2rem;">⚡</div>
-    <strong>Solutions</strong><br><small>Advanced logic, out-of-the-box</small>
+  <div style="text-align:center; background:rgba(28,53,94,0.06); padding:0.8rem; border-radius:10px; border: 1px solid rgba(28,53,94,0.1);">
+    <div style="font-size:1.5rem;">⚡</div>
+    <strong style="font-size: 0.9rem;">الحلول</strong><br><small style="font-size: 0.75rem;">منطق متقدم، جاهز للاستخدام</small>
   </div>
-  <div style="text-align:center; background:rgba(28,53,94,0.08); padding:1.2rem; border-radius:12px;">
-    <div style="font-size:2rem;">🗂️</div>
-    <strong>Datasets</strong><br><small>Structure labels for every task</small>
+  <div style="text-align:center; background:rgba(28,53,94,0.06); padding:0.8rem; border-radius:10px; border: 1px solid rgba(28,53,94,0.1);">
+    <div style="font-size:1.5rem;">🗂️</div>
+    <strong style="font-size: 0.9rem;">البيانات</strong><br><small style="font-size: 0.75rem;">هيكلة التسميات لكل مهمة</small>
   </div>
-  <div style="text-align:center; background:rgba(0,201,167,0.12); padding:1.2rem; border-radius:12px;">
-    <div style="font-size:2rem;">🛠️</div>
-    <strong>Tools</strong><br><small>CLI · YAML · Hyperparameters</small>
+  <div style="text-align:center; background:rgba(0,201,167,0.08); padding:0.8rem; border-radius:10px; border: 1px solid rgba(0,201,167,0.15);">
+    <div style="font-size:1.5rem;">🛠️</div>
+    <strong style="font-size: 0.9rem;">الأدوات</strong><br><small style="font-size: 0.75rem;">CLI · YAML · المعلمات الفائقة</small>
   </div>
-  <div style="text-align:center; background:rgba(0,201,167,0.12); padding:1.2rem; border-radius:12px;">
-    <div style="font-size:2rem;">📊</div>
-    <strong>Evaluation</strong><br><small>Metrics · Thresholds · PR curves</small>
+  <div style="text-align:center; background:rgba(0,201,167,0.08); padding:0.8rem; border-radius:10px; border: 1px solid rgba(0,201,167,0.15);">
+    <div style="font-size:1.5rem;">📊</div>
+    <strong style="font-size: 0.9rem;">التقييم</strong><br><small style="font-size: 0.75rem;">مقاييس · عتبات · منحنيات PR</small>
   </div>
-  <div style="text-align:center; background:rgba(0,201,167,0.12); padding:1.2rem; border-radius:12px;">
-    <div style="font-size:2rem;">🚀</div>
-    <strong>Deployment</strong><br><small>Export for production speed</small>
+  <div style="text-align:center; background:rgba(0,201,167,0.08); padding:0.8rem; border-radius:10px; border: 1px solid rgba(0,201,167,0.15);">
+    <div style="font-size:1.5rem;">🚀</div>
+    <strong style="font-size: 0.9rem;">النشر</strong><br><small style="font-size: 0.75rem;">تصدير لسرعة الإنتاج</small>
   </div>
 </div>
 ```
 
-## What's Next?
+## ماذا بعد؟ {.smaller}
 
 ```{=html}
 <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 1.2rem; margin-top: 1.4rem;">
   <div style="background:rgba(28,53,94,0.08); padding:1.2rem; border-radius:12px;">
     <div style="font-size:2rem; text-align:center;">📷</div>
-    <strong>Smart Security</strong><br>
-    <small>Detect intruders, vehicles, and anomalies in real time.</small>
+    <strong>الأمن الذكي</strong><br>
+    <small>اكتشاف المتسللين، المركبات، والأنشطة غير الطبيعية في الوقت الفعلي.</small>
   </div>
   <div style="background:rgba(28,53,94,0.08); padding:1.2rem; border-radius:12px;">
     <div style="font-size:2rem; text-align:center;">🏥</div>
-    <strong>Medical Imaging</strong><br>
-    <small>Identify tumors, lesions, or instrument counts in scans.</small>
+    <strong>التصوير الطبي</strong><br>
+    <small>تحديد الأورام، الآفات، أو عد الأدوات الجراحية في الأشعة.</small>
   </div>
   <div style="background:rgba(0,201,167,0.10); padding:1.2rem; border-radius:12px;">
     <div style="font-size:2rem; text-align:center;">🚗</div>
-    <strong>Autonomous Vehicles</strong><br>
-    <small>Detect pedestrians, signs, and road hazards at speed.</small>
+    <strong>السيارات ذاتية القيادة</strong><br>
+    <small>اكتشاف المشاة، العلامات، ومخاطر الطريق بسرعات عالية.</small>
   </div>
   <div style="background:rgba(0,201,167,0.10); padding:1.2rem; border-radius:12px;">
     <div style="font-size:2rem; text-align:center;">🛒</div>
-    <strong>Retail Analytics</strong><br>
-    <small>Track foot traffic, shelf stock, and customer behaviour.</small>
+    <strong>تحليلات التجزئة</strong><br>
+    <small>تتبع حركة الزوار، مخزون الرفوف، وسلوك العملاء.</small>
   </div>
 </div>
 ```
 
-## Q&A {.sdaia-dark background-color="#1C355E"}
+## شكراً لكم! {background-color="#1C355E" background-image="slides_template/assets/anim.svg" background-size="cover" background-opacity="0.2"}
 
-::: {.r-fit-text}
-**Thank You!**
+::: {style="text-align: center; margin-top: 5rem;"}
+[شكراً جزيلاً لاهتمامكم]{style="font-size: 3.5rem; font-weight: bold; color: #00C9A7; display: block; margin-bottom: 1rem;"}
 
-Any questions?
+[هل لديكم أي أسئلة؟]{style="font-size: 2rem; color: white; opacity: 0.9;"}
+
+::: {style="margin-top: 4rem; display: flex; justify-content: center; gap: 2rem;"}
+![](slides_template/assets/sdaia.svg){width="150"}
+:::
 :::

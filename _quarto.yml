@@ -1,4 +1,4 @@
-quarto-required: ">= 1.8.26"
+quarto-required: ">= 1.4"
 
 project:
   output-dir: docs
@@ -35,7 +35,7 @@ format:
     multiplex: false
     help: true
     progress: true
-    history: false
+    history: true
     hide-inactive-cursor: true
     strip-comments: true
     center: false
