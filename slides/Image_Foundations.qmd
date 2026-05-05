@@ -1,11 +1,12 @@
 ---
 title: "أساسيات الصور الرقمية"
 subtitle: "كيف تدرك أجهزة الكمبيوتر الصور"
-date: today
+
 lang: ar
 dir: rtl
 format:
   revealjs:
+    chalkboard: true
     theme: [default, slides_template/assets/sdaia.scss]
     logo: slides_template/assets/sdaia.svg
     transition: slide

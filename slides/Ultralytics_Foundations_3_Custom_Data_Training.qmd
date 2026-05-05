@@ -1,11 +1,12 @@
 ---
 title: "أساسيات Ultralytics YOLO: الجزء الثالث"
 subtitle: "البيانات المخصصة وتدريب النماذج"
-date: today
+
 lang: ar
 dir: rtl
 format:
   revealjs:
+    chalkboard: true
     theme: [default, slides_template/assets/sdaia.scss]
     logo: slides_template/assets/sdaia.svg
     transition: slide

@@ -1,11 +1,12 @@
 ---
 title: مكتبة HuggingFace للرؤية الحاسوبية
 subtitle: SAM · التضمينات · نماذج لغة الرؤية
-date: today
+
 lang: ar
 dir: rtl
 format:
   revealjs:
+    chalkboard: true
     
     theme:
       - default
