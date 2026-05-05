@@ -1,6 +1,7 @@
 
 import os
 import re
+import shutil
 
 # List of all files to process
 slides_files = [
@@ -13,6 +14,7 @@ slides_files = [
 ]
 
 BASE_DIR = '/Users/halmayyof/Test3/test3/ذد/cv-for-developers-ultralytics/slides'
+DOCS_DIR = '/Users/halmayyof/Test3/test3/ذد/cv-for-developers-ultralytics/docs'
 
 SILENT_PATCH = r"""
 ```{python}
@@ -49,13 +51,35 @@ def process_files():
         if "---" in content:
             parts = content.split("---", 2)
             if len(parts) >= 3:
-                # Check if already patched to avoid duplicates
                 if "matplotlib_inline.backend_inline" not in parts[2]:
                     content = "---" + parts[1] + "---" + SILENT_PATCH + parts[2]
         
         with open(filepath, 'w') as f:
             f.write(content)
         print(f"Patched {filename}")
+
+def deploy_assets():
+    # Ensure docs/slides and docs/slides/assets exist
+    docs_slides_dir = os.path.join(DOCS_DIR, 'slides')
+    docs_assets_dir = os.path.join(docs_slides_dir, 'slides_template', 'assets')
+    
+    if not os.path.exists(docs_assets_dir):
+        os.makedirs(docs_assets_dir)
+    
+    # Copy all .html files from slides/ to docs/slides/
+    for item in os.listdir(BASE_DIR):
+        if item.endswith('.html'):
+            shutil.copy2(os.path.join(BASE_DIR, item), os.path.join(docs_slides_dir, item))
+            
+    # Copy assets (logo, etc.)
+    src_assets = os.path.join(BASE_DIR, 'slides_template', 'assets')
+    if os.path.exists(src_assets):
+        for item in os.listdir(src_assets):
+            src_item = os.path.join(src_assets, item)
+            if os.path.isfile(src_item):
+                shutil.copy2(src_item, os.path.join(docs_assets_dir, item))
+    
+    print("Deployed slides and assets to docs/slides/")
 
 def create_index():
     repo_url = "https://colab.research.google.com/github/hanenalmayouf/Computer_vision_Arabic-/blob/main/labs/"
@@ -69,29 +93,31 @@ def create_index():
     <title>منهج الرؤية الحاسوبية - SDAIA</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap" rel="stylesheet">
     <style>
-        body {{ font-family: 'Inter', sans-serif; background: #f0f4f8; margin: 0; padding: 0; color: #1C355E; }}
-        header {{ background: linear-gradient(135deg, #1C355E, #00C9A7); color: white; padding: 4rem 1rem; text-align: center; box-shadow: 0 4px 15px rgba(0,0,0,0.1); }}
+        body {{ font-family: 'Inter', sans-serif; background: #f8fafc; margin: 0; padding: 0; color: #0f172a; line-height: 1.6; }}
+        header {{ background: linear-gradient(135deg, #0f172a, #334155); color: white; padding: 4rem 1rem; text-align: center; border-bottom: 4px solid #38bdf8; }}
         .container {{ max-width: 900px; margin: 2rem auto; padding: 1rem; }}
-        h1 {{ margin: 0; font-size: 2.5rem; font-weight: 800; }}
-        .module {{ background: white; border-radius: 20px; padding: 2rem; margin-bottom: 2rem; box-shadow: 0 10px 30px rgba(0,0,0,0.05); border: 1px solid #eef2f7; }}
-        .module h3 {{ margin: 0 0 0.5rem 0; color: #1C355E; font-size: 1.6rem; display: flex; align-items: center; gap: 10px; }}
-        .module p {{ margin: 0 0 1.5rem 0; color: #546e7a; line-height: 1.6; font-size: 1rem; }}
-        .link-group {{ display: flex; flex-direction: column; gap: 12px; }}
-        .link-item {{ display: flex; align-items: center; gap: 12px; text-decoration: none; padding: 12px 20px; border-radius: 12px; transition: 0.3s; font-weight: 700; font-size: 0.95rem; }}
-        .link-slides {{ background: #f1f5f9; color: #1C355E; }}
-        .link-slides:hover {{ background: #e2e8f0; }}
-        .link-lab {{ background: #e0f2f1; color: #00796b; }}
-        .link-lab:hover {{ background: #b2dfdb; }}
-        .badge {{ display: inline-block; padding: 4px 10px; border-radius: 10px; font-size: 0.75rem; background: #00C9A7; color: white; margin-bottom: 10px; }}
-        .footer {{ text-align: center; padding: 3rem; color: #94a3b8; font-size: 0.85rem; }}
-        img.logo {{ width: 130px; margin-bottom: 1.5rem; }}
+        h1 {{ margin: 0; font-size: 2.8rem; font-weight: 800; color: #38bdf8; }}
+        header p {{ font-size: 1.2rem; opacity: 0.8; margin-top: 0.5rem; }}
+        .module {{ background: white; border-radius: 24px; padding: 2.5rem; margin-bottom: 2.5rem; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06); border: 1px solid #e2e8f0; transition: 0.3s; }}
+        .module:hover {{ transform: translateY(-4px); box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04); }}
+        .module h3 {{ margin: 0 0 0.75rem 0; color: #1e293b; font-size: 1.75rem; display: flex; align-items: center; gap: 12px; }}
+        .module p {{ margin: 0 0 2rem 0; color: #64748b; font-size: 1.1rem; }}
+        .link-group {{ display: flex; flex-direction: column; gap: 14px; }}
+        .link-item {{ display: flex; align-items: center; gap: 14px; text-decoration: none; padding: 14px 24px; border-radius: 16px; transition: 0.2s; font-weight: 700; font-size: 1rem; }}
+        .link-slides {{ background: #f1f5f9; color: #334155; border: 1px solid #e2e8f0; }}
+        .link-slides:hover {{ background: #e2e8f0; border-color: #cbd5e1; }}
+        .link-lab {{ background: #f0f9ff; color: #0369a1; border: 1px solid #e0f2fe; }}
+        .link-lab:hover {{ background: #e0f2fe; border-color: #bae6fd; }}
+        .badge {{ display: inline-block; padding: 6px 14px; border-radius: 12px; font-size: 0.85rem; font-weight: 800; background: #38bdf8; color: #0f172a; margin-bottom: 1rem; text-transform: uppercase; }}
+        .footer {{ text-align: center; padding: 4rem; color: #94a3b8; font-size: 0.95rem; }}
+        img.logo {{ width: 140px; margin-bottom: 1.5rem; }}
     </style>
 </head>
 <body>
     <header>
         <img src="slides/slides_template/assets/sdaia.svg" alt="SDAIA" class="logo">
         <h1>منهج الرؤية الحاسوبية الاحترافي</h1>
-        <p>فهرس المنهج: محاضرات ومعامل تطبيقية</p>
+        <p>فهرس المنهج الشامل: من الأساسيات حتى النشر والإنتاج</p>
     </header>
     
     <div class="container">
@@ -178,20 +204,19 @@ def create_index():
 
     <div class="footer">
         © 2026 جميع الحقوق محفوظة لـ سدايا (SDAIA) <br>
-        منهج الرؤية الحاسوبية المطور.
+        منهج الرؤية الحاسوبية المطور لتمكين الكوادر الوطنية.
     </div>
 </body>
 </html>
 """
-    # Write to the root docs folder
-    docs_dir = '/Users/halmayyof/Test3/test3/ذد/cv-for-developers-ultralytics/docs'
-    if not os.path.exists(docs_dir): os.makedirs(docs_dir)
+    if not os.path.exists(DOCS_DIR): os.makedirs(DOCS_DIR)
     
-    with open(os.path.join(docs_dir, 'index.html'), 'w') as f:
+    with open(os.path.join(DOCS_DIR, 'index.html'), 'w') as f:
         f.write(index_html)
     
     print("Created structured index.html in docs/")
 
 if __name__ == "__main__":
     process_files()
+    deploy_assets()
     create_index()
