@@ -4,105 +4,113 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SDAIA | منهج الرؤية الحاسوبية</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+    <title>منهج الرؤية الحاسوبية - SDAIA</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;800&display=swap" rel="stylesheet">
     <style>
-        :root { --primary: #1e293b; --accent: #38bdf8; --bg: #f8fafc; --text: #0f172a; }
-        body { font-family: 'Inter', sans-serif; background: var(--bg); margin: 0; padding: 0; color: var(--text); line-height: 1.6; }
-        header { background: var(--primary); color: white; padding: 4rem 1rem; text-align: center; border-bottom: 4px solid var(--accent); }
-        .container { max-width: 800px; margin: 2rem auto; padding: 1rem; }
-        h1 { margin: 0; font-size: 2.5rem; font-weight: 800; color: var(--accent); }
-        header p { font-size: 1.1rem; opacity: 0.8; margin-top: 0.5rem; }
-        .module { background: white; border-radius: 16px; padding: 2rem; margin-bottom: 2rem; box-shadow: 0 4px 6px rgba(0,0,0,0.05); border: 1px solid #e2e8f0; }
-        .module h3 { margin: 0 0 0.5rem 0; color: var(--primary); font-size: 1.5rem; border-bottom: 2px solid #f1f5f9; padding-bottom: 10px; }
-        .module p { margin: 0.5rem 0 1.5rem 0; color: #64748b; font-size: 1rem; }
-        .link-list { display: flex; flex-direction: column; gap: 10px; }
-        .link-item { display: flex; align-items: center; gap: 10px; text-decoration: none; padding: 12px 18px; border-radius: 10px; font-weight: 600; transition: 0.2s; }
-        .link-slides { background: #f1f5f9; color: var(--primary); }
-        .link-slides:hover { background: #e2e8f0; }
-        .link-lab { background: #f0f9ff; color: #0369a1; }
-        .link-lab:hover { background: #e0f2fe; }
-        .footer { text-align: center; padding: 3rem; color: #94a3b8; font-size: 0.85rem; }
+        body { font-family: 'Inter', sans-serif; background: #f0f4f8; margin: 0; padding: 0; color: #1C355E; }
+        header { background: linear-gradient(135deg, #1C355E, #00C9A7); color: white; padding: 4rem 1rem; text-align: center; box-shadow: 0 4px 15px rgba(0,0,0,0.1); }
+        .container { max-width: 1200px; margin: 2rem auto; padding: 1rem; }
+        h1 { margin: 0; font-size: 2.8rem; font-weight: 800; }
+        .section-title { margin: 3rem 0 2rem; color: #1C355E; text-align: center; font-size: 2.2rem; font-weight: 800; }
+        .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(350px, 1fr)); gap: 2.5rem; }
+        .card { background: white; border-radius: 24px; padding: 2.5rem; transition: 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); box-shadow: 0 10px 30px rgba(0,0,0,0.05); border: 1px solid #eef2f7; display: flex; flex-direction: column; }
+        .card:hover { transform: translateY(-10px); box-shadow: 0 20px 40px rgba(0,0,0,0.1); border-color: #00C9A7; }
+        .card h3 { margin: 0 0 1rem 0; color: #1C355E; font-size: 1.5rem; font-weight: 800; }
+        .card p { margin: 0 0 2.5rem 0; font-size: 1rem; color: #546e7a; line-height: 1.6; flex-grow: 1; }
+        .badge { display: inline-block; padding: 6px 14px; border-radius: 12px; font-size: 0.8rem; font-weight: 700; margin-bottom: 1.2rem; background: #e0f2f1; color: #00796b; width: fit-content; }
+        .btn-group { display: flex; gap: 12px; flex-wrap: wrap; }
+        .btn { flex: 1; min-width: 130px; text-align: center; padding: 14px 20px; border-radius: 15px; font-weight: 700; text-decoration: none; font-size: 0.95rem; transition: 0.3s; display: flex; align-items: center; justify-content: center; gap: 8px; }
+        .btn-slides { background: #1C355E; color: white; }
+        .btn-slides:hover { background: #2c5282; }
+        .btn-lab { background: #00C9A7; color: white; }
+        .btn-lab:hover { background: #00a88b; }
+        .footer { text-align: center; padding: 4rem 2rem; color: #94a3b8; font-size: 0.9rem; border-top: 1px solid #e2e8f0; margin-top: 4rem; }
         img.logo { width: 140px; margin-bottom: 1.5rem; }
     </style>
 </head>
 <body>
     <header>
         <img src="slides/slides_template/assets/sdaia.svg" alt="SDAIA" class="logo">
-        <h1>Ultralytics & Computer Vision For Developers</h1>
-        <p>فهرس الدورة التعليمية المطور - سدايا</p>
+        <h1>منهج الرؤية الحاسوبية الاحترافي</h1>
+        <p>مسار تطوير الأنظمة باستخدام YOLO و HuggingFace</p>
     </header>
     
     <div class="container">
-        
-        <div class="module">
-            <h3>🖼️ Preparatory Module</h3>
-            <p>How computers perceive images: pixels, color channels, and coordinate systems.</p>
-            <div class="link-list">
-                <a href="slides/Image_Foundations.html" class="link-item link-slides">Presentation Slides</a>
-                <a href="https://colab.research.google.com/github/hanenalmayouf/Computer_vision_Arabic-/blob/main/labs/00_images.ipynb" class="link-item link-lab" target="_blank">Lab: Images as N-Dimensional Arrays</a>
+        <h2 class="section-title">خارطة الطريق التعليمية 🗺️</h2>
+        <div class="grid">
+            <!-- Module 0 -->
+            <div class="card">
+                <span class="badge">الوحدة التمهيدية</span>
+                <h3>0. أساسيات الصورة الرقمية</h3>
+                <p>تعلم كيف يفهم الكمبيوتر الصور، البكسلات، القنوات اللونية، وأنظمة الإحداثيات.</p>
+                <div class="btn-group">
+                    <a href="slides/Image_Foundations.html" class="btn btn-slides">🎥 عرض المحاضرة</a>
+                    <a href="https://colab.research.google.com/github/hanenalmayouf/Computer_vision_Arabic-/blob/main/labs/00_images.ipynb" class="btn btn-lab" target="_blank">🧪 المعمل</a>
+                </div>
+            </div>
+
+            <!-- Module 1 -->
+            <div class="card">
+                <span class="badge">الجزء الأول</span>
+                <h3>1. المهام والاستدلال</h3>
+                <p>اكتشف قدرات YOLO في الاكتشاف، التجزئة، التصنيف، وتقدير الوضعية.</p>
+                <div class="btn-group">
+                    <a href="slides/Ultralytics_Foundations_1_Tasks_Inference.html" class="btn btn-slides">🎥 عرض المحاضرة</a>
+                    <a href="https://colab.research.google.com/github/hanenalmayouf/Computer_vision_Arabic-/blob/main/labs/01_tasks_inference_ar.ipynb" class="btn btn-lab" target="_blank">🧪 المعمل</a>
+                </div>
+            </div>
+
+            <!-- Module 2 -->
+            <div class="card">
+                <span class="badge">الجزء الثاني</span>
+                <h3>2. تطبيقات العالم الحقيقي</h3>
+                <p>ما وراء الصناديق: تحليل المناطق، التتبع الحركي، والخرائط الحرارية للفيديو.</p>
+                <div class="btn-group">
+                    <a href="slides/Ultralytics_Foundations_2_Real_World_Use_Cases.html" class="btn btn-slides">🎥 عرض المحاضرة</a>
+                    <a href="https://colab.research.google.com/github/hanenalmayouf/Computer_vision_Arabic-/blob/main/labs/02_solutions_expanded.ipynb" class="btn btn-lab" target="_blank">🧪 المعمل A</a>
+                    <a href="https://colab.research.google.com/github/hanenalmayouf/Computer_vision_Arabic-/blob/main/labs/02b_video_engineering.ipynb" class="btn btn-lab" target="_blank">🧪 المعمل B</a>
+                </div>
+            </div>
+
+            <!-- Module 3 -->
+            <div class="card">
+                <span class="badge">الجزء الثالث</span>
+                <h3>3. تدريب النماذج المخصصة</h3>
+                <p>تجهيز البيانات الخاصة، ضبط المعاملات الفائقة، وبدء دورات التدريب.</p>
+                <div class="btn-group">
+                    <a href="slides/Ultralytics_Foundations_3_Custom_Data_Training.html" class="btn btn-slides">🎥 عرض المحاضرة</a>
+                    <a href="https://colab.research.google.com/github/hanenalmayouf/Computer_vision_Arabic-/blob/main/labs/03_custom_training.ipynb" class="btn btn-lab" target="_blank">🧪 المعمل</a>
+                </div>
+            </div>
+
+            <!-- Module 4 -->
+            <div class="card">
+                <span class="badge">الجزء الرابع</span>
+                <h3>4. التقييم والنشر</h3>
+                <p>فهم مصفوفة الارتباك، IoU، الدقة، الاستدعاء، وتصدير النماذج للإنتاج.</p>
+                <div class="btn-group">
+                    <a href="slides/Ultralytics_Foundations_4_Evaluation_Deployment.html" class="btn btn-slides">🎥 عرض المحاضرة</a>
+                    <a href="https://colab.research.google.com/github/hanenalmayouf/Computer_vision_Arabic-/blob/main/labs/04a_roi_evaluation.ipynb" class="btn btn-lab" target="_blank">🧪 المعمل A</a>
+                    <a href="https://colab.research.google.com/github/hanenalmayouf/Computer_vision_Arabic-/blob/main/labs/04b_evaluation_technical.ipynb" class="btn btn-lab" target="_blank">🧪 المعمل B</a>
+                </div>
+            </div>
+
+            <!-- Module 5 -->
+            <div class="card">
+                <span class="badge">الجزء الخامس</span>
+                <h3>5. نظام HuggingFace للرؤية</h3>
+                <p>استخدام SAM 3 للتجزئة، والبحث بالصور، ونماذج لغة الرؤية المتعددة.</p>
+                <div class="btn-group">
+                    <a href="slides/HuggingFace_CV_Part5.html" class="btn btn-slides">🎥 عرض المحاضرة</a>
+                    <a href="https://colab.research.google.com/github/hanenalmayouf/Computer_vision_Arabic-/blob/main/labs/05_huggingface_cv_ar.ipynb" class="btn btn-lab" target="_blank">🧪 المعمل</a>
+                </div>
             </div>
         </div>
-
-        <div class="module">
-            <h3>🚀 Part 1: Tasks & Inference</h3>
-            <p>Discover what YOLO can do out of the box: Detection, Segmentation, Classification, and Pose.</p>
-            <div class="link-list">
-                <a href="slides/Ultralytics_Foundations_1_Tasks_Inference.html" class="link-item link-slides">Presentation Slides</a>
-                <a href="https://colab.research.google.com/github/hanenalmayouf/Computer_vision_Arabic-/blob/main/labs/01_tasks_inference_ar.ipynb" class="link-item link-lab" target="_blank">Lab: YOLO Tasks & Inference</a>
-            </div>
-        </div>
-
-        <div class="module">
-            <h3>🔍 Part 2: Use Cases & Solutions</h3>
-            <p>Beyond bounding boxes: actionable insights, region analytics, and heatmaps.</p>
-            <div class="link-list">
-                <a href="slides/Ultralytics_Foundations_2_Real_World_Use_Cases.html" class="link-item link-slides">Presentation Slides</a>
-                <a href="https://colab.research.google.com/github/hanenalmayouf/Computer_vision_Arabic-/blob/main/labs/02_solutions_expanded.ipynb" class="link-item link-lab" target="_blank">Lab: Real-World Solutions</a>
-            </div>
-        </div>
-
-        <div class="module">
-            <h3>🎥 Part 2B: Video Engineering (BONUS)</h3>
-            <p>Handling RTSP, Concurrency, Threading, and real-time streaming.</p>
-            <div class="link-list">
-                <a href="slides/Ultralytics_Foundations_2_Real_World_Use_Cases.html" class="link-item link-slides">Presentation Slides</a>
-                <a href="https://colab.research.google.com/github/hanenalmayouf/Computer_vision_Arabic-/blob/main/labs/02b_video_engineering.ipynb" class="link-item link-lab" target="_blank">BONUS Lab: Async Video Streaming</a>
-            </div>
-        </div>
-
-        <div class="module">
-            <h3>🛠️ Part 3: Custom Data & Training</h3>
-            <p>Teaching the model your custom data: fine-tuning on COCO8.</p>
-            <div class="link-list">
-                <a href="slides/Ultralytics_Foundations_3_Custom_Data_Training.html" class="link-item link-slides">Presentation Slides</a>
-                <a href="https://colab.research.google.com/github/hanenalmayouf/Computer_vision_Arabic-/blob/main/labs/03_custom_training.ipynb" class="link-item link-lab" target="_blank">Lab: Custom Training</a>
-            </div>
-        </div>
-
-        <div class="module">
-            <h3>📊 Part 4: Evaluation & Deployment</h3>
-            <p>Understanding metrics (mAP, IoU, ROI) and exporting for production.</p>
-            <div class="link-list">
-                <a href="slides/Ultralytics_Foundations_4_Evaluation_Deployment.html" class="link-item link-slides">Presentation Slides</a>
-                <a href="https://colab.research.google.com/github/hanenalmayouf/Computer_vision_Arabic-/blob/main/labs/04a_roi_evaluation.ipynb" class="link-item link-lab" target="_blank">Lab 4A: ROI-Driven Evaluation</a>
-                <a href="https://colab.research.google.com/github/hanenalmayouf/Computer_vision_Arabic-/blob/main/labs/04b_evaluation_technical.ipynb" class="link-item link-lab" target="_blank">Lab 4B: Technical Metrics & Diagnosis</a>
-            </div>
-        </div>
-
-        <div class="module">
-            <h3>🤗 Part 5: HuggingFace for CV</h3>
-            <p>Expanding your toolkit: SAM 3, visual embeddings, and Vision LLMs.</p>
-            <div class="link-list">
-                <a href="slides/HuggingFace_CV_Part5.html" class="link-item link-slides">Presentation Slides</a>
-                <a href="https://colab.research.google.com/github/hanenalmayouf/Computer_vision_Arabic-/blob/main/labs/05_huggingface_cv_ar.ipynb" class="link-item link-lab" target="_blank">Lab 5: HuggingFace for CV</a>
-            </div>
-        </div>
-
     </div>
 
     <div class="footer">
-        © 2026 SDAIA - All rights reserved.
+        © 2026 جميع الحقوق محفوظة لـ سدايا (SDAIA) <br>
+        منهج الرؤية الحاسوبية المطور لتمكين الكوادر الوطنية.
     </div>
 </body>
 </html>
