@@ -812,21 +812,18 @@
 <section id="تحدي-التوصيل-هل-أنت-مستعد" class="slide level2 smaller">
 <h2>تحدي التوصيل: هل أنت مستعد؟</h2>
 <p>اضغط على <strong>المشكلة</strong> أولاً، ثم اضغط على <strong>الحل</strong> الذي تراه مناسباً:</p>
-<div class="matching-game">
-<div class="matching-columns">
-<pre><code>&lt;div class="scenarios-col"&gt;
-  &lt;div class="match-item" id="s1" onclick="selectScenario(this, 'speed')"&gt;🚗 سيارات تسير بسرعة جنونية&lt;/div&gt;
-  &lt;div class="match-item" id="s2" onclick="selectScenario(this, 'security')"&gt;🚨 دخول شخص لمنطقة محظورة&lt;/div&gt;
-  &lt;div class="match-item" id="s3" onclick="selectScenario(this, 'queue')"&gt;🛒 زحام شديد عند المحاسب&lt;/div&gt;
-  &lt;div class="match-item" id="s4" onclick="selectScenario(this, 'blur')"&gt;👤 وجوه تظهر بوضوح في الكاميرا&lt;/div&gt;
-&lt;/div&gt;
-&lt;div class="solutions-col"&gt;
-  &lt;div class="match-item" id="sol-blur" onclick="selectSolution(this, 'blur')"&gt;Object Blurring&lt;/div&gt;
-  &lt;div class="match-item" id="sol-speed" onclick="selectSolution(this, 'speed')"&gt;Speed Estimation&lt;/div&gt;
-  &lt;div class="match-item" id="sol-queue" onclick="selectSolution(this, 'queue')"&gt;Queue Management&lt;/div&gt;
-  &lt;div class="match-item" id="sol-security" onclick="selectSolution(this, 'security')"&gt;Security Alarm&lt;/div&gt;
-&lt;/div&gt;</code></pre>
+<div class="matching-game"><div class="matching-columns"><div class="scenarios-col">
+  <div class="match-item" id="s1" onclick="selectScenario(this, 'speed')">🚗 سيارات تسير بسرعة جنونية</div>
+  <div class="match-item" id="s2" onclick="selectScenario(this, 'security')">🚨 دخول شخص لمنطقة محظورة</div>
+  <div class="match-item" id="s3" onclick="selectScenario(this, 'queue')">🛒 زحام شديد عند المحاسب</div>
+  <div class="match-item" id="s4" onclick="selectScenario(this, 'blur')">👤 وجوه تظهر بوضوح في الكاميرا</div>
 </div>
+<div class="solutions-col">
+  <div class="match-item" id="sol-blur" onclick="selectSolution(this, 'blur')">Object Blurring</div>
+  <div class="match-item" id="sol-speed" onclick="selectSolution(this, 'speed')">Speed Estimation</div>
+  <div class="match-item" id="sol-queue" onclick="selectSolution(this, 'queue')">Queue Management</div>
+  <div class="match-item" id="sol-security" onclick="selectSolution(this, 'security')">Security Alarm</div>
+</div></div>
 <div id="game-feedback" style="margin-top:20px; font-weight:bold; text-align:center; min-height:1.5em;">
 
 </div>
@@ -1272,4 +1269,117 @@
     <script>videojs(video_shortcode_videojs_video3);</script>
     
 
+
+<style>
+.matching-game {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 15px;
+  padding: 15px;
+  background: rgba(255,255,255,0.05);
+  border-radius: 15px;
+  margin-top: 20px;
+}
+.matching-columns {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  gap: 30px;
+}
+.scenarios-col, .solutions-col {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.match-item {
+  padding: 12px;
+  background: white;
+  border: 2px solid #e2e8f0;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: all 0.3s;
+  text-align: center;
+  font-weight: bold;
+  color: #1e293b;
+  font-size: 0.9rem;
+}
+.match-item:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1);
+  border-color: #00C9A7;
+}
+.match-item.selected {
+  border-color: #00C9A7;
+  background: #f0fdfa;
+  transform: scale(1.02);
+}
+.match-item.matched {
+  background: #dcfce7;
+  border-color: #22c55e;
+  color: #166534;
+  cursor: default;
+  opacity: 0.8;
+}
+.match-item.wrong {
+  background: #fee2e2;
+  border-color: #ef4444;
+  animation: shake 0.5s;
+}
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  25% { transform: translateX(-5px); }
+  75% { transform: translateX(5px); }
+}
+</style>
+
+<script>
+(function() {
+  let currentScenario = null;
+  let currentSolution = null;
+  let totalMatches = 0;
+
+  window.selectScenario = function(el, matchId) {
+    if (el.classList.contains('matched')) return;
+    el.closest('.matching-game').querySelectorAll('.scenarios-col .match-item').forEach(i => i.classList.remove('selected'));
+    el.classList.add('selected');
+    currentScenario = { el, matchId };
+    if (currentSolution) checkMatch(el.closest('.matching-game'));
+  };
+
+  window.selectSolution = function(el, matchId) {
+    if (el.classList.contains('matched')) return;
+    el.closest('.matching-game').querySelectorAll('.solutions-col .match-item').forEach(i => i.classList.remove('selected'));
+    el.classList.add('selected');
+    currentSolution = { el, matchId };
+    if (currentScenario) checkMatch(el.closest('.matching-game'));
+  };
+
+  function checkMatch(gameEl) {
+    const feedback = gameEl.querySelector('#game-feedback');
+    if (currentScenario.matchId === currentSolution.matchId) {
+      currentScenario.el.classList.add('matched');
+      currentSolution.el.classList.add('matched');
+      feedback.innerHTML = '<span style="color: #22c55e;">أحسنت! إجابة صحيحة ✅</span>';
+      totalMatches++;
+      if (totalMatches % 4 === 0) {
+        feedback.innerHTML = '<span style="color: #00C9A7; font-size: 1.4em;">🎉 مذهل! لقد أتممت التحدي بنجاح! 🎉</span>';
+      }
+    } else {
+      currentScenario.el.classList.add('wrong');
+      currentSolution.el.classList.add('wrong');
+      feedback.innerHTML = '<span style="color: #ef4444;">حاول مرة أخرى ❌</span>';
+      const s = currentScenario.el;
+      const sol = currentSolution.el;
+      setTimeout(() => {
+        s.classList.remove('wrong', 'selected');
+        sol.classList.remove('wrong', 'selected');
+      }, 800);
+    }
+    currentScenario = null;
+    currentSolution = null;
+  }
+})();
+</script>
 </body></html>
