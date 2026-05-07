@@ -809,7 +809,7 @@ model.predict(source="dir/", stream=True)
 
 # أسئلة وأجوبة {.sdaia-dark data-background-gradient="linear-gradient(135deg, #1C355E, #00C9A7)" data-state="sdaia-bg"}
 
-::: {style="display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100%; text-align: center; margin-top: 5rem;"}
+::: {style="display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100%; text-align: center; min-height: 80vh; margin: 0 auto;"}
 [شكراً لاهتمامكم ووقتكم]{style="font-size: 3.5rem; font-weight: 800; color: white; display: block; margin-bottom: 1rem;"}
 
 [يُسعدني الإجابة على استفساراتكم ومناقشاتكم]{style="font-size: 1.8rem; color: #00C9A7; font-weight: 600; opacity: 0.9;"}
