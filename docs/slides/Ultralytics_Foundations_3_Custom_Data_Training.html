@@ -534,9 +534,9 @@
 <section id="ماذا-يوجد-داخل-ملفات-النصوص" class="slide level2 smaller">
 <h2>ماذا يوجد داخل ملفات النصوص؟</h2>
 <ul>
-<li><p><strong>اكتشاف الكائنات</strong> (مربع إحاطة): <code>&lt;رقم_الصنف&gt; &lt;مركز_x&gt; &lt;مركز_y&gt; &lt;العرض&gt; &lt;الارتفاع&gt;</code></p></li>
-<li><p><strong>التجزئة</strong> (مضلع بأضلاع كثيرة): <code>&lt;رقم_الصنف&gt; &lt;x1&gt; &lt;y1&gt; &lt;x2&gt; &lt;y2&gt; ... &lt;xn&gt; &lt;yn&gt;</code></p></li>
-<li><p><strong>تتبع الهيكل</strong> (نقاط المفاصل): <code>&lt;رقم_الصنف&gt; &lt;مربع_الإحاطة&gt; &lt;نقطة_x1&gt; &lt;نقطة_y1&gt; &lt;رؤية_النقطة&gt; ...</code></p></li>
+<li><p><strong>اكتشاف الكائنات</strong> (مربع إحاطة): <code>&lt;class_id&gt; &lt;x_center&gt; &lt;y_center&gt; &lt;width&gt; &lt;height&gt;</code></p></li>
+<li><p><strong>التجزئة</strong> (مضلع بأضلاع كثيرة): <code>&lt;class_id&gt; &lt;x1&gt; &lt;y1&gt; &lt;x2&gt; &lt;y2&gt; ... &lt;xn&gt; &lt;yn&gt;</code></p></li>
+<li><p><strong>تتبع الهيكل</strong> (نقاط المفاصل): <code>&lt;class_id&gt; &lt;bbox&gt; &lt;kp_x1&gt; &lt;kp_y1&gt; &lt;v1&gt; ...</code></p></li>
 </ul>
 <p><strong>تنبيه ⚠️:</strong> يجب أن تكون كل الإحداثيات <strong>نسبية</strong> (من 0.0 إلى 1.0) وليست أرقام بيكسل مطلقة!</p>
 </section>
