@@ -276,7 +276,7 @@ results = model.train(resume=True)
 
 ## عرض توضيحي: تقنية SAHI {.center}
 
-{{< video assets/slides/outputs/videos/task-sahi-inference.mp4 width="900" height="500" autoplay="true" loop="true" muted="true" >}}
+![](https://cdn.jsdelivr.net/gh/ultralytics/assets@main/docs/sahi-sliced-inference-overview.avif){width="900" fig-align="center"}
 
 ## استخدام ملفات الإعدادات (أفضل ممارسة) {.smaller}
 
