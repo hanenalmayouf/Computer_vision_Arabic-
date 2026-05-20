@@ -182,11 +182,12 @@ def create_index():
                 <div class="btn-group">
                     <a href="slides/Ultralytics_Foundations_4_Evaluation_Deployment.html" class="btn btn-slides">🎥 عرض المحاضرة</a>
                     <a href="{repo_url}04a_roi_evaluation.ipynb" class="btn btn-lab" target="_blank">🧪 المعمل A</a>
-                    <a href="{repo_url}04b_evaluation_technical.ipynb" class="btn btn-lab" target="_blank">🧪 المعمل B</a>
+                    <!-- <a href="{repo_url}04b_evaluation_technical.ipynb" class="btn btn-lab" target="_blank">🧪 المعمل B</a> -->
                 </div>
             </div>
 
             <!-- Module 5 -->
+            <!--
             <div class="card">
                 <span class="badge">الجزء الخامس</span>
                 <h3>5. نظام HuggingFace للرؤية</h3>
@@ -196,6 +197,7 @@ def create_index():
                     <a href="{repo_url}05_huggingface_cv_ar.ipynb" class="btn btn-lab" target="_blank">🧪 المعمل</a>
                 </div>
             </div>
+            -->
         </div>
     </div>
 
